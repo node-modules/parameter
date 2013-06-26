@@ -74,23 +74,27 @@ var errors = p.verify(data, rules);
 // errors => null
 
 var errors = p.verify(wrongData, rules);
-// errors => [{
-//   resource: 'Param',
-//   field: 'id',
-//   code: 'missing_field'  
-// }, {
-//   resource: 'Param',
-//   field: 'nick',
-//   code: 'invalid'  
-// }, {
-//   resource: 'Param',
-//   field: 'date',
-//   code: 'invalid'  
-// }, {
-//   resource: 'Param',
-//   field: 'age',
-//   code: 'invalid'  
-// }]
+// errors =>
+// [ { resource: 'Param',
+//     field: 'id',
+//     message: 'id required',
+//     code: 'missing_field' },
+//   { resource: 'Param',
+//     field: 'nick',
+//     message: 'expect string, but got number',
+//     code: 'invalid' },
+//   { resource: 'Param',
+//     field: 'date',
+//     message: 'should be "YYYY-MM-DD" date format string',
+//     code: 'invalid' },
+//   { resource: 'Param',
+//     field: 'age',
+//     message: 'expect number, but got string',
+//     code: 'invalid' },
+//   { resource: 'Param',
+//     field: 'sex',
+//     message: 'expect string, but got number',
+//     code: 'invalid' } ]
 ```
 
 ## License 
