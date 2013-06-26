@@ -1,4 +1,10 @@
 
+0.0.3 / 2013-06-26 
+==================
+
+  * fixed required=false bug
+  * run again to vaild cache functions
+
 0.0.2 / 2013-06-26 
 ==================
 
