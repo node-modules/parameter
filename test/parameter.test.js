@@ -44,6 +44,14 @@ describe('parameter.test.js', function () {
       should.not.exists(p.verify(data, rules));
     });
 
+    it('should cache function work for required = false', function () {
+      var rules = {key: {required: false, type: 'number'}};
+      should.not.exists(p.verify({key: 1}, rules));
+      should.not.exists(p.verify({key2: 1}, rules));
+      should.not.exists(p.verify({key: 1}, rules));
+      should.not.exists(p.verify({}, rules));
+    });
+
     it('should errors', function () {
       var wrongData = {
         nick: 123,
