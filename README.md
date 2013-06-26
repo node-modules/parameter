@@ -97,6 +97,29 @@ var errors = p.verify(wrongData, rules);
 //     code: 'invalid' } ]
 ```
 
+## Performance
+
+```bash
+$ node benchmark.js
+
+rules pass: {id: p.Id} x 6,023,826 ops/sec ±0.87% (99 runs sampled)
+rules pass: {id: {type: p.Id}} x 4,207,059 ops/sec ±0.92% (98 runs sampled)
+rules pass: {id: {idId: true}} x 4,101,462 ops/sec ±5.28% (92 runs sampled)
+rules pass: {date: p.Date} x 3,421,468 ops/sec ±1.19% (92 runs sampled)
+rules pass: {date: {type: p.Date}} x 3,577,401 ops/sec ±1.71% (92 runs sampled)
+rules pass: {date: {isDate: true}} x 3,893,278 ops/sec ±0.84% (100 runs sampled)
+rules pass: {time: p.DateTime} x 3,705,611 ops/sec ±2.07% (93 runs sampled)
+rules pass: {time: {type: p.DateTime}} x 3,734,069 ops/sec ±1.96% (93 runs sampled)
+rules pass: {time: {isDateTime: true}} x 3,739,484 ops/sec ±1.68% (92 runs sampled)
+rules pass: {age: "number"} x 6,098,496 ops/sec ±0.74% (95 runs sampled)
+rules pass: {age: {type: "number"}} x 6,391,140 ops/sec ±0.93% (92 runs sampled)
+rules pass: {nick: "string"} x 5,995,432 ops/sec ±0.70% (98 runs sampled)
+rules pass: {nick: {type: "string"}} x 6,215,072 ops/sec ±1.04% (96 runs sampled)
+rules pass: {not_exists: "string", required: false} x 1,175,066 ops/sec ±1.39% (98 runs sampled)
+
+Fastest is rules pass: {age: {type: "number"}}
+```
+
 ## License 
 
 (The MIT License)
