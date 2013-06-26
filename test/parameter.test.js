@@ -35,8 +35,13 @@ describe('parameter.test.js', function () {
         emptyRule: null,
         time: { required: false, type: p.DateTime },
       };
-      var errors = p.verify(data, rules);
-      should.not.exists(errors);
+      should.not.exists(p.verify(data, rules));
+      // run again to vaild cache functions
+      should.not.exists(p.verify(data, rules));
+      should.not.exists(p.verify(data, rules));
+      should.not.exists(p.verify(data, rules));
+      should.not.exists(p.verify(data, rules));
+      should.not.exists(p.verify(data, rules));
     });
 
     it('should errors', function () {
@@ -90,6 +95,9 @@ describe('parameter.test.js', function () {
           message: 'should be \"YYYY-MM-DD hh:mm:ss\" date format string',
           code: 'invalid' },
       ]);
+      should.exists(p.verify(wrongData, rules));
+      should.exists(p.verify(wrongData, rules));
+      should.exists(p.verify(wrongData, rules));
     });
 
     it('should check exists, {required: false|true}', function () {
