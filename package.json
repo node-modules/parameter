@@ -19,6 +19,7 @@
 
   },
   "devDependencies": {
+    "benchmark": "*",
     "should": "*",
     "blanket": "*",
     "travis-cov": "*",
