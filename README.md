@@ -30,6 +30,12 @@ $ npm install parameter
  *     // key4: { type: 'number' },
  *     key5: { required: false, type: 'number' }, // optional value, if set, must be a number
  *     key6: { required: false, type: parameter.Date }, // optional value, if set, must be a date string
+ *     key7: { isArray: true, resourceName: 'User', rules: { name: 'string', age: 'number'  } }
+ *     // key7: parameter.Array,
+ *     // key7: { type: parameter.Array, resource: 'User', rules: { name: 'string', age: 'number'  } }
+ *     key8: { isObject: true, resourceName: 'User', rules: { name: 'string', age: 'number'  } }
+ *     // key8: parameter.Object,
+ *     // key8: { type: parameter.Object, resource: 'User', rules: { name: 'string', age: 'number' } }
  *   }
  *   rules's keys must exists on `data`. If `data.key1` not exists, will got `missing_field` error.
  * @param {String} [resourceName] error resource name, default is 'Param'

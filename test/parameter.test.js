@@ -44,6 +44,79 @@ describe('parameter.test.js', function () {
       should.not.exists(p.verify(data, rules));
     });
 
+    it('should be string and not empty', function () {
+      should.not.exists(p.verify({key: 'foo'}, {key: 'string'}));
+      should.not.exists(p.verify({key: 'foo'}, {key: {type: 'string'}}));
+      should.not.exists(p.verify({key: ''}, {key: {type: 'string', empty: true}}));
+
+      should.exists(p.verify({key: ''}, {key: 'string'}));
+      should.exists(p.verify({key: '     \r\n   \t  '}, {key: 'string'}));
+      should.exists(p.verify({key: ''}, {key: {type: 'string', empty: false}}));
+      p.verify({key: ''}, {key: 'string'})[0].message.should.equal('should not be empty string');
+    });
+
+    it('should verify array', function () {
+      should.not.exists(p.verify({key: 'foo', a: []}, {key: 'string', a: p.Array}));
+      should.not.exists(p.verify({key: 'foo', a: []}, {key: 'string', a: {isArray: true}}));
+      should.not.exists(p.verify(
+        {key: 'foo', a: [{name: 'bar', age: 11}]}, 
+        {key: 'string', a: {isArray: true, rules: {name: 'string', age: 'number'}}}
+      ));
+
+      should.exists(p.verify({key: 'foo', a: {}}, {key: 'string', a: p.Array}));
+      should.exists(p.verify({key: 'foo', a: 1}, {key: 'string', a: {isArray: true}}));
+      p.verify({key: 'foo', a: {}}, {key: 'string', a: p.Array}).should.eql([
+        {resource: 'Param', field: 'a', message: 'should be an array', code: 'invalid'}
+      ]);
+
+      var errs1 = p.verify(
+        {key: 'foo', a: [{name: '   ', age: '11'}, {name: '   ', age: []}]}, 
+        {key: 'string', a: {isArray: true, resource: 'User', rules: {name: 'string', age: 'number'}}}
+      );
+      errs1.should.eql([
+        {resource: 'User', field: 'name', message: 'should not be empty string', code: 'invalid'},
+        {resource: 'User', field: 'age', message: 'expect number, but got string', code: 'invalid'},
+      ]);
+      var errs2 = p.verify(
+        {key: '', a: [{name: '   ', age: '11'}, {name: '   ', age: []}]}, 
+        {key: 'string', a: {isArray: true, resource: 'User', rules: {name: 'string', age: 'number'}}}
+      );
+      errs2.should.eql([
+        {resource: 'Param', field: 'key', message: 'should not be empty string', code: 'invalid'},
+      ]);
+    });
+
+    it('should verify object', function () {
+      should.not.exists(p.verify({key: 'foo', a: {}}, {key: 'string', a: p.Object}));
+      should.not.exists(p.verify({key: 'foo', a: {}}, {key: 'string', a: {isObject: true}}));
+      should.not.exists(p.verify(
+        {key: 'foo', a: {name: 'bar', age: 11}}, 
+        {key: 'string', a: {isObject: true, rules: {name: 'string', age: 'number'}}}
+      ));
+
+      should.exists(p.verify({key: 'foo', a: []}, {key: 'string', a: p.Object}));
+      should.exists(p.verify({key: 'foo', a: 1}, {key: 'string', a: {isObject: true}}));
+      p.verify({key: 'foo', a: []}, {key: 'string', a: p.Object}).should.eql([
+        {resource: 'Param', field: 'a', message: 'should be an object', code: 'invalid'}
+      ]);
+
+      var errs1 = p.verify(
+        {key: 'foo', a: {name: '   ', age: '11'}}, 
+        {key: 'string', a: {isObject: true, resource: 'User', rules: {name: 'string', age: 'number'}}}
+      );
+      errs1.should.eql([
+        {resource: 'User', field: 'name', message: 'should not be empty string', code: 'invalid'},
+        {resource: 'User', field: 'age', message: 'expect number, but got string', code: 'invalid'},
+      ]);
+      var errs2 = p.verify(
+        {key: '', a: {name: '   ', age: '11'}}, 
+        {key: 'string', a: {isObject: true, resource: 'User', rules: {name: 'string', age: 'number'}}}
+      );
+      errs2.should.eql([
+        {resource: 'Param', field: 'key', message: 'should not be empty string', code: 'invalid'},
+      ]);
+    });
+
     it('should cache function work for required = false', function () {
       var rules = {key: {required: false, type: 'number'}};
       should.not.exists(p.verify({key: 1}, rules));
@@ -128,7 +201,7 @@ describe('parameter.test.js', function () {
     it('should check type, rules: {key: "number|string|function|object"} or {key: {type: "type"}}', function () {
       should.not.exists(p.verify({key: 1}, {key: 'number'}));
       should.not.exists(p.verify({key: 1}, {key: {type: 'number'}}));
-      should.not.exists(p.verify({key: ''}, {key: 'string'}));
+      should.not.exists(p.verify({key: 'p'}, {key: 'string'}));
       should.not.exists(p.verify({key: 'foo'}, {key: 'string'}));
       should.not.exists(p.verify({key: 'foo'}, {key: {type: 'string'}}));
       should.not.exists(p.verify({key: function () {}}, {key: 'function'}));
