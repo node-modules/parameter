@@ -62,6 +62,7 @@ var data = {
   date: '2013-06-25',
   age: 29,
   sid: 123, // or '123'
+  uid: '456',
 };
 
 var wrongData = {
@@ -69,7 +70,8 @@ var wrongData = {
   date: '2013-06-1',
   age: '29',
   sex: 0,
-  sid: '123foo'
+  sid: '123foo',
+  uid: 'bar'
 };
 
 var rules = {
@@ -78,7 +80,8 @@ var rules = {
   date: p.Date,
   age: 'number',
   sex: { required: false, type: 'string' },
-  sid: /^\d+$/
+  sid: /^\d+$/,
+  uid: { type: /^\d+$/, message: 'should be digital' } // custom error message
 };
 var errors = p.verify(data, rules);
 // errors => null
@@ -108,6 +111,10 @@ var errors = p.verify(wrongData, rules);
 //   { resource: 'Param',
 //     field: 'sid',
 //     message: 'should match /^\d+$/',
+//     code: 'invalid' },
+//   { resource: 'Param',
+//     field: 'uid',
+//     message: 'should be digital',
 //     code: 'invalid' } ]
 ```
 
@@ -116,23 +123,25 @@ var errors = p.verify(wrongData, rules);
 ```bash
 $ node benchmark.js
 
-rules pass: {id: p.Id} x 5,074,408 ops/sec ±3.18% (90 runs sampled)
-rules pass: {id: {type: p.Id}} x 3,076,881 ops/sec ±8.20% (86 runs sampled)
-rules pass: {id: {idId: true}} x 3,390,500 ops/sec ±1.98% (89 runs sampled)
-rules pass: {date: p.Date} x 2,843,970 ops/sec ±3.75% (91 runs sampled)
-rules pass: {date: {type: p.Date}} x 3,070,906 ops/sec ±2.18% (93 runs sampled)
-rules pass: {date: {isDate: true}} x 3,346,604 ops/sec ±2.97% (93 runs sampled)
-rules pass: {time: p.DateTime} x 3,073,399 ops/sec ±2.16% (92 runs sampled)
-rules pass: {time: {type: p.DateTime}} x 2,937,585 ops/sec ±4.53% (84 runs sampled)
-rules pass: {time: {isDateTime: true}} x 3,060,667 ops/sec ±1.75% (92 runs sampled)
-rules pass: {age: "number"} x 5,127,739 ops/sec ±3.26% (87 runs sampled)
-rules pass: {age: {type: "number"}} x 4,717,803 ops/sec ±2.44% (90 runs sampled)
-rules pass: {nick: "string"} x 3,803,510 ops/sec ±1.69% (88 runs sampled)
-rules pass: {nick: {type: "string"}} x 3,635,789 ops/sec ±1.95% (91 runs sampled)
-rules pass: {not_exists: "string", required: false} x 1,015,538 ops/sec ±2.17% (92 runs sampled)
-rules pass: {age: /^\d+$/} x 3,177,203 ops/sec ±2.41% (86 runs sampled)
-rules pass: {age: {type: /^\d+$/}} x 3,055,727 ops/sec ±2.01% (87 runs sampled)
-rules fail: {age: {type: /^\d+$/}} x 1,327,194 ops/sec ±2.52% (89 runs sampled)
+rules pass: {id: p.Id} x 2,503,515 ops/sec ±11.17% (56 runs sampled)
+rules pass: {id: {type: p.Id}} x 3,830,045 ops/sec ±9.62% (78 runs sampled)
+rules pass: {id: {idId: true}} x 3,230,311 ops/sec ±3.64% (87 runs sampled)
+rules pass: {date: p.Date} x 2,794,378 ops/sec ±5.43% (82 runs sampled)
+rules pass: {date: {type: p.Date}} x 2,682,664 ops/sec ±5.77% (83 runs sampled)
+rules pass: {date: {isDate: true}} x 2,685,685 ops/sec ±6.65% (78 runs sampled)
+rules pass: {time: p.DateTime} x 2,613,951 ops/sec ±2.69% (85 runs sampled)
+rules pass: {time: {type: p.DateTime}} x 2,257,309 ops/sec ±6.26% (75 runs sampled)
+rules pass: {time: {isDateTime: true}} x 2,597,933 ops/sec ±7.10% (83 runs sampled)
+rules pass: {age: "number"} x 3,861,642 ops/sec ±4.14% (84 runs sampled)
+rules pass: {age: {type: "number"}} x 3,262,287 ops/sec ±8.42% (68 runs sampled)
+rules pass: {nick: "string"} x 2,423,116 ops/sec ±6.68% (75 runs sampled)
+rules pass: {nick: {type: "string"}} x 4,144,018 ops/sec ±2.33% (93 runs sampled)
+rules pass: {not_exists: "string", required: false} x 1,026,507 ops/sec ±3.08% (87 runs sampled)
+rules pass: {age: /^\d+$/} x 3,192,410 ops/sec ±2.83% (90 runs sampled)
+rules pass: {age: {type: /^\d+$/}} x 2,939,364 ops/sec ±1.61% (92 runs sampled)
+rules pass: {age: {type: /^\d+$/, message: "should be digital"}} x 3,488,519 ops/sec ±2.83% (88 runs sampled)
+rules fail: {age: {type: /^\d+$/}} x 1,238,951 ops/sec ±4.34% (88 runs sampled)
+rules fail: {age: {type: /^\d+$/, message: "should be digital"}} x 1,252,607 ops/sec ±2.39% (84 runs sampled)
 
 Fastest is rules pass: {age: {type: "number"}}
 ```

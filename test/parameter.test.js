@@ -37,7 +37,7 @@ describe('parameter.test.js', function () {
         emptyRule: null,
         time: { required: false, type: p.DateTime },
         sid: /^\d+$/,
-        uid: { type: /^\d+$/ }
+        uid: { type: /^\d+$/, message: 'should be digital' }
       };
       should.not.exists(p.verify(data, rules));
       // run again to vaild cache functions
@@ -68,6 +68,9 @@ describe('parameter.test.js', function () {
       should.exists(p.verify({key: '123foo'}, {key: /^\d+$/}));
       should.exists(p.verify({key: ''}, {key: {type: '/^\d+$/'}}));
       p.verify({key: 0.33}, {key: /^\d+$/})[0].message.should.equal('should match /^\\\d+$/');
+      p.verify({key: 'bar'}, {
+        key: { type: /^\d+$/, message: 'should be digital' }
+      })[0].message.should.equal('should be digital');
     });
 
     it('should verify array', function () {

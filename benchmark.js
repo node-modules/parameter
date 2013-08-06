@@ -40,8 +40,10 @@ var ruleSting1 = {nick: "string"};
 var ruleSting2 = {nick: {type: "string"}};
 var ruleRequireFalse = {not_exists: "string", required: false};
 var ruleRegex1 = {sid1: /^\d+$/};
-var ruleRegex2 = {sid2: /^\d+$/};
+var ruleRegex2 = {sid2: { type: /^\d+$/ }};
+var ruleRegex5 = {sid2: { type: /^\d+$/, message: 'should be digital' }};
 var ruleRegex3 = {sid3: /^\d+$/};
+var ruleRegex4 = {sid3: { type: /^\d+$/, message: 'should be digital' }};
 
 suite
 .add('rules pass: {id: p.Id}', function () {
@@ -96,8 +98,14 @@ suite
 .add('rules pass: {age: {type: /^\\d+$/}}', function () {
   p.verify(data, ruleRegex2);
 })
+.add('rules pass: {age: {type: /^\\d+$/, message: "should be digital"}}', function () {
+  p.verify(data, ruleRegex5);
+})
 .add('rules fail: {age: {type: /^\\d+$/}}', function () {
   p.verify(data, ruleRegex3);
+})
+.add('rules fail: {age: {type: /^\\d+$/, message: "should be digital"}}', function () {
+  p.verify(data, ruleRegex4);
 })
 
 // add listeners
