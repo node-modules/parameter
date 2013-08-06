@@ -19,7 +19,10 @@ var data = {
   nick: '苏千',
   date: '2013-06-25',
   time: '2013-06-25 01:12:22',
-  age: 29
+  age: 29,
+  sid1: 123,
+  sid2: '123',
+  sid3: 'foo'
 };
 
 var ruleId1 = {id: p.Id};
@@ -36,6 +39,9 @@ var ruleNumber2 = {age: {type: "number"}};
 var ruleSting1 = {nick: "string"};
 var ruleSting2 = {nick: {type: "string"}};
 var ruleRequireFalse = {not_exists: "string", required: false};
+var ruleRegex1 = {sid1: /^\d+$/};
+var ruleRegex2 = {sid2: /^\d+$/};
+var ruleRegex3 = {sid3: /^\d+$/};
 
 suite
 .add('rules pass: {id: p.Id}', function () {
@@ -82,6 +88,16 @@ suite
 })
 .add('rules pass: {not_exists: "string", required: false}', function () {
   p.verify(data, ruleRequireFalse);
+})
+
+.add('rules pass: {age: /^\\d+$/}', function () {
+  p.verify(data, ruleRegex1);
+})
+.add('rules pass: {age: {type: /^\\d+$/}}', function () {
+  p.verify(data, ruleRegex2);
+})
+.add('rules fail: {age: {type: /^\\d+$/}}', function () {
+  p.verify(data, ruleRegex3);
 })
 
 // add listeners

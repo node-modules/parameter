@@ -116,22 +116,39 @@ var errors = p.verify(wrongData, rules);
 ```bash
 $ node benchmark.js
 
-rules pass: {id: p.Id} x 6,023,826 ops/sec ±0.87% (99 runs sampled)
-rules pass: {id: {type: p.Id}} x 4,207,059 ops/sec ±0.92% (98 runs sampled)
-rules pass: {id: {idId: true}} x 4,101,462 ops/sec ±5.28% (92 runs sampled)
-rules pass: {date: p.Date} x 3,421,468 ops/sec ±1.19% (92 runs sampled)
-rules pass: {date: {type: p.Date}} x 3,577,401 ops/sec ±1.71% (92 runs sampled)
-rules pass: {date: {isDate: true}} x 3,893,278 ops/sec ±0.84% (100 runs sampled)
-rules pass: {time: p.DateTime} x 3,705,611 ops/sec ±2.07% (93 runs sampled)
-rules pass: {time: {type: p.DateTime}} x 3,734,069 ops/sec ±1.96% (93 runs sampled)
-rules pass: {time: {isDateTime: true}} x 3,739,484 ops/sec ±1.68% (92 runs sampled)
-rules pass: {age: "number"} x 6,098,496 ops/sec ±0.74% (95 runs sampled)
-rules pass: {age: {type: "number"}} x 6,391,140 ops/sec ±0.93% (92 runs sampled)
-rules pass: {nick: "string"} x 5,995,432 ops/sec ±0.70% (98 runs sampled)
-rules pass: {nick: {type: "string"}} x 6,215,072 ops/sec ±1.04% (96 runs sampled)
-rules pass: {not_exists: "string", required: false} x 1,175,066 ops/sec ±1.39% (98 runs sampled)
+rules pass: {id: p.Id} x 5,074,408 ops/sec ±3.18% (90 runs sampled)
+rules pass: {id: {type: p.Id}} x 3,076,881 ops/sec ±8.20% (86 runs sampled)
+rules pass: {id: {idId: true}} x 3,390,500 ops/sec ±1.98% (89 runs sampled)
+rules pass: {date: p.Date} x 2,843,970 ops/sec ±3.75% (91 runs sampled)
+rules pass: {date: {type: p.Date}} x 3,070,906 ops/sec ±2.18% (93 runs sampled)
+rules pass: {date: {isDate: true}} x 3,346,604 ops/sec ±2.97% (93 runs sampled)
+rules pass: {time: p.DateTime} x 3,073,399 ops/sec ±2.16% (92 runs sampled)
+rules pass: {time: {type: p.DateTime}} x 2,937,585 ops/sec ±4.53% (84 runs sampled)
+rules pass: {time: {isDateTime: true}} x 3,060,667 ops/sec ±1.75% (92 runs sampled)
+rules pass: {age: "number"} x 5,127,739 ops/sec ±3.26% (87 runs sampled)
+rules pass: {age: {type: "number"}} x 4,717,803 ops/sec ±2.44% (90 runs sampled)
+rules pass: {nick: "string"} x 3,803,510 ops/sec ±1.69% (88 runs sampled)
+rules pass: {nick: {type: "string"}} x 3,635,789 ops/sec ±1.95% (91 runs sampled)
+rules pass: {not_exists: "string", required: false} x 1,015,538 ops/sec ±2.17% (92 runs sampled)
+rules pass: {age: /^\d+$/} x 3,177,203 ops/sec ±2.41% (86 runs sampled)
+rules pass: {age: {type: /^\d+$/}} x 3,055,727 ops/sec ±2.01% (87 runs sampled)
+rules fail: {age: {type: /^\d+$/}} x 1,327,194 ops/sec ±2.52% (89 runs sampled)
 
 Fastest is rules pass: {age: {type: "number"}}
+```
+
+## Authors
+
+```bash
+$ git summary 
+
+ project  : parameter
+ repo age : 6 weeks
+ active   : 3 days
+ commits  : 11
+ files    : 13
+ authors  : 
+    11  fengmk2                 100.0%
 ```
 
 ## License 
