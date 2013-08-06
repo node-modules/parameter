@@ -36,6 +36,7 @@ $ npm install parameter
  *     key8: { isObject: true, resourceName: 'User', rules: { name: 'string', age: 'number'  } }
  *     // key8: parameter.Object,
  *     // key8: { type: parameter.Object, resource: 'User', rules: { name: 'string', age: 'number' } }
+ *     key9: /^\d+$/, // must match number or number string.
  *   }
  *   rules's keys must exists on `data`. If `data.key1` not exists, will got `missing_field` error.
  * @param {String} [resourceName] error resource name, default is 'Param'
@@ -59,14 +60,16 @@ var data = {
   id: '043624',
   nick: '苏千',
   date: '2013-06-25',
-  age: 29
+  age: 29,
+  sid: 123, // or '123'
 };
 
 var wrongData = {
   nick: 123,
   date: '2013-06-1',
   age: '29',
-  sex: 0
+  sex: 0,
+  sid: '123foo'
 };
 
 var rules = {
@@ -74,7 +77,8 @@ var rules = {
   nick: 'string',
   date: p.Date,
   age: 'number',
-  sex: { required: false, type: 'string' }
+  sex: { required: false, type: 'string' },
+  sid: /^\d+$/
 };
 var errors = p.verify(data, rules);
 // errors => null
@@ -100,6 +104,10 @@ var errors = p.verify(wrongData, rules);
 //   { resource: 'Param',
 //     field: 'sex',
 //     message: 'expect string, but got number',
+//     code: 'invalid' },
+//   { resource: 'Param',
+//     field: 'sid',
+//     message: 'should match /^\d+$/',
 //     code: 'invalid' } ]
 ```
 

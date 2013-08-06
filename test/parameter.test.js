@@ -24,6 +24,8 @@ describe('parameter.test.js', function () {
         date: '2013-06-25',
         age: 29,
         time: '2013-06-26 12:20:50',
+        sid: '123',
+        uid: 456,
       };
 
       var rules = {
@@ -34,6 +36,8 @@ describe('parameter.test.js', function () {
         sex: { required: false, type: 'string' },
         emptyRule: null,
         time: { required: false, type: p.DateTime },
+        sid: /^\d+$/,
+        uid: { type: /^\d+$/ }
       };
       should.not.exists(p.verify(data, rules));
       // run again to vaild cache functions
@@ -53,6 +57,17 @@ describe('parameter.test.js', function () {
       should.exists(p.verify({key: '     \r\n   \t  '}, {key: 'string'}));
       should.exists(p.verify({key: ''}, {key: {type: 'string', empty: false}}));
       p.verify({key: ''}, {key: 'string'})[0].message.should.equal('should not be empty string');
+    });
+
+    it('should match regex', function () {
+      should.not.exists(p.verify({key: 123}, {key: /^\d+$/}));
+      should.not.exists(p.verify({key: '123'}, {key: {type: /^\d+$/}}));
+      should.not.exists(p.verify({}, {key: {type: /^\d+$/, required: false}}));
+
+      should.exists(p.verify({key: null}, {key: /^\d+$/}));
+      should.exists(p.verify({key: '123foo'}, {key: /^\d+$/}));
+      should.exists(p.verify({key: ''}, {key: {type: '/^\d+$/'}}));
+      p.verify({key: 0.33}, {key: /^\d+$/})[0].message.should.equal('should match /^\\\d+$/');
     });
 
     it('should verify array', function () {
