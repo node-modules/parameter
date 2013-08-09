@@ -22,7 +22,8 @@ var data = {
   age: 29,
   sid1: 123,
   sid2: '123',
-  sid3: 'foo'
+  sid3: 'foo',
+  unit: 'y',
 };
 
 var ruleId1 = {id: p.Id};
@@ -44,6 +45,9 @@ var ruleRegex2 = {sid2: { type: /^\d+$/ }};
 var ruleRegex5 = {sid2: { type: /^\d+$/, message: 'should be digital' }};
 var ruleRegex3 = {sid3: /^\d+$/};
 var ruleRegex4 = {sid3: { type: /^\d+$/, message: 'should be digital' }};
+var ruleArr1 = { unit: ['y', 'm', 'd', 'w'] };
+var ruleArr2 = { unit: { type: ['y', 'm', 'd', 'w'] } };
+var ruleArr3 = { unit: ['yy', 'mm', 'dd', 'ww'] };
 
 suite
 .add('rules pass: {id: p.Id}', function () {
@@ -106,6 +110,16 @@ suite
 })
 .add('rules fail: {age: {type: /^\\d+$/, message: "should be digital"}}', function () {
   p.verify(data, ruleRegex4);
+})
+
+.add('rules pass: {unit: ["y", "m", "w", "d"]}', function () {
+  p.verify(data, ruleArr1);
+})
+.add('rules pass: {unit: {type: ["y", "m", "w", "d"]}}', function () {
+  p.verify(data, ruleArr2);
+})
+.add('rules fail: {unit: ["y", "m", "w", "d"]}', function () {
+  p.verify(data, ruleArr3);
 })
 
 // add listeners

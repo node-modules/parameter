@@ -26,6 +26,7 @@ describe('parameter.test.js', function () {
         time: '2013-06-26 12:20:50',
         sid: '123',
         uid: 456,
+        unit: 'y'
       };
 
       var rules = {
@@ -37,7 +38,8 @@ describe('parameter.test.js', function () {
         emptyRule: null,
         time: { required: false, type: p.DateTime },
         sid: /^\d+$/,
-        uid: { type: /^\d+$/, message: 'should be digital' }
+        uid: { type: /^\d+$/, message: 'should be digital' },
+        unit: ['y', 'm', 'd']
       };
       should.not.exists(p.verify(data, rules));
       // run again to vaild cache functions
@@ -57,6 +59,17 @@ describe('parameter.test.js', function () {
       should.exists(p.verify({key: '     \r\n   \t  '}, {key: 'string'}));
       should.exists(p.verify({key: ''}, {key: {type: 'string', empty: false}}));
       p.verify({key: ''}, {key: 'string'})[0].message.should.equal('should not be empty string');
+    });
+
+    it('should match enum', function () {
+      should.not.exists(p.verify({key: 123}, {key: [1, 123]}));
+      should.not.exists(p.verify({key: '123'}, {key: {type: ['123']}}));
+      should.not.exists(p.verify({}, {key: {type: [123, 456], required: false}}));
+
+      should.exists(p.verify({key: null}, {key: [123, 456]}));
+      should.exists(p.verify({key: 'y'}, {key: ['b', 'w']}));
+      should.exists(p.verify({key: 'p'}, {key: {type: ['pp']}}));
+      p.verify({key: 'k'}, {key: ['kkk', 'fff']})[0].message.should.equal('should match one of ["kkk","fff"]');
     });
 
     it('should match regex', function () {
