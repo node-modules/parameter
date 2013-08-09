@@ -164,11 +164,11 @@ $ git summary
 
  project  : parameter
  repo age : 6 weeks
- active   : 3 days
- commits  : 11
+ active   : 5 days
+ commits  : 16
  files    : 13
  authors  : 
-    11  fengmk2                 100.0%
+    16  fengmk2                 100.0%
 ```
 
 ## License 
