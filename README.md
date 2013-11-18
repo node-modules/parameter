@@ -1,6 +1,8 @@
 parameter [![Build Status](https://secure.travis-ci.org/fengmk2/parameter.png)](http://travis-ci.org/fengmk2/parameter) [![Coverage Status](https://coveralls.io/repos/fengmk2/parameter/badge.png)](https://coveralls.io/r/fengmk2/parameter)
 =======
 
+[![NPM](https://nodei.co/npm/parameter.png?downloads=true&stars=true)](https://nodei.co/npm/parameter/)
+
 ![logo](https://raw.github.com/fengmk2/parameter/master/logo.png)
 
 A parameter verify tools.
@@ -26,7 +28,7 @@ $ npm install parameter
  *     // key2: { isDate: true },
  *     key3: parameter.DateTime, // must match 'YYYY-MM-DD hh:mm:ss' format date string, e.g.: '2013-06-25 12:20:50'
  *     // key3: { isDateTime: true },
- *     key4: 'number', // must match `typeof` result, could be 'number', 'string', 'function' or 'object' 
+ *     key4: 'number', // must match `typeof` result, could be 'number', 'string', 'function' or 'object'
  *     // key4: { type: 'number' },
  *     key5: { required: false, type: 'number' }, // optional value, if set, must be a number
  *     key6: { required: false, type: parameter.Date }, // optional value, if set, must be a date string
@@ -41,7 +43,7 @@ $ npm install parameter
  *   }
  *   rules's keys must exists on `data`. If `data.key1` not exists, will got `missing_field` error.
  * @param {String} [resourceName] error resource name, default is 'Param'
- * 
+ *
  * @return {null|Array} errors, return null meaning no errors.
  *   e.g.: [{
  *     resource: 'Param',
@@ -160,18 +162,18 @@ Fastest is rules pass: {age: {type: "number"}}
 ## Authors
 
 ```bash
-$ git summary 
+$ git summary
 
  project  : parameter
  repo age : 6 weeks
  active   : 5 days
  commits  : 16
  files    : 13
- authors  : 
+ authors  :
     16  fengmk2                 100.0%
 ```
 
-## License 
+## License
 
 (The MIT License)
 
