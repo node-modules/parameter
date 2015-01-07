@@ -12,6 +12,13 @@
 'use strict';
 
 /**
+ * Module exports
+ * @type {Function}
+ */
+
+module.exports = validate;
+
+/**
  * Regexps
  */
 
@@ -21,6 +28,7 @@ var ID_RE = /^\d+$/;
 
 /**
  * Simple type map
+ * @type {Object}
  */
 
 var TYPE_MAP = {
@@ -38,16 +46,19 @@ var TYPE_MAP = {
   enum: checkEnum
 };
 
+/**
+ * All support types
+ * @type {Array}
+ */
+
 var TYPES = Object.keys(TYPE_MAP);
 
-module.exports = check;
-
 /**
- * [check description]
+ * check
  * @return {[type]} [description]
  */
 
-function check(obj, rules) {
+function validate(obj, rules) {
   if (typeof rules !== 'object') {
     throw new TypeError('need object type rule');
   }
@@ -55,9 +66,9 @@ function check(obj, rules) {
   var errors = [];
 
   for (var key in rules) {
-    var rule = getRule(rules[key]);
+    var rule = formatRule(rules[key]);
     var has = obj.hasOwnProperty(key);
-    var data = obj[key];
+
     if (!has) {
       if (rule.required !== false) {
         errors.push({
@@ -71,10 +82,11 @@ function check(obj, rules) {
 
     var checker = TYPE_MAP[rule.type];
     if (!checker) {
-      throw new Error('rule type must be one of ' + TYPES.join(', '));
+      throw new TypeError('rule type must be one of ' + TYPES.join(', ') +
+        ', but the following type was passed: ' + rule.type);
     }
 
-    var msg = checker(data, rule);
+    var msg = checker(obj[key], rule);
     if (typeof msg === 'string') {
       errors.push({
         message: key + ' ' + msg,
@@ -86,7 +98,7 @@ function check(obj, rules) {
     if (Array.isArray(msg)) {
       msg.forEach(function (e) {
         var dot = rule.type === 'object' ? '.' : '';
-        e.message = key + dot + e.field;
+        e.message = key + dot + e.message;
         e.field = key + dot + e.field;
         errors.push(e);
       });
@@ -98,7 +110,15 @@ function check(obj, rules) {
   }
 }
 
-function getRule(rule) {
+/**
+ * format a rule
+ *
+ * @param {Mixed} rule
+ * @return {Object}
+ * @api private
+ */
+
+function formatRule(rule) {
   if (typeof rule === 'string') {
     return { type: rule };
   }
@@ -108,37 +128,45 @@ function getRule(rule) {
   if (rule instanceof RegExp) {
     return { type: 'string', format: rule };
   }
-  return rule;
+  return rule || {};
 }
 
 /**
- * check value if is an integer
+ * check interger
+ * {
+ *   max: 100,
+ *   min: 0
+ * }
  *
- * @param {Object} rule
  * @param {Mixed} value
+ * @param {Object} rule
  * @return {Boolean}
  * @api private
  */
 
 function checkInt(value, rule) {
-  if (typeof value !== 'number' && value % 1 === 0) {
+  if (typeof value !== 'number' || value % 1 !== 0) {
     return 'should be an integer';
   }
 
-  if (rule.max && value > rule.max) {
+  if (rule.hasOwnProperty('max') && value > rule.max) {
     return 'should smaller than ' + rule.max;
   }
 
-  if (rule.min && value < rule.min) {
+  if (rule.hasOwnProperty('min') && value < rule.min) {
     return 'should bigger than ' + rule.min;
   }
 }
 
 /**
- * check value if is a number
+ * check number
+ * {
+ *   max: 100,
+ *   min: 0
+ * }
  *
- * @param {Object} argument
  * @param {Mixed} value
+ * @param {Object} rule
  * @return {Boolean}
  * @api private
  */
@@ -146,43 +174,121 @@ function checkNumber(value, rule) {
   if (typeof value !== 'number') {
     return 'should be a number';
   }
-  if (rule.max && value > rule.max) {
+  if (rule.hasOwnProperty('max') && value > rule.max) {
     return 'should smaller than ' + rule.max;
   }
-  if (rule.min && value < rule.min) {
+  if (rule.hasOwnProperty('min') && value < rule.min) {
     return 'should bigger than ' + rule.min;
   }
 }
+
+/**
+ * check string
+ * {
+ *   allowEmpty: true, // (default to true, alias to empty)
+ *   format: /^\d+$/,
+ *   max: 100,
+ *   min: 0
+ * }
+ *
+ * @param {Mixed} value
+ * @param {Object} rule
+ * @return {Boolean}
+ * @api private
+ */
 
 function checkString(value, rule) {
   if (typeof value !== 'string') {
     return 'should be a string';
   }
-  if (!rule.empty && value === '') {
+  var allowEmpty = rule.hasOwnProperty('allowEmpty')
+    ? rule.allowEmpty
+    : rule.empty;
+  allowEmpty = allowEmpty !== false;
+
+  if (rule.hasOwnProperty('max') && value.length > rule.max) {
+    return 'length should smaller than ' + rule.max;
+  }
+  if (rule.hasOwnProperty('min') && value.length < rule.min) {
+    return 'length should bigger than ' + rule.min;
+  }
+
+  if (!allowEmpty && value === '') {
     return 'should not be empty';
   }
-  if (rule.format && !value.match(rule.format)) {
+  if (rule.format && !rule.format.test(value)) {
     return 'should match ' + rule.format;
   }
 }
+
+/**
+ * check id format
+ * format: /^\d+/
+ *
+ * @param {Mixed} value
+ * @param {Object} rule
+ * @return {Boolean}
+ * @api private
+ */
 
 function checkId(value, rule) {
   return checkString(value, {format: ID_RE});
 }
 
+/**
+ * check date format
+ * format: YYYY-MM-DD
+ *
+ * @param {Mixed} value
+ * @param {Object} rule
+ * @return {Boolean}
+ * @api private
+ */
+
 function checkDate(value, rule) {
   return checkString(value, {format: DATE_TYPE_RE});
 }
 
+/**
+ * check date time format
+ * format: YYYY-MM-DD HH:mm:ss
+ *
+ * @param {Mixed} value
+ * @param {Object} rule
+ * @return {Boolean}
+ * @api private
+ */
+
 function checkDateTime(value, rule) {
   return checkString(value, {format: DATETIME_TYPE_RE});
 }
+
+/**
+ * check boolean
+ *
+ * @param {Mixed} value
+ * @param {Object} rule
+ * @return {Boolean}
+ * @api private
+ */
 
 function checkBoolean(value) {
   if (typeof value !== 'boolean') {
     return 'should be a boolean';
   }
 }
+
+/**
+ * check enum
+ * {
+ *   values: [0, 1, 2]
+ * }
+ *
+ * @param {Mixed} value
+ * @param {Object} rule
+ * @return {Boolean}
+ * @api private
+ */
 
 function checkEnum(value, rule) {
   if (!Array.isArray(rule.values)) {
@@ -193,15 +299,39 @@ function checkEnum(value, rule) {
   }
 }
 
+/**
+ * check object
+ * {
+ *   rule: {}
+ * }
+ *
+ * @param {Mixed} value
+ * @param {Object} rule
+ * @return {Boolean}
+ * @api private
+ */
+
 function checkObject (value, rule) {
   if (typeof value !== 'object') {
     return 'should be an object';
   }
 
   if (rule.rule) {
-    return check(value, rule.rule);
+    return validate(value, rule.rule);
   }
 }
+
+/**
+ * check array
+ * {
+ *   rule: {}
+ * }
+ *
+ * @param {Mixed} value
+ * @param {Object} rule
+ * @return {Boolean}
+ * @api private
+ */
 
 function checkArray (value, rule) {
   if (!Array.isArray(value)) {
@@ -211,14 +341,14 @@ function checkArray (value, rule) {
   if (rule.rule) {
     var errors = [];
     value.forEach(function (v, i) {
-      var errs = check(v, rule.rule);
+      var errs = validate(v, rule.rule);
       if (!errs) {
         return;
       }
 
       errors = errors.concat(errs.map(function (e) {
         e.field = '[' + i + '].' + e.field;
-        e.message = '[' + i + '].' + e.field;
+        e.message = '[' + i + '].' + e.message;
         return e;
       }));
     });
