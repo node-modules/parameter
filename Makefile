@@ -1,28 +1,36 @@
 TESTS = test/*.test.js
-REPORTER = spec
-TIMEOUT = 1000
+REPORTER = tap
+TIMEOUT = 3000
 MOCHA_OPTS =
 
 install:
-	@npm install
+	@npm install --registry=http://registry.npm.taobao.org
 
-test: install
-	@NODE_ENV=test ./node_modules/mocha/bin/mocha \
+test:
+	@NODE_ENV=test ./node_modules/mocha/bin/mocha\
 		--reporter $(REPORTER) \
 		--timeout $(TIMEOUT) \
+		--require should \
 		$(MOCHA_OPTS) \
 		$(TESTS)
 
 test-cov:
-	@rm -f coverage.html
-	@$(MAKE) test MOCHA_OPTS='--require blanket' REPORTER=html-cov > coverage.html
-	@$(MAKE) test MOCHA_OPTS='--require blanket' REPORTER=travis-cov
-	@ls -lh coverage.html
+	@NODE_ENV=test node \
+		node_modules/.bin/istanbul cover \
+		./node_modules/.bin/_mocha \
+		-- -u exports \
+		--require should \
+		$(TESTS) \
+		--bail
 
-test-coveralls: test
-	@echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
-	@-$(MAKE) test MOCHA_OPTS='--require blanket' REPORTER=mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js
-
-test-all: test test-cov
+test-travis:
+	@NODE_ENV=test node \
+		node_modules/.bin/istanbul cover \
+		./node_modules/.bin/_mocha \
+		--report lcovonly \
+		-- -u exports \
+		--require should \
+		$(TESTS) \
+		--bail
 
 .PHONY: test
