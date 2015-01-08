@@ -58,7 +58,7 @@ var TYPES = Object.keys(TYPE_MAP);
  * @return {[type]} [description]
  */
 
-function validate(obj, rules) {
+function validate(rules, obj) {
   if (typeof rules !== 'object') {
     throw new TypeError('need object type rule');
   }
@@ -86,7 +86,7 @@ function validate(obj, rules) {
         ', but the following type was passed: ' + rule.type);
     }
 
-    var msg = checker(obj[key], rule);
+    var msg = checker(rule, obj[key]);
     if (typeof msg === 'string') {
       errors.push({
         message: key + ' ' + msg,
@@ -138,13 +138,13 @@ function formatRule(rule) {
  *   min: 0
  * }
  *
- * @param {Mixed} value
  * @param {Object} rule
+ * @param {Mixed} value
  * @return {Boolean}
  * @api private
  */
 
-function checkInt(value, rule) {
+function checkInt(rule, value) {
   if (typeof value !== 'number' || value % 1 !== 0) {
     return 'should be an integer';
   }
@@ -165,12 +165,13 @@ function checkInt(value, rule) {
  *   min: 0
  * }
  *
- * @param {Mixed} value
  * @param {Object} rule
+ * @param {Mixed} value
  * @return {Boolean}
  * @api private
  */
-function checkNumber(value, rule) {
+
+function checkNumber(rule, value) {
   if (typeof value !== 'number') {
     return 'should be a number';
   }
@@ -191,13 +192,13 @@ function checkNumber(value, rule) {
  *   min: 0
  * }
  *
- * @param {Mixed} value
  * @param {Object} rule
+ * @param {Mixed} value
  * @return {Boolean}
  * @api private
  */
 
-function checkString(value, rule) {
+function checkString(rule, value) {
   if (typeof value !== 'string') {
     return 'should be a string';
   }
@@ -224,54 +225,54 @@ function checkString(value, rule) {
  * check id format
  * format: /^\d+/
  *
- * @param {Mixed} value
  * @param {Object} rule
+ * @param {Mixed} value
  * @return {Boolean}
  * @api private
  */
 
-function checkId(value, rule) {
-  return checkString(value, {format: ID_RE});
+function checkId(rule, value) {
+  return checkString({format: ID_RE}, value);
 }
 
 /**
  * check date format
  * format: YYYY-MM-DD
  *
- * @param {Mixed} value
  * @param {Object} rule
+ * @param {Mixed} value
  * @return {Boolean}
  * @api private
  */
 
-function checkDate(value, rule) {
-  return checkString(value, {format: DATE_TYPE_RE});
+function checkDate(rule, value) {
+  return checkString({format: DATE_TYPE_RE}, value);
 }
 
 /**
  * check date time format
  * format: YYYY-MM-DD HH:mm:ss
  *
- * @param {Mixed} value
  * @param {Object} rule
+ * @param {Mixed} value
  * @return {Boolean}
  * @api private
  */
 
-function checkDateTime(value, rule) {
-  return checkString(value, {format: DATETIME_TYPE_RE});
+function checkDateTime(rule, value) {
+  return checkString({format: DATETIME_TYPE_RE}, value);
 }
 
 /**
  * check boolean
  *
- * @param {Mixed} value
  * @param {Object} rule
+ * @param {Mixed} value
  * @return {Boolean}
  * @api private
  */
 
-function checkBoolean(value) {
+function checkBoolean(rule, value) {
   if (typeof value !== 'boolean') {
     return 'should be a boolean';
   }
@@ -283,13 +284,13 @@ function checkBoolean(value) {
  *   values: [0, 1, 2]
  * }
  *
- * @param {Mixed} value
  * @param {Object} rule
+ * @param {Mixed} value
  * @return {Boolean}
  * @api private
  */
 
-function checkEnum(value, rule) {
+function checkEnum(rule, value) {
   if (!Array.isArray(rule.values)) {
     throw new TypeError('check enum need array type values');
   }
@@ -304,19 +305,19 @@ function checkEnum(value, rule) {
  *   rule: {}
  * }
  *
- * @param {Mixed} value
  * @param {Object} rule
+ * @param {Mixed} value
  * @return {Boolean}
  * @api private
  */
 
-function checkObject (value, rule) {
+function checkObject(rule, value) {
   if (typeof value !== 'object') {
     return 'should be an object';
   }
 
   if (rule.rule) {
-    return validate(value, rule.rule);
+    return validate(rule.rule, value);
   }
 }
 
@@ -336,13 +337,13 @@ function checkObject (value, rule) {
  *   }
  * }
  *
- * @param {Mixed} value
  * @param {Object} rule
+ * @param {Mixed} value
  * @return {Boolean}
  * @api private
  */
 
-function checkArray (value, rule) {
+function checkArray(rule, value) {
   if (!Array.isArray(value)) {
     return 'should be an array';
   }
@@ -364,7 +365,7 @@ function checkArray (value, rule) {
 
   value.forEach(function (v, i) {
     var index = '[' + i + ']';
-    var errs = checker(v, subRule);
+    var errs = checker(subRule, v);
 
     if (typeof errs === 'string') {
       errors.push({

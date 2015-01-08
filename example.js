@@ -82,5 +82,5 @@ var invalid = {
   }
 };
 
-console.log('valid object result: ', validate(valid, rule));
-console.log('invalid object result: ', validate(invalid, rule));
+console.log('valid object result: ', validate(rule, valid));
+console.log('invalid object result: ', validate(rule, invalid));

@@ -22,19 +22,19 @@ describe('parameter', function () {
     it('should required work fine', function () {
       var value = {int: 1};
       var rule = {int: {type: 'int', required: true}};
-      validate({}, rule)[0].message.should.equal('int required');
+      validate(rule, {})[0].message.should.equal('int required');
     });
 
     it('should not required work fine', function () {
       var value = {int: 1};
       var rule = {int: {type: 'int', required: false}};
-      should.not.exist(validate({}, rule));
+      should.not.exist(validate(rule, {}));
     });
 
     it('should not required check ok', function () {
       var value = {int: 1.1};
       var rule = {int: {type: 'int', required: false}};
-      validate(value, rule)[0].message.should.equal('int should be an integer');
+      validate(rule, value)[0].message.should.equal('int should be an integer');
     });
   });
 
@@ -43,14 +43,13 @@ describe('parameter', function () {
       (function () {
         var value = {int: 1.1};
         var rule = {int: {type: 'int1', required: false}};
-        validate(value, rule);
+        validate(rule, value);
       }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, boolean, bool, array, object, enum, but the following type was passed: int1');
     });
 
     it('should throw without rule', function () {
       (function () {
-        var value = {int: 1.1};
-        validate(value);
+        validate();
       }).should.throw('need object type rule');
     });
   });
@@ -59,32 +58,32 @@ describe('parameter', function () {
     it('should check ok', function () {
       var value = { int: 1 };
       var rule = { int: {type: 'int', max: 100, min: 1 }};
-      should.not.exist(validate(value, rule));
-      should.not.exist(validate(value, {int: 'int'}));
+      should.not.exist(validate(rule, value));
+      should.not.exist(validate({int: 'int'}, value));
     });
 
     it('should check number error', function () {
       var value = { int: '1' };
       var rule = { int: {type: 'int', max: 100, min: 1 }};
-      validate(value, rule)[0].message.should.equal('int should be an integer');
+      validate(rule, value)[0].message.should.equal('int should be an integer');
     });
 
     it('should check int error', function () {
       var value = { int: 1.1 };
       var rule = { int: {type: 'int', max: 100, min: 1 }};
-      validate(value, rule)[0].message.should.equal('int should be an integer');
+      validate(rule, value)[0].message.should.equal('int should be an integer');
     });
 
     it('should check max error', function () {
       var value = { int: 101 };
       var rule = { int: {type: 'int', max: 100, min: 1 }};
-      validate(value, rule)[0].message.should.equal('int should smaller than 100');
+      validate(rule, value)[0].message.should.equal('int should smaller than 100');
     });
 
     it('should check min error', function () {
       var value = { int: -1 };
       var rule = { int: {type: 'int', max: 100, min: 0 }};
-      validate(value, rule)[0].message.should.equal('int should bigger than 0');
+      validate(rule, value)[0].message.should.equal('int should bigger than 0');
     });
   });
 
@@ -92,26 +91,26 @@ describe('parameter', function () {
     it('should check ok', function () {
       var value = { number: 1.1 };
       var rule = { number: {type: 'number', max: 100, min: 1 }};
-      should.not.exist(validate(value, rule));
-      should.not.exist(validate(value, {number: 'number'}));
+      should.not.exist(validate(rule, value));
+      should.not.exist(validate({number: 'number'}, value));
     });
 
     it('should check number error', function () {
       var value = { number: '1' };
       var rule = { number: {type: 'number', max: 100, min: 1 }};
-      validate(value, rule)[0].message.should.equal('number should be a number');
+      validate(rule, value)[0].message.should.equal('number should be a number');
     });
 
     it('should check max error', function () {
       var value = { number: 101 };
       var rule = { number: {type: 'number', max: 100, min: 1 }};
-      validate(value, rule)[0].message.should.equal('number should smaller than 100');
+      validate(rule, value)[0].message.should.equal('number should smaller than 100');
     });
 
     it('should check min error', function () {
       var value = { number: -1 };
       var rule = { number: {type: 'number', max: 100, min: 0 }};
-      validate(value, rule)[0].message.should.equal('number should bigger than 0');
+      validate(rule, value)[0].message.should.equal('number should bigger than 0');
     });
   });
 
@@ -119,35 +118,35 @@ describe('parameter', function () {
     it('should check ok', function () {
       var value = { string: 'hello' };
       var rule = { string: {type: 'string', max: 100, min: 1, format: /^\D+$/ }};
-      should.not.exist(validate(value, rule));
-      should.not.exist(validate(value, {string: 'string'}));
-      should.not.exist(validate({string: ''}, {string: {type: 'string', allowEmpty: true}}));
+      should.not.exist(validate(rule, value));
+      should.not.exist(validate({string: 'string'}, value));
+      should.not.exist(validate({string: {type: 'string', allowEmpty: true}}, {string: ''}));
     });
 
     it('should check empty error', function () {
       var value = { string: '' };
       var rule = { string: 'string'};
-      validate(value, rule)[0].message.should.equal('string should not be empty');
+      validate(rule, value)[0].message.should.equal('string should not be empty');
       rule = { string: {type: 'string', empty: false }};
-      validate(value, rule)[0].message.should.equal('string should not be empty');
+      validate(rule, value)[0].message.should.equal('string should not be empty');
     });
 
     it('should check max error', function () {
       var value = { string: 'hello' };
       var rule = { string: {type: 'string', max: 4, min: 1 }};
-      validate(value, rule)[0].message.should.equal('string length should smaller than 4');
+      validate(rule, value)[0].message.should.equal('string length should smaller than 4');
     });
 
     it('should check min error', function () {
       var value = { string: 'hello' };
       var rule = { string: {type: 'string', max: 100, min: 10 }};
-      validate(value, rule)[0].message.should.equal('string length should bigger than 10');
+      validate(rule, value)[0].message.should.equal('string length should bigger than 10');
     });
 
     it('should check format error', function () {
       var value = {string: 'hello'};
       var rule = {string: /\d+/};
-      validate(value, rule)[0].message.should.equal('string should match /\\d+/');
+      validate(rule, value)[0].message.should.equal('string should match /\\d+/');
     });
   });
 
@@ -155,13 +154,13 @@ describe('parameter', function () {
     it('should check ok', function () {
       var value = {id : '0524' };
       var rule = {id: 'id'};
-      should.not.exist(validate(value, rule));
+      should.not.exist(validate(rule, value));
     });
 
     it('should check id not ok', function () {
       var value = {id : '0524x' };
       var rule = {id: 'id'};
-      validate(value, rule)[0].message.should.equal('id should match /^\\d+$/');
+      validate(rule, value)[0].message.should.equal('id should match /^\\d+$/');
     });
   });
 
@@ -170,13 +169,13 @@ describe('parameter', function () {
     it('should check ok', function () {
       var value = {date : '2014-11-11' };
       var rule = {date: 'date'};
-      should.not.exist(validate(value, rule));
+      should.not.exist(validate(rule, value));
     });
 
     it('should check date not ok', function () {
       var value = {date : '2014-xx-xx' };
       var rule = {date: 'date'};
-      validate(value, rule)[0].message.should.equal('date should match /^\\d{4}\\-\\d{2}\\-\\d{2}$/');
+      validate(rule, value)[0].message.should.equal('date should match /^\\d{4}\\-\\d{2}\\-\\d{2}$/');
     });
   });
 
@@ -184,13 +183,13 @@ describe('parameter', function () {
     it('should check ok', function () {
       var value = {dateTime : '2014-11-11 00:00:00' };
       var rule = {dateTime: 'dateTime'};
-      should.not.exist(validate(value, rule));
+      should.not.exist(validate(rule, value));
     });
 
     it('should check dateTime not ok', function () {
       var value = {dateTime : '2014-11-11 00:xx:00' };
       var rule = {dateTime: 'dateTime'};
-      validate(value, rule)[0].message.should.equal('dateTime should match /^\\d{4}\\-\\d{2}\\-\\d{2} \\d{2}:\\d{2}:\\d{2}$/');
+      validate(rule, value)[0].message.should.equal('dateTime should match /^\\d{4}\\-\\d{2}\\-\\d{2} \\d{2}:\\d{2}:\\d{2}$/');
     });
   });
 
@@ -198,15 +197,15 @@ describe('parameter', function () {
     it('should check ok', function () {
       var value = {boolean : true };
       var rule = {boolean: 'boolean'};
-      should.not.exist(validate(value, rule));
+      should.not.exist(validate(rule, value));
       rule = {boolean: 'bool'};
-      should.not.exist(validate(value, rule));
+      should.not.exist(validate(rule, value));
     });
 
     it('should check boolean not ok', function () {
       var value = {boolean : '2014-11-11 00:xx:00' };
       var rule = {boolean: 'boolean'};
-      validate(value, rule)[0].message.should.equal('boolean should be a boolean');
+      validate(rule, value)[0].message.should.equal('boolean should be a boolean');
     });
   });
 
@@ -214,21 +213,21 @@ describe('parameter', function () {
     it('should check ok', function () {
       var value = {enum : 1 };
       var rule = {enum: [1, 2, 3]};
-      should.not.exist(validate(value, rule));
+      should.not.exist(validate(rule, value));
       rule = {enum: {type: 'enum', values: [1, 2, 3]}};
-      should.not.exist(validate(value, rule));
+      should.not.exist(validate(rule, value));
     });
 
     it('should throw when no values', function () {
       (function () {
-        validate({enum: 1}, {enum: {type: 'enum'}});
+        validate({enum: {type: 'enum'}}, {enum: 1});
       }).should.throw('check enum need array type values');
     });
 
     it('should check enum not ok', function () {
       var value = {enum : 4 };
       var rule = {enum: [1, 2, 3]};
-      validate(value, rule)[0].message.should.equal('enum should be one of 1, 2, 3');
+      validate(rule, value)[0].message.should.equal('enum should be one of 1, 2, 3');
     });
   });
 
@@ -249,14 +248,14 @@ describe('parameter', function () {
           }
         }
       };
-      should.not.exist(validate(value, rule));
-      should.not.exist(validate(value, {object: 'object'}));
+      should.not.exist(validate(rule, value));
+      should.not.exist(validate({object: 'object'}, value));
     });
 
     it('should check object', function () {
       var value = {object: 1};
       var rule = {object: 'object'};
-      validate(value, rule)[0].message.should.equal('object should be an object');
+      validate(rule, value)[0].message.should.equal('object should be an object');
     });
 
     it('should check error', function () {
@@ -275,7 +274,7 @@ describe('parameter', function () {
           }
         }
       };
-      validate(value, rule)[0].message.should.equal('object.age should be an integer');
+      validate(rule, value)[0].message.should.equal('object.age should be an integer');
     });
   });
 
@@ -300,20 +299,20 @@ describe('parameter', function () {
           }
         }
       };
-      should.not.exist(validate(value, rule));
-      should.not.exist(validate(value, {array: 'array'}));
+      should.not.exist(validate(rule, value));
+      should.not.exist(validate({array: 'array'}, value));
     });
 
     it('should check array', function () {
       var value = {array: 1};
       var rule = {array: 'array'};
-      validate(value, rule)[0].message.should.equal('array should be an array');
+      validate(rule, value)[0].message.should.equal('array should be an array');
     });
 
     it('should invalid itemType throw error', function () {
       var rule = {array: {type: 'array', itemType: 'invalid'}};
       (function () {
-         validate({array: []}, rule);
+         validate(rule, {array: []});
        }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, boolean, bool, array, object, enum, but the following type was passed: invalid');
     });
 
@@ -337,8 +336,8 @@ describe('parameter', function () {
           }
         }
       };
-      validate(value, rule)[0].message.should.equal('array[0].name should be a string');
-      validate(value, rule)[1].message.should.equal('array[1].age should be an integer');
+      validate(rule, value)[0].message.should.equal('array[0].name should be a string');
+      validate(rule, value)[1].message.should.equal('array[1].age should be an integer');
     });
 
     it('should check itemType=string error', function () {
@@ -359,10 +358,10 @@ describe('parameter', function () {
           rule: {type: 'string', allowEmpty: true}
         }
       }
-      validate(value, rule)[0].message.should.equal('array[2] should be a string');
-      validate(value, rule)[1].message.should.equal('array[3] should not be empty');
-      validate(value, rule2)[0].message.should.equal('array[2] should be a string');
-      validate(value, rule2).should.have.length(1);
+      validate(rule, value)[0].message.should.equal('array[2] should be a string');
+      validate(rule, value)[1].message.should.equal('array[3] should not be empty');
+      validate(rule2, value)[0].message.should.equal('array[2] should be a string');
+      validate(rule2, value).should.have.length(1);
     });
   });
 });

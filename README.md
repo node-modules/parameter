@@ -32,7 +32,7 @@ $ npm install parameter --save
 
 ### API
 
-- `validate(value, rule)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
+- `validate(rule, value)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
 
 ### Example
 
