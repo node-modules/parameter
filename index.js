@@ -185,7 +185,7 @@ function checkNumber(value, rule) {
 /**
  * check string
  * {
- *   allowEmpty: true, // (default to true, alias to empty)
+ *   allowEmpty: true, // (default to false, alias to empty)
  *   format: /^\d+$/,
  *   max: 100,
  *   min: 0
@@ -204,7 +204,6 @@ function checkString(value, rule) {
   var allowEmpty = rule.hasOwnProperty('allowEmpty')
     ? rule.allowEmpty
     : rule.empty;
-  allowEmpty = allowEmpty !== false;
 
   if (rule.hasOwnProperty('max') && value.length > rule.max) {
     return 'length should smaller than ' + rule.max;

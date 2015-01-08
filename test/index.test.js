@@ -121,12 +121,12 @@ describe('parameter', function () {
       var rule = { string: {type: 'string', max: 100, min: 1, format: /^\D+$/ }};
       should.not.exist(validate(value, rule));
       should.not.exist(validate(value, {string: 'string'}));
-      should.not.exist(validate({string: ''}, {string: 'string'}));
+      should.not.exist(validate({string: ''}, {string: {type: 'string', allowEmpty: true}}));
     });
 
     it('should check empty error', function () {
       var value = { string: '' };
-      var rule = { string: {type: 'string', allowEmpty: false }};
+      var rule = { string: 'string'};
       validate(value, rule)[0].message.should.equal('string should not be empty');
       rule = { string: {type: 'string', empty: false }};
       validate(value, rule)[0].message.should.equal('string should not be empty');
