@@ -27,6 +27,9 @@ var DATE_TYPE_RE = /^\d{4}\-\d{2}\-\d{2}$/;
 var DATETIME_TYPE_RE = /^\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2}$/;
 var ID_RE = /^\d+$/;
 
+// http://www.regular-expressions.info/email.html
+var EMAIL_RE = /^[a-z0-9\!\#\$\%\&\'\*\+\/\=\?\^\_\`\{\|\}\~\-]+(?:\.[a-z0-9\!\#\$\%\&\'\*\+\/\=\?\^\_\`\{\|\}\~\-]+)*@(?:[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?$/;
+
 /**
  * Simple type map
  * @type {Object}
@@ -45,7 +48,8 @@ var TYPE_MAP = validate.TYPE_MAP = {
   bool: checkBoolean,
   array: checkArray,
   object: checkObject,
-  enum: checkEnum
+  enum: checkEnum,
+  email: checkEmail,
 };
 
 /**
@@ -250,7 +254,7 @@ function checkString(rule, value) {
     return 'should not be empty';
   }
   if (rule.format && !rule.format.test(value)) {
-    return 'should match ' + rule.format;
+    return rule.message || 'should match ' + rule.format;
   }
 }
 
@@ -330,6 +334,21 @@ function checkEnum(rule, value) {
   if (rule.values.indexOf(value) === -1) {
     return 'should be one of ' + rule.values.join(', ');
   }
+}
+
+/**
+ * check email
+ *
+ * @param {Object} rule
+ * @param {Mixed} value
+ * @return {Boolean}
+ * @api private
+ */
+function checkEmail(rule, value) {
+  return checkString({
+    format: EMAIL_RE,
+    message: rule.message || 'should be an email'
+  }, value);
 }
 
 /**

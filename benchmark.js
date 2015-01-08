@@ -30,6 +30,7 @@ var data = {
   sid2: '123',
   sid3: 'foo',
   unit: 'y',
+  email: 'fengmk2@gmail.com',
 };
 
 var rules = [
@@ -55,6 +56,8 @@ var rules = [
   { unit: ['y', 'm', 'd', 'w'] },
   { unit: { type: 'enum', values: ['y', 'm', 'd', 'w'] } },
   { unit: ['yy', 'mm', 'dd', 'ww'] },
+
+  { email: 'email' }
 ];
 
 function json(obj) {

@@ -44,7 +44,7 @@ describe('parameter', function () {
         var value = {int: 1.1};
         var rule = {int: {type: 'int1', required: false}};
         validate(rule, value);
-      }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, but the following type was passed: int1');
+      }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, but the following type was passed: int1');
     });
 
     it('should throw without rule', function () {
@@ -56,7 +56,7 @@ describe('parameter', function () {
     it('should throw when rule is null', function () {
       (function () {
         validate({d: null}, {d: 1});
-      }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, but the following type was passed: undefined');
+      }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, but the following type was passed: undefined');
     });
   });
 
@@ -243,6 +243,38 @@ describe('parameter', function () {
     });
   });
 
+  describe('email', function () {
+    it('should check ok', function () {
+      [
+        'fengmk2@gmail.com',
+        'dead-horse@qq.com',
+        'fengmk2+github@gmail.com',
+        'fengmk2@yahoo.com.cn',
+      ].forEach(function (email) {
+        should.not.exist(validate({ name: 'email' }, { name: email }));
+        should.not.exist(validate({ name: { type: 'email' } }, { name: email }));
+      });
+    });
+
+    it('should check fail', function () {
+      [
+        'fengmk2@中文.域名',
+        '.fengmk2@gmail.com',
+        'dead-horse@qq.',
+        'fengmk2+github@gmail',
+        'fengmk2@yahoo.com.cn+',
+      ].forEach(function (email) {
+        validate({ name: 'email' }, { name: email }).should.eql([
+          {
+            code: 'invalid',
+            field: 'name',
+            message: 'name should be an email'
+          }
+        ]);
+      });
+    });
+  });
+
   describe('object', function () {
     it('should check ok', function () {
       var value = {
@@ -325,7 +357,7 @@ describe('parameter', function () {
       var rule = {array: {type: 'array', itemType: 'invalid'}};
       (function () {
          validate(rule, {array: []});
-       }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, but the following type was passed: invalid');
+       }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, but the following type was passed: invalid');
     });
 
     it('should check itemType=object error', function () {
