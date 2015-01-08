@@ -293,6 +293,7 @@ describe('parameter', function () {
       var rule = {
         array: {
           type: 'array',
+          itemType: 'object',
           rule: {
             name: 'string',
             age: 'int'
@@ -309,7 +310,14 @@ describe('parameter', function () {
       validate(value, rule)[0].message.should.equal('array should be an array');
     });
 
-    it('should check error', function () {
+    it('should invalid itemType throw error', function () {
+      var rule = {array: {type: 'array', itemType: 'invalid'}};
+      (function () {
+         validate({array: []}, rule);
+       }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, boolean, bool, array, object, enum, but the following type was passed: invalid');
+    });
+
+    it('should check itemType=object error', function () {
       var value = {
         array: [{
           name: 22,
@@ -322,6 +330,7 @@ describe('parameter', function () {
       var rule = {
         array: {
           type: 'array',
+          itemType: 'object',
           rule: {
             name: 'string',
             age: 'int'
@@ -330,6 +339,30 @@ describe('parameter', function () {
       };
       validate(value, rule)[0].message.should.equal('array[0].name should be a string');
       validate(value, rule)[1].message.should.equal('array[1].age should be an integer');
+    });
+
+    it('should check itemType=string error', function () {
+      var value = {
+        array: ['test', 'foo', 1, '']
+      };
+      var rule = {
+        array: {
+          type: 'array',
+          itemType: 'string'
+        }
+      };
+
+      var rule2 = {
+        array: {
+          type: 'array',
+          itemType: 'string',
+          rule: {type: 'string', allowEmpty: true}
+        }
+      }
+      validate(value, rule)[0].message.should.equal('array[2] should be a string');
+      validate(value, rule)[1].message.should.equal('array[3] should not be empty');
+      validate(value, rule2)[0].message.should.equal('array[2] should be a string');
+      validate(value, rule2).should.have.length(1);
     });
   });
 });

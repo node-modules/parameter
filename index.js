@@ -323,7 +323,17 @@ function checkObject (value, rule) {
 /**
  * check array
  * {
- *   rule: {}
+ *   type: 'array',
+ *   itemType: 'string'
+ *   rule: {type: 'string', allowEmpty: true}
+ * }
+ *
+ * {
+ *   type: 'array'.
+ *   itemType: 'object',
+ *   rule: {
+ *     name: 'string'
+ *   }
  * }
  *
  * @param {Mixed} value
@@ -337,20 +347,40 @@ function checkArray (value, rule) {
     return 'should be an array';
   }
 
-  if (rule.rule) {
-    var errors = [];
-    value.forEach(function (v, i) {
-      var errs = validate(v, rule.rule);
-      if (!errs) {
-        return;
-      }
+  if (!rule.itemType) {
+    return;
+  }
 
+  var checker = TYPE_MAP[rule.itemType];
+  if (!checker) {
+    throw new TypeError('rule type must be one of ' + TYPES.join(', ') +
+        ', but the following type was passed: ' + rule.itemType);
+  }
+
+  var errors = [];
+  var subRule = rule.itemType === 'object'
+  ? rule
+  : rule.rule || formatRule(rule.itemType);
+
+  value.forEach(function (v, i) {
+    var index = '[' + i + ']';
+    var errs = checker(v, subRule);
+
+    if (typeof errs === 'string') {
+      errors.push({
+        field: index,
+        message: index + ' ' + errs,
+        code: 'invalid'
+      });
+    }
+    if (Array.isArray(errs)) {
       errors = errors.concat(errs.map(function (e) {
-        e.field = '[' + i + '].' + e.field;
-        e.message = '[' + i + '].' + e.message;
+        e.field = index + '.' + e.field;
+        e.message = index + '.' + e.message;
         return e;
       }));
-    });
-    return errors;
-  }
+    }
+  });
+
+  return errors;
 }
