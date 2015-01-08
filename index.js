@@ -40,6 +40,7 @@ var TYPE_MAP = validate.TYPE_MAP = {
   id: checkId,
   date: checkDate,
   dateTime: checkDateTime,
+  datetime: checkDateTime,
   boolean: checkBoolean,
   bool: checkBoolean,
   array: checkArray,

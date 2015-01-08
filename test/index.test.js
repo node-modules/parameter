@@ -44,13 +44,19 @@ describe('parameter', function () {
         var value = {int: 1.1};
         var rule = {int: {type: 'int1', required: false}};
         validate(rule, value);
-      }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, boolean, bool, array, object, enum, but the following type was passed: int1');
+      }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, but the following type was passed: int1');
     });
 
     it('should throw without rule', function () {
       (function () {
         validate();
       }).should.throw('need object type rule');
+    });
+
+    it('should throw when rule is null', function () {
+      (function () {
+        validate({d: null}, {d: 1});
+      }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, but the following type was passed: undefined');
     });
   });
 
@@ -191,6 +197,12 @@ describe('parameter', function () {
       var rule = {dateTime: 'dateTime'};
       validate(rule, value)[0].message.should.equal('dateTime should match /^\\d{4}\\-\\d{2}\\-\\d{2} \\d{2}:\\d{2}:\\d{2}$/');
     });
+
+    it('should datetime alias to dateTime', function () {
+      var value = {datetime : '2014-11-11 00:00:00' };
+      var rule = {datetime: 'dateTime'};
+      should.not.exist(validate(rule, value));
+    });
   });
 
   describe('boolean', function () {
@@ -313,7 +325,7 @@ describe('parameter', function () {
       var rule = {array: {type: 'array', itemType: 'invalid'}};
       (function () {
          validate(rule, {array: []});
-       }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, boolean, bool, array, object, enum, but the following type was passed: invalid');
+       }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, but the following type was passed: invalid');
     });
 
     it('should check itemType=object error', function () {
