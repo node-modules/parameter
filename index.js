@@ -27,6 +27,11 @@ var DATE_TYPE_RE = /^\d{4}\-\d{2}\-\d{2}$/;
 var DATETIME_TYPE_RE = /^\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2}$/;
 var ID_RE = /^\d+$/;
 
+// http://www.regular-expressions.info/email.html
+var EMAIL_RE = /^[a-z0-9\!\#\$\%\&\'\*\+\/\=\?\^\_\`\{\|\}\~\-]+(?:\.[a-z0-9\!\#\$\%\&\'\*\+\/\=\?\^\_\`\{\|\}\~\-]+)*@(?:[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?$/;
+
+var PASSWORD_RE = /^[\w\`\~\!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\]\{\}\|\;\:\'\"\,\<\.\>\/\?]+$/;
+
 /**
  * Simple type map
  * @type {Object}
@@ -40,11 +45,14 @@ var TYPE_MAP = validate.TYPE_MAP = {
   id: checkId,
   date: checkDate,
   dateTime: checkDateTime,
+  datetime: checkDateTime,
   boolean: checkBoolean,
   bool: checkBoolean,
   array: checkArray,
   object: checkObject,
-  enum: checkEnum
+  enum: checkEnum,
+  email: checkEmail,
+  password: checkPassword,
 };
 
 /**
@@ -90,7 +98,7 @@ function validate(rules, obj) {
         ', but the following type was passed: ' + rule.type);
     }
 
-    var msg = checker(rule, obj[key]);
+    var msg = checker(rule, obj[key], obj);
     if (typeof msg === 'string') {
       errors.push({
         message: key + ' ' + msg,
@@ -249,7 +257,7 @@ function checkString(rule, value) {
     return 'should not be empty';
   }
   if (rule.format && !rule.format.test(value)) {
-    return 'should match ' + rule.format;
+    return rule.message || 'should match ' + rule.format;
   }
 }
 
@@ -328,6 +336,35 @@ function checkEnum(rule, value) {
   }
   if (rule.values.indexOf(value) === -1) {
     return 'should be one of ' + rule.values.join(', ');
+  }
+}
+
+/**
+ * check email
+ *
+ * @param {Object} rule
+ * @param {Mixed} value
+ * @return {Boolean}
+ * @api private
+ */
+function checkEmail(rule, value) {
+  return checkString({
+    format: EMAIL_RE,
+    message: rule.message || 'should be an email'
+  }, value);
+}
+
+function checkPassword(rule, value, obj) {
+  if (!rule.min) {
+    rule.min = 6;
+  }
+  rule.format = PASSWORD_RE;
+  var error = checkString(rule, value);
+  if (error) {
+    return error;
+  }
+  if (rule.compare && obj[rule.compare] !== value) {
+    return 'should equal to ' + rule.compare;
   }
 }
 

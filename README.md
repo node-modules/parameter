@@ -18,8 +18,6 @@ parameter
 [node-image]: https://img.shields.io/badge/node.js-%3E=_0.10-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/
 
-![logo](https://raw.github.com/fengmk2/parameter/master/logo.png)
-
 A parameter verify tools.
 
 ## Install
@@ -92,6 +90,10 @@ The `date` type want to match `YYYY-MM-DD` type date string.
 
 The `dateTime` type want to match `YYYY-MM-DD HH:mm:ss` type date string.
 
+#### datetime
+
+Alias to `dateTime`.
+
 #### id
 
 The `id` type want to match `/^\d+$/` type date string.
@@ -112,6 +114,20 @@ If type is `string`, there has four addition rules:
 - `format` - A `RegExp` to check string's format.
 - `max` - The maximum length of the string.
 - `min` - The minimum length of the string.
+
+#### email
+
+The `email` type want to match [RFC 5322](http://tools.ietf.org/html/rfc5322#section-3.4) email address.
+
+- `allowEmpty` - allow empty string, default is false.
+
+#### password
+
+The `password` type want to match `/^$/` type string.
+
+- `compare` - Compare field to check equal, default null, not check.
+- `max` - The maximum length of the password.
+- `min` - The minimum length of the password, default is 6.
 
 #### enum
 
@@ -143,6 +159,8 @@ If type is `array`, there has tow addition rule:
 - `'boolean'` => `{type: 'boolean', required: true}`
 - `'bool'` => `{type: 'bool', required: true}`
 - `'string'` => `{type: 'string', required: true, allowEmpty: false}`
+- `'email'` => `{type: 'email', required: true, allowEmpty: false, format: EMAIL_RE}`
+- `'password'` => `{type: 'password', required: true, allowEmpty: false, format: PASSWORD_RE, min: 6}`
 - `'object'` => `{type: 'object', required: true}`
 - `'array'` => `{type: 'array', required: true}`
 - `[1, 2]` => `{type: 'enum', values: [1, 2]}`
@@ -151,25 +169,4 @@ If type is `array`, there has tow addition rule:
 
 ## License
 
-(The MIT License)
-
-Copyright (c) 2015 fengmk2 &lt;fengmk2@gmail.com&gt;
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+[MIT](LICENSE.txt)
