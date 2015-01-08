@@ -364,4 +364,37 @@ describe('parameter', function () {
       validate(rule2, value).should.have.length(1);
     });
   });
+
+  describe('addRule', function () {
+    it('should throw without type', function () {
+      (function () {
+        validate.addRule();
+      }).should.throw('`type` required');
+    });
+
+    it('should throw without check', function () {
+      (function () {
+        validate.addRule('type');
+      }).should.throw('check must be function or regexp');
+    });
+
+    it('should add with function', function () {
+      validate.addRule('prefix', function (rule, value) {
+        if (value.indexOf(rule.prefix) !== 0) {
+          return 'should start with ' + rule.prefix;
+        }
+      });
+
+      var rule = {key: {type: 'prefix', prefix: 'prefix'}};
+      var value = {key: 'not-prefixed'};
+      validate(rule, value)[0].message.should.equal('key should start with prefix');
+    });
+
+    it('should add with regexp', function () {
+      validate.addRule('prefix', /^prefix/);
+      var rule = {key: 'prefix'};
+      var value = {key: 'not-prefixed'};
+      validate(rule, value)[0].message.should.equal('key should match /^prefix/');
+    });
+  });
 });

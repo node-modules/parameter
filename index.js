@@ -17,6 +17,7 @@
  */
 
 module.exports = validate;
+validate.addRule = addRule;
 
 /**
  * Regexps
@@ -31,7 +32,7 @@ var ID_RE = /^\d+$/;
  * @type {Object}
  */
 
-var TYPE_MAP = {
+var TYPE_MAP = validate.TYPE_MAP = {
   number: checkNumber,
   int: checkInt,
   integer: checkInt,
@@ -54,8 +55,11 @@ var TYPE_MAP = {
 var TYPES = Object.keys(TYPE_MAP);
 
 /**
- * check
- * @return {[type]} [description]
+ * validate
+ *
+ * @param {Object} rules
+ * @return {Object} obj
+ * @api public
  */
 
 function validate(rules, obj) {
@@ -108,6 +112,34 @@ function validate(rules, obj) {
   if (errors.length) {
     return errors;
   }
+}
+
+/**
+ * add custom rule
+ *
+ * @param {String} type
+ * @param {Function | RegExp} check
+ * @api public
+ */
+
+function addRule(type, check) {
+  if (!type) {
+    throw new TypeError('`type` required');
+  }
+
+  if (typeof check === 'function') {
+    TYPE_MAP[type] = check;
+    return;
+  }
+
+  if (check instanceof RegExp) {
+    TYPE_MAP[type] = function (rule, value) {
+      return checkString({format: check}, value);
+    };
+    return;
+  }
+
+  throw new TypeError('check must be function or regexp');
 }
 
 /**

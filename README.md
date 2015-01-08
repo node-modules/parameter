@@ -33,6 +33,9 @@ $ npm install parameter --save
 ### API
 
 - `validate(rule, value)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
+- `validate.addRule(type, check)` - add custom rules.
+   - `type` - rule type, required and must be string type.
+   - `check` - check handler. can be a `function` or a `RegExp`.
 
 ### Example
 
@@ -143,6 +146,7 @@ If type is `array`, there has tow addition rule:
 - `'object'` => `{type: 'object', required: true}`
 - `'array'` => `{type: 'array', required: true}`
 - `[1, 2]` => `{type: 'enum', values: [1, 2]}`
+- `/\d+/` => `{type: 'string', required: true, allowEmpty: false, format: /\d+/}`
 ```
 
 ## License
