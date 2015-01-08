@@ -56,13 +56,6 @@ var TYPE_MAP = validate.TYPE_MAP = {
 };
 
 /**
- * All support types
- * @type {Array}
- */
-
-var TYPES = Object.keys(TYPE_MAP);
-
-/**
  * validate
  *
  * @param {Object} rules
@@ -94,7 +87,7 @@ function validate(rules, obj) {
 
     var checker = TYPE_MAP[rule.type];
     if (!checker) {
-      throw new TypeError('rule type must be one of ' + TYPES.join(', ') +
+      throw new TypeError('rule type must be one of ' + Object.keys(TYPE_MAP).join(', ') +
         ', but the following type was passed: ' + rule.type);
     }
 
@@ -423,7 +416,7 @@ function checkArray(rule, value) {
 
   var checker = TYPE_MAP[rule.itemType];
   if (!checker) {
-    throw new TypeError('rule type must be one of ' + TYPES.join(', ') +
+    throw new TypeError('rule type must be one of ' + Object.keys(TYPE_MAP).join(', ') +
         ', but the following type was passed: ' + rule.itemType);
   }
 
