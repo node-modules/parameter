@@ -115,6 +115,20 @@ If type is `string`, there has four addition rules:
 - `max` - The maximum length of the string.
 - `min` - The minimum length of the string.
 
+#### email
+
+The `email` type want to match [RFC 5322](http://tools.ietf.org/html/rfc5322#section-3.4) email address.
+
+- `allowEmpty` - allow empty string, default is false.
+
+#### password
+
+The `password` type want to match `/^$/` type string.
+
+- `compare` - Compare field to check equal, default null, not check.
+- `max` - The maximum length of the password.
+- `min` - The minimum length of the password, default is 6.
+
 #### enum
 
 If type is `enum`, it requires an addition rule:
@@ -145,6 +159,8 @@ If type is `array`, there has tow addition rule:
 - `'boolean'` => `{type: 'boolean', required: true}`
 - `'bool'` => `{type: 'bool', required: true}`
 - `'string'` => `{type: 'string', required: true, allowEmpty: false}`
+- `'email'` => `{type: 'email', required: true, allowEmpty: false, format: EMAIL_RE}`
+- `'password'` => `{type: 'password', required: true, allowEmpty: false, format: PASSWORD_RE, min: 6}`
 - `'object'` => `{type: 'object', required: true}`
 - `'array'` => `{type: 'array', required: true}`
 - `[1, 2]` => `{type: 'enum', values: [1, 2]}`

@@ -31,6 +31,8 @@ var data = {
   sid3: 'foo',
   unit: 'y',
   email: 'fengmk2@gmail.com',
+  password: '!@#123',
+  're-password': '!@#123',
 };
 
 var rules = [
@@ -57,7 +59,9 @@ var rules = [
   { unit: { type: 'enum', values: ['y', 'm', 'd', 'w'] } },
   { unit: ['yy', 'mm', 'dd', 'ww'] },
 
-  { email: 'email' }
+  { email: 'email' },
+
+  { password: { type: 'password', compare: 're-password' } },
 ];
 
 function json(obj) {
@@ -83,23 +87,25 @@ suite.on('cycle', function(event) {
 
 // $ node benchmark.js
 //
-// node version: v0.11.14, date: Thu Jan 08 2015 15:31:08 GMT+0800 (CST)
+// node version: v0.11.14, date: Thu Jan 08 2015 19:40:04 GMT+0800 (CST)
 // Starting...
-// 16 tests completed.
+// 18 tests completed.
 //
-// verify {"id":"id"}                                         x 2,115,641 ops/sec ±1.10% (91 runs sampled)
-// verify {"id":{"type":"id"}}                                x 2,089,624 ops/sec ±2.24% (92 runs sampled)
-// verify {"date":"date"}                                     x 1,784,996 ops/sec ±6.12% (83 runs sampled)
-// verify {"date":{"type":"date"}}                            x 1,809,219 ops/sec ±3.81% (85 runs sampled)
-// verify {"time":"datetime"}:
-// verify {"time":{"type":"datetime"}}:
-// verify {"age":"number"}                                    x 2,705,620 ops/sec ±1.74% (88 runs sampled)
-// verify {"age":{"type":"number"}}                           x 2,575,615 ops/sec ±2.33% (85 runs sampled)
-// verify {"nick":"string"}                                   x 2,140,266 ops/sec ±2.38% (85 runs sampled)
-// verify {"nick":{"type":"string"}}                          x 2,149,018 ops/sec ±2.57% (87 runs sampled)
-// verify {"not_exists":"string","required":false}            x   927,337 ops/sec ±6.10% (82 runs sampled)
-// verify {"sid1":{}}                                         x 1,179,423 ops/sec ±5.53% (76 runs sampled)
-// verify {"sid2":{"type":"string","format":{}}}              x 1,781,882 ops/sec ±2.90% (86 runs sampled)
-// verify {"unit":["y","m","d","w"]}                          x 2,476,129 ops/sec ±1.48% (90 runs sampled)
-// verify {"unit":{"type":"enum","values":["y","m","d","w"]}} x 3,617,270 ops/sec ±2.90% (85 runs sampled)
-// verify {"unit":["yy","mm","dd","ww"]}                      x 1,122,732 ops/sec ±4.24% (85 runs sampled)
+// verify {"id":"id"}                                              x 1,896,293 ops/sec ±5.38% (82 runs sampled)
+// verify {"id":{"type":"id"}}                                     x 1,473,771 ops/sec ±11.77% (65 runs sampled)
+// verify {"date":"date"}                                          x 1,513,462 ops/sec ±9.23% (73 runs sampled)
+// verify {"date":{"type":"date"}}                                 x 1,563,038 ops/sec ±8.09% (76 runs sampled)
+// verify {"time":"datetime"}                                      x 1,541,142 ops/sec ±6.58% (78 runs sampled)
+// verify {"time":{"type":"datetime"}}                             x 1,735,154 ops/sec ±2.08% (87 runs sampled)
+// verify {"age":"number"}                                         x 2,436,145 ops/sec ±5.15% (85 runs sampled)
+// verify {"age":{"type":"number"}}                                x 2,467,326 ops/sec ±3.71% (84 runs sampled)
+// verify {"nick":"string"}                                        x 2,094,849 ops/sec ±3.28% (86 runs sampled)
+// verify {"nick":{"type":"string"}}                               x 2,106,839 ops/sec ±2.04% (89 runs sampled)
+// verify {"not_exists":"string","required":false}                 x   846,973 ops/sec ±7.22% (77 runs sampled)
+// verify {"sid1":{}}                                              x 1,404,479 ops/sec ±1.32% (89 runs sampled)
+// verify {"sid2":{"type":"string","format":{}}}                   x 1,981,292 ops/sec ±1.62% (91 runs sampled)
+// verify {"unit":["y","m","d","w"]}                               x 2,425,140 ops/sec ±1.30% (89 runs sampled)
+// verify {"unit":{"type":"enum","values":["y","m","d","w"]}}      x 3,505,832 ops/sec ±3.03% (85 runs sampled)
+// verify {"unit":["yy","mm","dd","ww"]}                           x 1,111,593 ops/sec ±2.30% (84 runs sampled)
+// verify {"email":"email"}                                        x 1,117,493 ops/sec ±11.38% (61 runs sampled)
+// verify {"password":{"type":"password","compare":"re-password"}} x   966,424 ops/sec ±11.80% (53 runs sampled)

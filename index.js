@@ -30,6 +30,8 @@ var ID_RE = /^\d+$/;
 // http://www.regular-expressions.info/email.html
 var EMAIL_RE = /^[a-z0-9\!\#\$\%\&\'\*\+\/\=\?\^\_\`\{\|\}\~\-]+(?:\.[a-z0-9\!\#\$\%\&\'\*\+\/\=\?\^\_\`\{\|\}\~\-]+)*@(?:[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?$/;
 
+var PASSWORD_RE = /^[\w\`\~\!\@\#\$\%\^\&\*\(\)\-\_\=\+\[\]\{\}\|\;\:\'\"\,\<\.\>\/\?]+$/;
+
 /**
  * Simple type map
  * @type {Object}
@@ -50,6 +52,7 @@ var TYPE_MAP = validate.TYPE_MAP = {
   object: checkObject,
   enum: checkEnum,
   email: checkEmail,
+  password: checkPassword,
 };
 
 /**
@@ -95,7 +98,7 @@ function validate(rules, obj) {
         ', but the following type was passed: ' + rule.type);
     }
 
-    var msg = checker(rule, obj[key]);
+    var msg = checker(rule, obj[key], obj);
     if (typeof msg === 'string') {
       errors.push({
         message: key + ' ' + msg,
@@ -349,6 +352,20 @@ function checkEmail(rule, value) {
     format: EMAIL_RE,
     message: rule.message || 'should be an email'
   }, value);
+}
+
+function checkPassword(rule, value, obj) {
+  if (!rule.min) {
+    rule.min = 6;
+  }
+  rule.format = PASSWORD_RE;
+  var error = checkString(rule, value);
+  if (error) {
+    return error;
+  }
+  if (rule.compare && obj[rule.compare] !== value) {
+    return 'should equal to ' + rule.compare;
+  }
 }
 
 /**
