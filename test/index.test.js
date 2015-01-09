@@ -22,7 +22,11 @@ describe('parameter', function () {
     it('should required work fine', function () {
       var value = {int: 1};
       var rule = {int: {type: 'int', required: true}};
-      validate(rule, {})[0].message.should.equal('int required');
+      validate(rule, {})[0].should.eql({
+        code: 'missing_field',
+        field: 'int',
+        message: 'int required'
+      });
     });
 
     it('should not required work fine', function () {
@@ -34,7 +38,11 @@ describe('parameter', function () {
     it('should not required check ok', function () {
       var value = {int: 1.1};
       var rule = {int: {type: 'int', required: false}};
-      validate(rule, value)[0].message.should.equal('int should be an integer');
+      validate(rule, value)[0].should.eql({
+        code: 'invalid',
+        field: 'int',
+        message: 'int should be an integer'
+      });
     });
   });
 

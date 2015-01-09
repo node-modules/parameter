@@ -1,6 +1,6 @@
 {
   "name": "parameter",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "description": "A parameter verify tools.",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "test-cov": "node node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- --check-leaks -t 1000 test/*.test.js",
     "test-travis": "node node_modules/.bin/istanbul cover node_modules/.bin/_mocha --report lcovonly -- --check-leaks -t 1000 test/*.test.js",
     "jshint": "jshint .",
-    "autod": "autod -w --prefix '~' && npm run cnpm",
+    "autod": "autod -w --prefix '~'",
     "cnpm": "npm install --registry=https://registry.npm.taobao.org",
     "contributors": "contributors -f plain -o AUTHORS"
   },

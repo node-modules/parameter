@@ -167,6 +167,28 @@ If type is `array`, there has tow addition rule:
 - `/\d+/` => `{type: 'string', required: true, allowEmpty: false, format: /\d+/}`
 ```
 
+## `errors` examples
+
+### `code: missing_field`
+
+```js
+{
+  code: 'missing_field',
+  field: 'name',
+  message: 'name required'
+}
+```
+
+### `code: invalid`
+
+```js
+{
+  code: 'invalid',
+  field: 'age',
+  message: 'age should be an integer'
+}
+```
+
 ## License
 
 [MIT](LICENSE.txt)

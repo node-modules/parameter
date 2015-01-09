@@ -1,4 +1,17 @@
 
+1.0.0 / 2015-01-09
+==================
+
+ * fix: ensure error message correct when add custom rules
+ * feat: add password
+ * feat: add email type
+ * feat(addRule): support add custom rules
+ * doc: fix readme and add example
+ * fix(array): array itemType
+ * feat(string): detault allowEmpty to false
+ * fix:(test) fix test cases
+ * refactor: rewrite
+
 0.0.7 / 2013-08-09 
 ==================
 
