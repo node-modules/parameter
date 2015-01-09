@@ -165,7 +165,6 @@ If type is `array`, there has tow addition rule:
 - `'array'` => `{type: 'array', required: true}`
 - `[1, 2]` => `{type: 'enum', values: [1, 2]}`
 - `/\d+/` => `{type: 'string', required: true, allowEmpty: false, format: /\d+/}`
-```
 
 ## `errors` examples
 
