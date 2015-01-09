@@ -52,7 +52,7 @@ var rule = {
   gender: ['male', 'female', 'unknown']
 };
 
-var errors = validate(data, rule);
+var errors = validate(rule, data);
 ```
 
 #### [complex example](example.js)
