@@ -52,7 +52,7 @@ describe('parameter', function () {
         var value = {int: 1.1};
         var rule = {int: {type: 'int1', required: false}};
         validate(rule, value);
-      }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, password, but the following type was passed: int1');
+      }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, password, url, but the following type was passed: int1');
     });
 
     it('should throw without rule', function () {
@@ -64,7 +64,7 @@ describe('parameter', function () {
     it('should throw when rule is null', function () {
       (function () {
         validate({d: null}, {d: 1});
-      }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, password, but the following type was passed: undefined');
+      }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, password, url, but the following type was passed: undefined');
     });
   });
 
@@ -339,6 +339,75 @@ describe('parameter', function () {
     });
   });
 
+  describe('url', function () {
+    it('should check ok', function () {
+      [
+        'http://✪df.ws/123',
+        'http://userid:password@example.com:8080',
+        'http://userid:password@example.com:8080/',
+        'http://userid@example.com',
+        'http://userid@example.com/',
+        'http://userid@example.com:8080',
+        'http://userid@example.com:8080/',
+        'http://userid:password@example.com',
+        'http://userid:password@example.com/',
+        'http://142.42.1.1/',
+        'http://142.42.1.1:8080/',
+        'http://➡.ws/䨹',
+        'http://⌘.ws',
+        'http://⌘.ws/',
+        'http://foo.com/blah_(wikipedia)#cite-1',
+        'http://foo.com/blah_(wikipedia)_blah#cite-1',
+        'http://foo.com/unicode_(✪)_in_parens',
+        'http://foo.com/(something)?after=parens',
+        'http://☺.damowmow.com/',
+        'http://code.google.com/events/#&product=browser',
+        'http://j.mp',
+        'ftp://foo.bar/baz',
+        'http://foo.bar/?q=Test%20URL-encoded%20stuff',
+        'http://مثال.إختبار',
+        'http://例子.测试'
+      ].forEach(function (url) {
+        should.not.exist(validate({ name: 'url' }, { name: url }));
+        should.not.exist(validate({ name: { type: 'url' } }, { name: url }));
+      });
+    });
+
+    it('should check fail', function () {
+      [
+      'http://',
+      'http://.',
+      'http://..',
+      'http://../',
+      'http://?',
+      'http://foo.bar?q=Spaces should be encoded',
+      '//',
+      '//a',
+      '///a',
+      'http:// shouldfail.com',
+      ':// should fail',
+      'http://foo.bar/foo(bar)baz quux',
+      'ftps://foo.bar/',
+      'http://-error-.invalid/',
+      'http://-a.b.co',
+      'http://a.b-.co',
+      'http://0.0.0.0',
+      'http://www.foo.bar./',
+      'http://.www.foo.bar./',
+      'http://10.1.1.1',
+      'http://10.1.1.254'
+      ].forEach(function (url) {
+        validate({ name: 'url' }, { name: url }).should.eql([
+          {
+            code: 'invalid',
+            field: 'name',
+            message: 'name should be a url'
+          }
+        ]);
+      });
+    });
+  });
+
   describe('object', function () {
     it('should check ok', function () {
       var value = {
@@ -421,7 +490,7 @@ describe('parameter', function () {
       var rule = {array: {type: 'array', itemType: 'invalid'}};
       (function () {
          validate(rule, {array: []});
-       }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, password, but the following type was passed: invalid');
+       }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, password, url, but the following type was passed: invalid');
     });
 
     it('should check itemType=object error', function () {
