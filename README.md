@@ -126,6 +126,10 @@ The `password` type want to match `/^$/` type string.
 - `max` - The maximum length of the password.
 - `min` - The minimum length of the password, default is 6.
 
+#### url
+
+The `url` type want to match [web url](https://gist.github.com/dperini/729294).
+
 #### enum
 
 If type is `enum`, it requires an addition rule:
