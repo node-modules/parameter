@@ -11,6 +11,8 @@
 
 'use strict';
 
+var util = require('util');
+
 /**
  * Module exports
  * @type {Function}
@@ -18,6 +20,7 @@
 
 module.exports = validate;
 validate.addRule = addRule;
+validate.translate = null;
 
 /**
  * Regexps
@@ -81,9 +84,9 @@ function validate(rules, obj) {
     if (!has) {
       if (rule.required !== false) {
         errors.push({
-          message: key + ' required',
-          field: key,
-          code: 'missing_field'
+          message: t('%s required', key),
+          field: t(key),
+          code: t('missing_field')
         });
       }
       continue;
@@ -98,17 +101,17 @@ function validate(rules, obj) {
     var msg = checker(rule, obj[key], obj);
     if (typeof msg === 'string') {
       errors.push({
-        message: key + ' ' + msg,
-        code: 'invalid',
-        field: key
+        message: t('%s ' + msg, key),
+        code: t('invalid'),
+        field: t(key)
       });
     }
 
     if (Array.isArray(msg)) {
       msg.forEach(function (e) {
         var dot = rule.type === 'object' ? '.' : '';
-        e.message = key + dot + e.message;
-        e.field = key + dot + e.field;
+        e.message = t('%s%s' + e.message, key, dot);
+        e.field = t('%s%s%s', key, dot, e.field);
         errors.push(e);
       });
     }
@@ -183,15 +186,15 @@ function formatRule(rule) {
 
 function checkInt(rule, value) {
   if (typeof value !== 'number' || value % 1 !== 0) {
-    return 'should be an integer';
+    return t('should be an integer');
   }
 
   if (rule.hasOwnProperty('max') && value > rule.max) {
-    return 'should smaller than ' + rule.max;
+    return t('should smaller than %s', rule.max);
   }
 
   if (rule.hasOwnProperty('min') && value < rule.min) {
-    return 'should bigger than ' + rule.min;
+    return t('should bigger than %s', rule.min);
   }
 }
 
@@ -210,13 +213,13 @@ function checkInt(rule, value) {
 
 function checkNumber(rule, value) {
   if (typeof value !== 'number') {
-    return 'should be a number';
+    return t('should be a number');
   }
   if (rule.hasOwnProperty('max') && value > rule.max) {
-    return 'should smaller than ' + rule.max;
+    return t('should smaller than %s', rule.max);
   }
   if (rule.hasOwnProperty('min') && value < rule.min) {
-    return 'should bigger than ' + rule.min;
+    return t('should bigger than %s', rule.min);
   }
 }
 
@@ -237,24 +240,24 @@ function checkNumber(rule, value) {
 
 function checkString(rule, value) {
   if (typeof value !== 'string') {
-    return 'should be a string';
+    return t('should be a string');
   }
   var allowEmpty = rule.hasOwnProperty('allowEmpty')
     ? rule.allowEmpty
     : rule.empty;
 
   if (rule.hasOwnProperty('max') && value.length > rule.max) {
-    return 'length should smaller than ' + rule.max;
+    return t('length should smaller than %s', rule.max);
   }
   if (rule.hasOwnProperty('min') && value.length < rule.min) {
-    return 'length should bigger than ' + rule.min;
+    return t('length should bigger than %s', rule.min);
   }
 
   if (!allowEmpty && value === '') {
-    return 'should not be empty';
+    return t('should not be empty');
   }
   if (rule.format && !rule.format.test(value)) {
-    return rule.message || 'should match ' + rule.format;
+    return rule.message || t('should match %s', rule.format);
   }
 }
 
@@ -311,7 +314,7 @@ function checkDateTime(rule, value) {
 
 function checkBoolean(rule, value) {
   if (typeof value !== 'boolean') {
-    return 'should be a boolean';
+    return t('should be a boolean');
   }
 }
 
@@ -332,7 +335,7 @@ function checkEnum(rule, value) {
     throw new TypeError('check enum need array type values');
   }
   if (rule.values.indexOf(value) === -1) {
-    return 'should be one of ' + rule.values.join(', ');
+    return t('should be one of %s', rule.values.join(', '));
   }
 }
 
@@ -348,7 +351,7 @@ function checkEnum(rule, value) {
 function checkEmail(rule, value) {
   return checkString({
     format: EMAIL_RE,
-    message: rule.message || 'should be an email'
+    message: rule.message || t('should be an email')
   }, value);
 }
 
@@ -372,7 +375,7 @@ function checkPassword(rule, value, obj) {
     return error;
   }
   if (rule.compare && obj[rule.compare] !== value) {
-    return 'should equal to ' + rule.compare;
+    return t('should equal to %s', rule.compare);
   }
 }
 
@@ -388,7 +391,7 @@ function checkPassword(rule, value, obj) {
 function checkUrl(rule, value) {
   return checkString({
     format: URL_RE,
-    message: rule.message || 'should be a url'
+    message: rule.message || t('should be a url')
   }, value);
 }
 
@@ -406,7 +409,7 @@ function checkUrl(rule, value) {
 
 function checkObject(rule, value) {
   if (typeof value !== 'object') {
-    return 'should be an object';
+    return t('should be an object');
   }
 
   if (rule.rule) {
@@ -438,7 +441,7 @@ function checkObject(rule, value) {
 
 function checkArray(rule, value) {
   if (!Array.isArray(value)) {
-    return 'should be an array';
+    return t('should be an array');
   }
 
   if (!rule.itemType) {
@@ -464,7 +467,7 @@ function checkArray(rule, value) {
       errors.push({
         field: index,
         message: index + ' ' + errs,
-        code: 'invalid'
+        code: t('invalid')
       });
     }
     if (Array.isArray(errs)) {
@@ -477,4 +480,13 @@ function checkArray(rule, value) {
   });
 
   return errors;
+}
+
+function t() {
+  var args = Array.prototype.slice.call(arguments);
+  if (typeof validate.translate === 'function') {
+    return validate.translate.apply(validate, args);
+  } else {
+    return util.format.apply(util, args);
+  }
 }
