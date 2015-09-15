@@ -588,6 +588,7 @@ describe('parameter', function () {
       var error = newValidate(rule, {})[0];
       error.message.should.equal('name required-add.');
       error.code.should.equal('missing_field-add.');
+      error.field.should.equal('name');
     });
   });
 });
