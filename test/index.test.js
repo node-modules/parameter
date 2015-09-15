@@ -15,6 +15,7 @@
  */
 
 var should = require('should');
+var util = require('util');
 var validate = require('..');
 
 describe('parameter', function () {
@@ -572,6 +573,21 @@ describe('parameter', function () {
       var rule = {key: 'prefix'};
       var value = {key: 'not-prefixed'};
       validate(rule, value)[0].message.should.equal('key should match /^prefix/');
+    });
+  });
+
+  describe('custom translate function', function(){
+    it('should work', function(){
+      var newValidate = require('..');
+      newValidate.translate = function() {
+        var args = Array.prototype.slice.call(arguments);
+        args[0] = args[0] + '-add.';
+        return util.format.apply(util, args);
+      };
+      var rule = { name: 'string' };
+      var error = newValidate(rule, {})[0];
+      error.message.should.equal('name required-add.');
+      error.code.should.equal('missing_field-add.');
     });
   });
 });

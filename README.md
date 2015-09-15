@@ -31,11 +31,18 @@ $ npm install parameter --save
 - `validate.addRule(type, check)` - add custom rules.
    - `type` - rule type, required and must be string type.
    - `check` - check handler. can be a `function` or a `RegExp`.
+- `validate.translate` - You can override the `translate` method to implement I18n.
 
 ### Example
 
 ```js
 var validate = require('parameter');
+
+validate.translate = function() {
+  var args = Array.prototype.slice.call(arguments);
+  // Assume there have I18n.t method for convert language.
+  return I18n.t.apply(I18n, args);
+}
 
 var data = {
   name: 'foo',
