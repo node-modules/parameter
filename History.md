@@ -1,4 +1,9 @@
 
+1.1.0 / 2015-09-15
+==================
+
+ * feat: I18n translate possible by override the `validate.translate` method.
+
 1.0.2 / 2015-01-12
 ==================
 
