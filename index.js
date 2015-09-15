@@ -85,7 +85,7 @@ function validate(rules, obj) {
       if (rule.required !== false) {
         errors.push({
           message: t('%s required', key),
-          field: t(key),
+          field: key,
           code: t('missing_field')
         });
       }
@@ -103,7 +103,7 @@ function validate(rules, obj) {
       errors.push({
         message: t('%s ' + msg, key),
         code: t('invalid'),
-        field: t(key)
+        field: key
       });
     }
 
@@ -111,7 +111,7 @@ function validate(rules, obj) {
       msg.forEach(function (e) {
         var dot = rule.type === 'object' ? '.' : '';
         e.message = t('%s%s' + e.message, key, dot);
-        e.field = t('%s%s%s', key, dot, e.field);
+        e.field = key + dot + e.field;
         errors.push(e);
       });
     }
