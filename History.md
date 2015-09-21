@@ -1,4 +1,9 @@
 
+1.2.0 / 2015-09-21
+==================
+
+ * feat: remove field name from error message. #12
+
 1.1.1 / 2015-09-15
 ==================
 
@@ -33,39 +38,39 @@
  * fix:(test) fix test cases
  * refactor: rewrite
 
-0.0.7 / 2013-08-09 
+0.0.7 / 2013-08-09
 ==================
 
   * support Enum check fixed #1
 
-0.0.6 / 2013-08-07 
+0.0.6 / 2013-08-07
 ==================
 
   * Custom error message
   * remove 0.11 from travis
 
-0.0.5 / 2013-08-06 
+0.0.5 / 2013-08-06
 ==================
 
   * support RegExp rule
 
-0.0.4 / 2013-07-01 
+0.0.4 / 2013-07-01
 ==================
 
   * support isArray and isObject
 
-0.0.3 / 2013-06-26 
+0.0.3 / 2013-06-26
 ==================
 
   * fixed required=false bug
   * run again to vaild cache functions
 
-0.0.2 / 2013-06-26 
+0.0.2 / 2013-06-26
 ==================
 
   * improve performance
 
-0.0.1 / 2013-06-26 
+0.0.1 / 2013-06-26
 ==================
 
   * add test cases
