@@ -182,7 +182,7 @@ If type is `array`, there has tow addition rule:
 {
   code: 'missing_field',
   field: 'name',
-  message: 'name required'
+  message: 'required'
 }
 ```
 
@@ -192,7 +192,7 @@ If type is `array`, there has tow addition rule:
 {
   code: 'invalid',
   field: 'age',
-  message: 'age should be an integer'
+  message: 'should be an integer'
 }
 ```
 
