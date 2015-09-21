@@ -84,7 +84,7 @@ function validate(rules, obj) {
     if (!has) {
       if (rule.required !== false) {
         errors.push({
-          message: t('%s required', key),
+          message: t('required'),
           field: key,
           code: t('missing_field')
         });
@@ -101,7 +101,7 @@ function validate(rules, obj) {
     var msg = checker(rule, obj[key], obj);
     if (typeof msg === 'string') {
       errors.push({
-        message: t('%s ' + msg, key),
+        message: msg,
         code: t('invalid'),
         field: key
       });
@@ -110,7 +110,6 @@ function validate(rules, obj) {
     if (Array.isArray(msg)) {
       msg.forEach(function (e) {
         var dot = rule.type === 'object' ? '.' : '';
-        e.message = t('%s%s' + e.message, key, dot);
         e.field = key + dot + e.field;
         errors.push(e);
       });
@@ -466,14 +465,14 @@ function checkArray(rule, value) {
     if (typeof errs === 'string') {
       errors.push({
         field: index,
-        message: index + ' ' + errs,
+        message: errs,
         code: t('invalid')
       });
     }
     if (Array.isArray(errs)) {
       errors = errors.concat(errs.map(function (e) {
         e.field = index + '.' + e.field;
-        e.message = index + '.' + e.message;
+        e.message = e.message;
         return e;
       }));
     }
