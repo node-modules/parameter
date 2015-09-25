@@ -3,17 +3,14 @@ parameter
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
-[![Test coverage][coveralls-image]][coveralls-url]
-[![node version][node-image]][node-url]
+[![Test coverage][codecov-image]][codecov-url]
 
 [npm-image]: https://img.shields.io/npm/v/parameter.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/parameter
 [travis-image]: https://img.shields.io/travis/node-modules/parameter.svg?style=flat-square
 [travis-url]: https://travis-ci.org/node-modules/parameter
-[coveralls-image]: https://img.shields.io/coveralls/node-modules/parameter.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/node-modules/parameter?branch=master
-[node-image]: https://img.shields.io/badge/node.js-%3E=_0.10-green.svg?style=flat-square
-[node-url]: http://nodejs.org/download/
+[codecov-image]: https://codecov.io/github/node-modules/parameter/coverage.svg?branch=master
+[codecov-url]: https://codecov.io/github/node-modules/parameter?branch=master
 
 A parameter verify tools.
 
@@ -27,7 +24,10 @@ $ npm install parameter --save
 
 ### API
 
-- `constructor(opts)`
+`Parameter` Class
+
+- `constructor([options])` - new Class `Parameter` instance
+  - `options.translate` - translate function
 - `validate(rule, value)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
 - `addRule(type, check)` - add custom rules.
    - `type` - rule type, required and must be string type.

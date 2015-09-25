@@ -1,6 +1,10 @@
+sudo: false
 language: node_js
 node_js:
-  - "3.0.0"
-  - "4.0.0"
-script: "npm run test-travis"
-after_script: "npm install coveralls@2 && cat ./coverage/lcov.info | coveralls"
+  - "2"
+  - "3"
+  - "4"
+script:
+  - "npm run test-cov"
+after_script:
+  - "npm i codecov.io && cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js"

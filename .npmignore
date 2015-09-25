@@ -1,6 +1,0 @@
-test/
-.travis.yml
-coverage/
-example.js
-benchmark.js
-History.md

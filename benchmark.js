@@ -1,11 +1,9 @@
 /**!
- * parameter - benchmark.js
- *
  * Copyright(c) node-modules and other contributors.
  * MIT Licensed
  *
  * Authors:
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
+ *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.com)
  */
 
 'use strict';
@@ -17,7 +15,6 @@
 var Benchmark = require('benchmark');
 var benchmarks = require('beautify-benchmark');
 var Parameter = require('./');
-var p = new Parameter();
 
 var suite = new Benchmark.Suite();
 
@@ -72,8 +69,15 @@ function json(obj) {
   return JSON.stringify(obj);
 }
 
+var globalParameter = new Parameter();
+
 rules.forEach(function (rule) {
-  suite.add('verify ' + json(rule), function () {
+  suite.add('globalParameter: verify ' + json(rule), function () {
+    globalParameter.validate(rule, data);
+  });
+
+  suite.add('localParameter: verify ' + json(rule), function () {
+    var p = new Parameter();
     p.validate(rule, data);
   });
 });
@@ -89,27 +93,45 @@ suite.on('cycle', function(event) {
 })
 .run({ 'async': false });
 
-// node benchmark.js
-// node version: v0.11.14, date: Mon Jan 12 2015 00:26:28 GMT+0800 (CST)
+// node version: v2.5.0, date: Fri Sep 25 2015 23:29:32 GMT+0800 (CST)
 // Starting...
-// 19 tests completed.
-
-// verify {"id":"id"}                                              x 2,288,326 ops/sec ±1.33% (93 runs sampled)
-// verify {"id":{"type":"id"}}                                     x 2,223,940 ops/sec ±1.63% (94 runs sampled)
-// verify {"date":"date"}                                          x 2,137,169 ops/sec ±1.93% (91 runs sampled)
-// verify {"date":{"type":"date"}}                                 x 2,198,088 ops/sec ±1.87% (91 runs sampled)
-// verify {"time":"datetime"}                                      x 2,215,601 ops/sec ±1.30% (93 runs sampled)
-// verify {"time":{"type":"datetime"}}                             x 2,153,529 ops/sec ±1.12% (94 runs sampled)
-// verify {"age":"number"}                                         x 3,228,224 ops/sec ±1.39% (93 runs sampled)
-// verify {"age":{"type":"number"}}                                x 3,199,251 ops/sec ±1.24% (96 runs sampled)
-// verify {"nick":"string"}                                        x 2,679,151 ops/sec ±1.38% (92 runs sampled)
-// verify {"nick":{"type":"string"}}                               x 2,704,384 ops/sec ±1.53% (95 runs sampled)
-// verify {"not_exists":"string","required":false}                 x 1,180,709 ops/sec ±1.57% (95 runs sampled)
-// verify {"sid1":{}}                                              x 1,640,462 ops/sec ±1.04% (91 runs sampled)
-// verify {"sid2":{"type":"string","format":{}}}                   x 2,248,618 ops/sec ±2.31% (92 runs sampled)
-// verify {"unit":["y","m","d","w"]}                               x 2,913,945 ops/sec ±1.12% (92 runs sampled)
-// verify {"unit":{"type":"enum","values":["y","m","d","w"]}}      x 4,243,777 ops/sec ±1.27% (95 runs sampled)
-// verify {"unit":["yy","mm","dd","ww"]}                           x 1,346,001 ops/sec ±2.98% (89 runs sampled)
-// verify {"email":"email"}                                        x 1,956,788 ops/sec ±1.46% (92 runs sampled)
-// verify {"password":{"type":"password","compare":"re-password"}} x 2,009,989 ops/sec ±1.91% (92 runs sampled)
-// verify {"url":"url"}                                            x 1,222,091 ops/sec ±1.22% (92 runs sampled)
+// 38 tests completed.
+//
+// globalParameter: verify {"id":"id"}                                              x 1,755,826 ops/sec ±1.14% (92 runs sampled)
+// localParameter: verify {"id":"id"}                                               x 1,700,584 ops/sec ±1.11% (91 runs sampled)
+// globalParameter: verify {"id":{"type":"id"}}                                     x 1,664,283 ops/sec ±1.26% (90 runs sampled)
+// localParameter: verify {"id":{"type":"id"}}                                      x 1,654,914 ops/sec ±1.35% (91 runs sampled)
+// globalParameter: verify {"date":"date"}                                          x 1,547,474 ops/sec ±1.22% (92 runs sampled)
+// localParameter: verify {"date":"date"}                                           x 1,543,998 ops/sec ±1.00% (92 runs sampled)
+// globalParameter: verify {"date":{"type":"date"}}                                 x 1,528,876 ops/sec ±1.17% (91 runs sampled)
+// localParameter: verify {"date":{"type":"date"}}                                  x 1,531,417 ops/sec ±1.16% (93 runs sampled)
+// globalParameter: verify {"time":"datetime"}                                      x 1,436,431 ops/sec ±1.16% (91 runs sampled)
+// localParameter: verify {"time":"datetime"}                                       x 1,435,370 ops/sec ±1.14% (91 runs sampled)
+// globalParameter: verify {"time":{"type":"datetime"}}                             x 1,412,463 ops/sec ±1.30% (92 runs sampled)
+// localParameter: verify {"time":{"type":"datetime"}}                              x 1,399,845 ops/sec ±1.74% (91 runs sampled)
+// globalParameter: verify {"age":"number"}                                         x 2,708,155 ops/sec ±1.27% (91 runs sampled)
+// localParameter: verify {"age":"number"}                                          x 2,587,876 ops/sec ±1.33% (92 runs sampled)
+// globalParameter: verify {"age":{"type":"number"}}                                x 2,607,889 ops/sec ±1.10% (93 runs sampled)
+// localParameter: verify {"age":{"type":"number"}}                                 x 2,538,770 ops/sec ±1.31% (91 runs sampled)
+// globalParameter: verify {"nick":"string"}                                        x 2,307,909 ops/sec ±1.13% (94 runs sampled)
+// localParameter: verify {"nick":"string"}                                         x 2,206,572 ops/sec ±1.27% (92 runs sampled)
+// globalParameter: verify {"nick":{"type":"string"}}                               x 2,296,899 ops/sec ±0.98% (94 runs sampled)
+// localParameter: verify {"nick":{"type":"string"}}                                x 2,170,179 ops/sec ±1.52% (92 runs sampled)
+// globalParameter: verify {"not_exists":"string","required":false}                 x   160,931 ops/sec ±1.15% (91 runs sampled)
+// localParameter: verify {"not_exists":"string","required":false}                  x   158,010 ops/sec ±1.63% (93 runs sampled)
+// globalParameter: verify {"sid1":{}}                                              x   266,353 ops/sec ±3.10% (87 runs sampled)
+// localParameter: verify {"sid1":{}}                                               x   278,138 ops/sec ±1.61% (90 runs sampled)
+// globalParameter: verify {"sid2":{"type":"string","format":{}}}                   x 1,711,115 ops/sec ±1.15% (90 runs sampled)
+// localParameter: verify {"sid2":{"type":"string","format":{}}}                    x 1,712,745 ops/sec ±1.07% (95 runs sampled)
+// globalParameter: verify {"unit":["y","m","d","w"]}                               x 2,763,750 ops/sec ±1.26% (90 runs sampled)
+// localParameter: verify {"unit":["y","m","d","w"]}                                x 2,703,971 ops/sec ±1.17% (93 runs sampled)
+// globalParameter: verify {"unit":{"type":"enum","values":["y","m","d","w"]}}      x 3,930,004 ops/sec ±1.43% (91 runs sampled)
+// localParameter: verify {"unit":{"type":"enum","values":["y","m","d","w"]}}       x 3,839,268 ops/sec ±1.40% (92 runs sampled)
+// globalParameter: verify {"unit":["yy","mm","dd","ww"]}                           x   186,797 ops/sec ±1.75% (92 runs sampled)
+// localParameter: verify {"unit":["yy","mm","dd","ww"]}                            x   188,961 ops/sec ±1.30% (94 runs sampled)
+// globalParameter: verify {"email":"email"}                                        x   370,479 ops/sec ±1.92% (89 runs sampled)
+// localParameter: verify {"email":"email"}                                         x   376,473 ops/sec ±1.19% (90 runs sampled)
+// globalParameter: verify {"password":{"type":"password","compare":"re-password"}} x 1,252,958 ops/sec ±1.12% (91 runs sampled)
+// localParameter: verify {"password":{"type":"password","compare":"re-password"}}  x 1,232,913 ops/sec ±1.47% (90 runs sampled)
+// globalParameter: verify {"url":"url"}                                            x   269,519 ops/sec ±1.15% (93 runs sampled)
+// localParameter: verify {"url":"url"}                                             x   262,017 ops/sec ±1.23% (91 runs sampled)
