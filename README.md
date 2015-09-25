@@ -27,22 +27,24 @@ $ npm install parameter --save
 
 ### API
 
+- `constructor(opts)`
 - `validate(rule, value)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
-- `validate.addRule(type, check)` - add custom rules.
+- `addRule(type, check)` - add custom rules.
    - `type` - rule type, required and must be string type.
    - `check` - check handler. can be a `function` or a `RegExp`.
-- `validate.translate` - You can override the `translate` method to implement I18n.
 
 ### Example
 
 ```js
-var validate = require('parameter');
+var Parameter = require('parameter');
 
-validate.translate = function() {
-  var args = Array.prototype.slice.call(arguments);
-  // Assume there have I18n.t method for convert language.
-  return I18n.t.apply(I18n, args);
-}
+var parameter = new Parameter({
+  translate: function() {
+    var args = Array.prototype.slice.call(arguments);
+    // Assume there have I18n.t method for convert language.
+    return I18n.t.apply(I18n, args);
+  }
+});
 
 var data = {
   name: 'foo',
@@ -56,7 +58,7 @@ var rule = {
   gender: ['male', 'female', 'unknown']
 };
 
-var errors = validate(rule, data);
+var errors = parameter.validate(rule, data);
 ```
 
 #### [complex example](example.js)
