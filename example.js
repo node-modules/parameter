@@ -1,4 +1,4 @@
-var validate = require('./');
+var Parameter = require('./');
 
 var rule = {
   name: 'string',
@@ -82,5 +82,7 @@ var invalid = {
   }
 };
 
-console.log('valid object result: ', validate(rule, valid));
-console.log('invalid object result: ', validate(rule, invalid));
+var p = new Parameter();
+
+console.log('valid object result: ', p.validate(rule, valid));
+console.log('invalid object result: ', p.validate(rule, invalid));

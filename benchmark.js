@@ -16,7 +16,8 @@
 
 var Benchmark = require('benchmark');
 var benchmarks = require('beautify-benchmark');
-var verify = require('./');
+var Parameter = require('./');
+var p = new Parameter();
 
 var suite = new Benchmark.Suite();
 
@@ -73,7 +74,7 @@ function json(obj) {
 
 rules.forEach(function (rule) {
   suite.add('verify ' + json(rule), function () {
-    verify(rule, data);
+    p.validate(rule, data);
   });
 });
 
