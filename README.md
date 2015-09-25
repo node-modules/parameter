@@ -4,6 +4,7 @@ parameter
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
 [![Test coverage][codecov-image]][codecov-url]
+[![npm download][download-image]][download-url]
 
 [npm-image]: https://img.shields.io/npm/v/parameter.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/parameter
@@ -11,6 +12,8 @@ parameter
 [travis-url]: https://travis-ci.org/node-modules/parameter
 [codecov-image]: https://codecov.io/github/node-modules/parameter/coverage.svg?branch=master
 [codecov-url]: https://codecov.io/github/node-modules/parameter?branch=master
+[download-image]: https://img.shields.io/npm/dm/parameter.svg?style=flat-square
+[download-url]: https://npmjs.org/package/parameter
 
 A parameter verify tools.
 

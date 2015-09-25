@@ -1,4 +1,10 @@
 
+2.0.0 / 2015-09-25
+==================
+
+ * test: use codecov.io
+ * Refactor with Class, use ES6 class style.
+
 1.2.0 / 2015-09-21
 ==================
 
