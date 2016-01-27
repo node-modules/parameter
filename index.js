@@ -50,12 +50,33 @@ class Parameter {
   }
 
   /**
+   * validate with customize translate
+   *
+   * @param  {Object} rules
+   * @param  {Mixed} obj
+   * @param  {Function} translate
+   * @return {Object} errors
+   * @api public
+   */
+  validateWithTranslate(rules, obj, translate) {
+    var _translate = this.translate;
+    this.translate = translate;
+    try {
+      return this.validate(rules, obj);
+    } finally {
+      this.translate = _translate;
+    }
+  };
+
+  /**
    * validate
    *
    * @param {Object} rules
-   * @return {Object} obj
+   * @param {Mixed} obj
+   * @return {Object} errors
    * @api public
    */
+
   validate(rules, obj) {
     if (typeof rules !== 'object') {
       throw new TypeError('need object type rule');
