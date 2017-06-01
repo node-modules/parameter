@@ -274,6 +274,12 @@ function checkString(rule, value) {
   if (!allowEmpty && value === '') {
     return this.t('should not be empty');
   }
+
+  // if allowEmpty was set, don't need to match format
+  if (allowEmpty && value === '') {
+    return;
+  }
+
   if (rule.format && !rule.format.test(value)) {
     return rule.message || this.t('should match %s', rule.format);
   }
@@ -290,7 +296,7 @@ function checkString(rule, value) {
  */
 
 function checkId(rule, value) {
-  return checkString.call(this, {format: ID_RE}, value);
+  return checkString.call(this, {format: ID_RE, allowEmpty: rule.allowEmpty}, value);
 }
 
 /**
@@ -304,7 +310,7 @@ function checkId(rule, value) {
  */
 
 function checkDate(rule, value) {
-  return checkString.call(this, {format: DATE_TYPE_RE}, value);
+  return checkString.call(this, {format: DATE_TYPE_RE, allowEmpty: rule.allowEmpty}, value);
 }
 
 /**
@@ -318,7 +324,7 @@ function checkDate(rule, value) {
  */
 
 function checkDateTime(rule, value) {
-  return checkString.call(this, {format: DATETIME_TYPE_RE}, value);
+  return checkString.call(this, {format: DATETIME_TYPE_RE, allowEmpty: rule.allowEmpty}, value);
 }
 
 /**
@@ -369,7 +375,8 @@ function checkEnum(rule, value) {
 function checkEmail(rule, value) {
   return checkString.call(this, {
     format: EMAIL_RE,
-    message: rule.message || this.t('should be an email')
+    message: rule.message || this.t('should be an email'),
+    allowEmpty: rule.allowEmpty,
   }, value);
 }
 
@@ -409,7 +416,8 @@ function checkPassword(rule, value, obj) {
 function checkUrl(rule, value) {
   return checkString.call(this, {
     format: URL_RE,
-    message: rule.message || this.t('should be a url')
+    message: rule.message || this.t('should be a url'),
+    allowEmpty: rule.allowEmpty
   }, value);
 }
 
