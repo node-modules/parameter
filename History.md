@@ -1,4 +1,10 @@
 
+2.1.0 / 2017-06-02
+==================
+
+  * feat: allowEmpty can be use with max and min
+  * feat: allowEmpty can be use with format
+
 2.0.0 / 2015-09-25
 ==================
 
