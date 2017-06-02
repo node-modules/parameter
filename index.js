@@ -264,13 +264,6 @@ function checkString(rule, value) {
     ? rule.allowEmpty
     : rule.empty;
 
-  if (rule.hasOwnProperty('max') && value.length > rule.max) {
-    return this.t('length should smaller than %s', rule.max);
-  }
-  if (rule.hasOwnProperty('min') && value.length < rule.min) {
-    return this.t('length should bigger than %s', rule.min);
-  }
-
   if (!allowEmpty && value === '') {
     return this.t('should not be empty');
   }
@@ -278,6 +271,13 @@ function checkString(rule, value) {
   // if allowEmpty was set, don't need to match format
   if (allowEmpty && value === '') {
     return;
+  }
+
+  if (rule.hasOwnProperty('max') && value.length > rule.max) {
+    return this.t('length should smaller than %s', rule.max);
+  }
+  if (rule.hasOwnProperty('min') && value.length < rule.min) {
+    return this.t('length should bigger than %s', rule.min);
   }
 
   if (rule.format && !rule.format.test(value)) {

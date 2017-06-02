@@ -168,6 +168,12 @@ describe('parameter', function () {
       var rule = {string: { type: 'string', format: /\d+/, allowEmpty: true}};
       should.not.exist(parameter.validate(rule, value));
     });
+
+    it('should check allowEmpty with min and max ok', function () {
+      var value = {string: ''};
+      var rule = {string: { type: 'string', min: 10, max: 100, allowEmpty: true}};
+      should.not.exist(parameter.validate(rule, value));
+    });
   });
 
   describe('id', function () {
