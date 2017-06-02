@@ -162,6 +162,18 @@ describe('parameter', function () {
       var rule = {string: /\d+/};
       parameter.validate(rule, value)[0].message.should.equal('should match /\\d+/');
     });
+
+    it('should check allowEmpty with format ok', function () {
+      var value = {string: ''};
+      var rule = {string: { type: 'string', format: /\d+/, allowEmpty: true}};
+      should.not.exist(parameter.validate(rule, value));
+    });
+
+    it('should check allowEmpty with min and max ok', function () {
+      var value = {string: ''};
+      var rule = {string: { type: 'string', min: 10, max: 100, allowEmpty: true}};
+      should.not.exist(parameter.validate(rule, value));
+    });
   });
 
   describe('id', function () {
@@ -169,6 +181,15 @@ describe('parameter', function () {
       var value = {id : '0524' };
       var rule = {id: 'id'};
       should.not.exist(parameter.validate(rule, value));
+    });
+
+    it('should check allowEmpty ok', function () {
+      [
+        '231',
+        '',
+      ].forEach(function (id) {
+        should.not.exist(parameter.validate({ name: { type: 'id', allowEmpty: true } }, { name: id }));
+      });
     });
 
     it('should check id not ok', function () {
@@ -191,6 +212,15 @@ describe('parameter', function () {
       var rule = {date: 'date'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^\\d{4}\\-\\d{2}\\-\\d{2}$/');
     });
+
+    it('should check allowEmpty ok', function () {
+      [
+        '2014-11-11',
+        '',
+      ].forEach(function (date) {
+        should.not.exist(parameter.validate({ name: { type: 'date', allowEmpty: true } }, { name: date }));
+      });
+    });
   });
 
   describe('dateTime', function () {
@@ -210,6 +240,15 @@ describe('parameter', function () {
       var value = {datetime : '2014-11-11 00:00:00' };
       var rule = {datetime: 'dateTime'};
       should.not.exist(parameter.validate(rule, value));
+    });
+
+    it('should check allowEmpty ok', function () {
+      [
+        '2014-11-11 00:00:00',
+        '',
+      ].forEach(function (datetime) {
+        should.not.exist(parameter.validate({ name: { type: 'dateTime', allowEmpty: true } }, { name: datetime }));
+      });
     });
   });
 
@@ -261,6 +300,15 @@ describe('parameter', function () {
       ].forEach(function (email) {
         should.not.exist(parameter.validate({ name: 'email' }, { name: email }));
         should.not.exist(parameter.validate({ name: { type: 'email' } }, { name: email }));
+      });
+    });
+
+    it('should check allowEmpty ok', function () {
+      [
+        'fengmk2@gmail.com',
+        '',
+      ].forEach(function (email) {
+        should.not.exist(parameter.validate({ name: { type: 'email', allowEmpty: true } }, { name: email }));
       });
     });
 
