@@ -470,6 +470,13 @@ function checkArray(rule, value) {
     return this.t('should be an array');
   }
 
+  if (rule.hasOwnProperty('max') && value.length > rule.max) {
+    return this.t('length should smaller than %s', rule.max);
+  }
+  if (rule.hasOwnProperty('min') && value.length < rule.min) {
+    return this.t('length should bigger than %s', rule.min);
+  }
+
   if (!rule.itemType) {
     return;
   }
