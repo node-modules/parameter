@@ -543,6 +543,18 @@ describe('parameter', function () {
        }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, password, url, but the following type was passed: invalid');
     });
 
+    it('should check max error', function () {
+      var value = {array: [0, 1, 2, 3, 4]};
+      var rule = {array: {type: 'array', itemType: 'int', max: 4, min: 1}};
+      parameter.validate(rule, value)[0].message.should.equal('length should smaller than 4');
+    });
+
+    it('should check min error', function () {
+      var value = {array: [0, 1, 2, 3, 4]};
+      var rule = {array: {type: 'array', itemType: 'int', max: 100, min: 10}};
+      parameter.validate(rule, value)[0].message.should.equal('length should bigger than 10');
+    });
+
     it('should check itemType=object error', function () {
       var value = {
         array: [{

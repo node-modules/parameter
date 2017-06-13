@@ -157,10 +157,12 @@ If type is `object`, there has one addition rule:
 
 #### array
 
-If type is `array`, there has tow addition rule:
+If type is `array`, there has four addition rule:
 
 - `itemType` - The type of every item in this array.
 - `rule` - An object that validate the items of the array. Only work with `itemType`.
+- `max` - The maximun length of the array.
+- `min` - The minimun lenght of the array.
 
 #### abbr
 
