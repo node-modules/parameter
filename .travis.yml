@@ -1,13 +1,18 @@
-sudo: false
 language: node_js
+notifications:
+  email: false
 node_js:
-  - "2"
-  - "3"
-  - "4"
-  - "6"
-  - "7"
-  - "8"
+  - '8'
+  - '6'
+  - '4'
+install:
+  - npm i npminstall && npminstall
 script:
-  - "npm run test-cov"
+  - npm run ci
 after_script:
-  - "npm i codecov.io && cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js"
+  - npminstall codecov && codecov
+after_success:
+  - npm run semantic-release
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
