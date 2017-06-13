@@ -1,12 +1,3 @@
-/**
- * Copyright(c) node-modules and other contributors.
- * MIT Licensed
- *
- * Authors:
- *  fengmk2 <fengmk2@gmail.com>
- *  dead_horse <dead_horse@qq.com>
- */
-
 'use strict';
 
 var util = require('util');

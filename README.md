@@ -5,6 +5,7 @@ parameter
 [![build status][travis-image]][travis-url]
 [![Test coverage][codecov-image]][codecov-url]
 [![npm download][download-image]][download-url]
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)
 
 [npm-image]: https://img.shields.io/npm/v/parameter.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/parameter
