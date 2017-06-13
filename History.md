@@ -1,4 +1,10 @@
 
+2.2.0 / 2017-06-13
+==================
+
+  * feat(array): support max and min in array check (#22)
+  * chore: use semantic-release workflow (#23)
+
 2.1.0 / 2017-06-02
 ==================
 
