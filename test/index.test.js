@@ -210,13 +210,19 @@ describe('parameter', function () {
     it('should check date not ok', function () {
       var value = {date : '2014-xx-xx' };
       var rule = {date: 'date'};
-      parameter.validate(rule, value)[0].message.should.equal('should match /^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)/')
+      parameter.validate(rule, value)[0].message.should.equal('should match /^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$/')
     });
 
     it('should check date not ok with invalid format', function () {
       var value = {date : '2014-13-01' };
       var rule = {date: 'date'};
-      parameter.validate(rule, value)[0].message.should.equal('should match /^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)/')
+      parameter.validate(rule, value)[0].message.should.equal('should match /^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$/')
+    });
+
+    it('should check date not ok with ivalid date in leap year', function () {
+      var value = {date : '1999-02-29' };
+      var rule = {date: 'date'};
+      parameter.validate(rule, value)[0].message.should.equal('should match /^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$/')
     });
 
     it('should check allowEmpty ok', function () {
@@ -248,7 +254,7 @@ describe('parameter', function () {
       parameter.validate(rule, value)[0].message.should.equal('should match /^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29) (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$/');
     });
 
-    it('should check dateTime not ok with leap year', function () {
+    it('should check dateTime not ok with invalid date in leap year', function () {
       var value = {dateTime : '1999-02-29 00:00:00' };
       var rule = {dateTime: 'dateTime'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29) (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$/');
