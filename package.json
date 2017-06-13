@@ -1,14 +1,16 @@
 {
   "name": "parameter",
-  "version": "2.1.0",
+  "version": "0.0.0-development",
   "description": "A parameter verify tools.",
   "main": "index.js",
   "files": [
     "index.js"
   ],
   "scripts": {
-    "test": "mocha --check-leaks -R spec -t 1000 test/*.test.js",
-    "test-cov": "istanbul cover node_modules/.bin/_mocha -- --check-leaks -t 1000 test/*.test.js"
+    "test": "mocha -R spec -t 1000 test/*.test.js",
+    "cov": "istanbul cover _mocha -- -t 1000 test/*.test.js",
+    "ci": "npm run cov",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "dependencies": {},
   "devDependencies": {
@@ -16,11 +18,12 @@
     "benchmark": "*",
     "istanbul": "*",
     "mocha": "*",
-    "should": "*"
+    "should": "*",
+    "semantic-release": "^6.3.6"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/node-modules/parameter.git"
+    "url": "https://github.com/node-modules/parameter.git"
   },
   "keywords": [
     "parameter",
@@ -28,7 +31,7 @@
     "univ"
   ],
   "engines": {
-    "node": ">= 2.0.0"
+    "node": ">= 4.0.0"
   },
   "author": "fengmk2 <fengmk2@gmail.com>",
   "license": "MIT"
