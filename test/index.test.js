@@ -230,10 +230,22 @@ describe('parameter', function () {
       should.not.exist(parameter.validate(rule, value));
     });
 
-    it('should check dateTime not ok', function () {
+    it('should check dateTime not ok with nonnumeric', function () {
       var value = {dateTime : '2014-11-11 00:xx:00' };
       var rule = {dateTime: 'dateTime'};
-      parameter.validate(rule, value)[0].message.should.equal('should match /^\\d{4}\\-\\d{2}\\-\\d{2} \\d{2}:\\d{2}:\\d{2}$/');
+      parameter.validate(rule, value)[0].message.should.equal('should match /^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29) (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$/');
+    });
+
+    it('should check dateTime not ok with invalid format', function () {
+      var value = {dateTime : '2014-11-11 00:00:61' };
+      var rule = {dateTime: 'dateTime'};
+      parameter.validate(rule, value)[0].message.should.equal('should match /^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29) (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$/');
+    });
+
+    it('should check dateTime not ok with leap year', function () {
+      var value = {dateTime : '1999-02-29 00:00:00' };
+      var rule = {dateTime: 'dateTime'};
+      parameter.validate(rule, value)[0].message.should.equal('should match /^(?:[1-9]\\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29) (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$/');
     });
 
     it('should datetime alias to dateTime', function () {
