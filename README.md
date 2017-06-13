@@ -204,6 +204,13 @@ If type is `array`, there has four addition rule:
 }
 ```
 
+## Release process
+
+We're using [semantic-release](https://github.com/semantic-release/semantic-release) to run npm publish
+after every commit on master.
+
+See [Default Commit Message Format](https://github.com/semantic-release/semantic-release#default-commit-message-format) for details.
+
 ## License
 
 [MIT](LICENSE.txt)
