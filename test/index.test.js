@@ -115,6 +115,12 @@ describe('parameter', function () {
       parameter.validate(rule, value)[0].message.should.equal('should be a number');
     });
 
+    it('should check NaN error', function () {
+      var value = { number: NaN };
+      var rule = { number: 'number' };
+      parameter.validate(rule, value)[0].message.should.equal('should be a number');
+    });
+
     it('should check max error', function () {
       var value = { number: 101 };
       var rule = { number: {type: 'number', max: 100, min: 1 }};
