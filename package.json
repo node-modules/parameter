@@ -1,6 +1,6 @@
 {
   "name": "parameter",
-  "version": "0.0.0-development",
+  "version": "2.2.1",
   "description": "A parameter verify tools.",
   "main": "index.js",
   "files": [

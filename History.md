@@ -1,4 +1,13 @@
 
+2.2.1 / 2017-11-23
+==================
+
+**fixes**
+  * [[`3693861`](http://github.com/node-modules/parameter/commit/3693861897e2d207edf791f56db51820f76588b2)] - fix: check number  exclude NaN (#30) (Gao Peng <<ggjqzjgp103@qq.com>>)
+
+**others**
+  * [[`67d8cf6`](http://github.com/node-modules/parameter/commit/67d8cf6269abe4fdf3480b6c25cd08b67868ed11)] - chore(docs): add semantic-release process description (fengmk2 <<fengmk2@gmail.com>>)
+
 2.2.0 / 2017-06-13
 ==================
 
