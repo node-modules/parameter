@@ -221,7 +221,7 @@ function checkInt(rule, value) {
  */
 
 function checkNumber(rule, value) {
-  if (typeof value !== 'number') {
+  if (typeof value !== 'number' || isNaN(value)) {
     return this.t('should be a number');
   }
   if (rule.hasOwnProperty('max') && value > rule.max) {
