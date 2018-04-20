@@ -52,6 +52,14 @@ class Parameter {
       throw new TypeError('need object type rule');
     }
 
+    if (typeof obj !== 'object' || !obj) {
+      return [{
+        message: 'the validated value should be a object',
+        code: this.t('invalid'),
+        field: undefined,
+      }];
+    }
+
     var self = this;
 
     var errors = [];

@@ -47,6 +47,12 @@ describe('parameter', function () {
   });
 
   describe('validate', function () {
+    it('should not pass when received a invalid value', function () {
+        var value = null;
+        var rule = {int: {type: 'int1', required: false}};
+        parameter.validate(rule, value)[0].message.should.equal('the validated value should be a object');;
+    });
+
     it('should invalid type throw', function () {
       (function () {
         var value = {int: 1.1};
