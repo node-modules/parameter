@@ -1,4 +1,10 @@
 
+2.2.2 / 2018-05-04
+==================
+
+**fixes**
+  * [[`8317071`](http://github.com/node-modules/parameter/commit/83170710bbc88b1d7267cba6b9eae764a1e5fd36)] - fix: email regx to case insensitive (#36) (mansonchor.github.com <<mansonchor@126.com>>),
+
 2.2.1 / 2017-11-23
 ==================
 
