@@ -303,6 +303,7 @@ describe('parameter', function () {
         'dead-horse@qq.com',
         'fengmk2+github@gmail.com',
         'fengmk2@yahoo.com.cn',
+        'Fengmk2@126.Com',
       ].forEach(function (email) {
         should.not.exist(parameter.validate({ name: 'email' }, { name: email }));
         should.not.exist(parameter.validate({ name: { type: 'email' } }, { name: email }));
