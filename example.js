@@ -15,7 +15,7 @@ var rule = {
     required: false,
     rule: {
       name: 'string',
-      age: 'int',
+      age: { type: 'int', customMsg: 'age must be an integer!!!!' },
       gender: ['male', 'female'],
       birthday: {type: 'date', required: false}
     }

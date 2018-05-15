@@ -661,4 +661,44 @@ describe('parameter', function () {
       error.field.should.equal('name');
     });
   });
+
+  describe('custom error message', function () {
+    it('should work', function () {
+      var value = {
+        key: 1234,
+        val: '1'
+      };
+      var rule = {
+        key: { type: 'string' },
+        val: { type: 'int', customMsg: 'must be int!' }
+      };
+      parameter.validate(rule, value).should.eql([
+        { code: 'invalid', field: 'key', message: 'should be a string' },
+        { code: 'invalid', field: 'val', message: 'should be an integer', customMsg: 'must be int!' },
+      ])
+    });
+
+    it('should work in array', function () {
+      var value = {
+        key: [
+          { name: 'Jone', age: 18 },
+          { name: 6, age: 'Eric' }
+        ]
+      };
+      var rule = {
+        key: {
+          type: 'array',
+          itemType: 'object',
+          rule: {
+            name: { type: 'string', customMsg: 'name must be string!' },
+            age: { type: 'int' }
+          }
+        }
+      };
+      parameter.validate(rule, value).should.eql([
+        { code: 'invalid', field: 'key[1].name', message: 'should be a string', customMsg: 'name must be string!' },
+        { code: 'invalid', field: 'key[1].age', message: 'should be an integer' },
+      ])
+    });
+  });
 });
