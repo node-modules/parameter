@@ -1,12 +1,12 @@
 'use strict';
 
 var util = require('util');
-var {
-  TYPE_MAP,
-  formatRule,
-  formatError,
-  checkString
-} = require('./lib/helper');
+var helper = require('./lib/helper');
+
+var TYPE_MAP = helper.TYPE_MAP;
+var formatRule = helper.formatRule;
+var formatError = helper.formatError;
+var checkString = helper.checkString;
 
 /**
  * Parameter class
