@@ -29,6 +29,10 @@ class Parameter {
     if (typeof opts.translate === 'function') {
       this.translate = opts.translate;
     }
+
+    if (opts.validateRoot) {
+      this.validateRoot = true;
+    }
   }
 
   t() {
@@ -52,7 +56,7 @@ class Parameter {
       throw new TypeError('need object type rule');
     }
 
-    if (typeof obj !== 'object' || !obj) {
+    if (this.validateRoot && (typeof obj !== 'object' || !obj)) {
       return [{
         message: 'the validated value should be a object',
         code: this.t('invalid'),
