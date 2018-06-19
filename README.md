@@ -32,6 +32,7 @@ $ npm install parameter --save
 
 - `constructor([options])` - new Class `Parameter` instance
   - `options.translate` - translate function
+  - `options.validateRoot` - config whether to validate the passed in value must be a object.
 - `validate(rule, value)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
 - `addRule(type, check)` - add custom rules.
    - `type` - rule type, required and must be string type.
