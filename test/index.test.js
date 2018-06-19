@@ -17,6 +17,10 @@ var util = require('util');
 var Parameter = require('..');
 var parameter = new Parameter();
 
+var parameterWithRootValidate = new Parameter({
+  validateRoot: true,
+});
+
 describe('parameter', function () {
   describe('required', function () {
     it('should required work fine', function () {
@@ -47,6 +51,18 @@ describe('parameter', function () {
   });
 
   describe('validate', function () {
+    it('should throw error when received a non object', function () {
+        var value = null;
+        var rule = {int: {type: 'int1', required: false}};
+        let err;
+        try {
+          parameter.validate(rule, undefined)
+        } catch (e) {
+          err = e;
+        }
+      should(err.message).equal("Cannot read property 'hasOwnProperty' of undefined");
+    });
+
     it('should invalid type throw', function () {
       (function () {
         var value = {int: 1.1};
@@ -660,5 +676,14 @@ describe('parameter', function () {
       error.code.should.equal('missing_field-add.');
       error.field.should.equal('name');
     });
+  });
+});
+
+
+describe('validate with option.validateRoot', function () {
+  it('should not pass when received a invalid value', function () {
+    var value = null;
+    var rule = { int: { type: 'int1', required: false } };
+    parameterWithRootValidate.validate(rule, value)[0].message.should.equal('the validated value should be a object');;
   });
 });
