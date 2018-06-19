@@ -1,4 +1,10 @@
 
+2.3.0 / 2018-06-19
+==================
+
+**features**
+  * [[`a5c1721`](http://github.com/node-modules/parameter/commit/a5c172179071aaaafb6fac604bc6bf4ebb0c8d98)] - feat: Add option.validateRoot to enable validate the root object (#41) (paranoidjk <<hust2012jiangkai@gmail.com>>)
+
 2.2.3 / 2018-05-16
 ==================
 
