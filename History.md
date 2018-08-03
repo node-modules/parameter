@@ -1,4 +1,10 @@
 
+2.4.0 / 2018-08-03
+==================
+
+**features**
+  * [[`e12fac4`](http://github.com/node-modules/parameter/commit/e12fac4d1681e51b02193defd5acb9e4864138dd)] - feat: add global addRule method (#46) (fengmk2 <<fengmk2@gmail.com>>)
+
 2.3.0 / 2018-06-19
 ==================
 
