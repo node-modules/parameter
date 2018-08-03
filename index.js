@@ -385,7 +385,7 @@ function checkEnum(rule, value) {
 function checkEmail(rule, value) {
   return checkString.call(this, {
     format: EMAIL_RE,
-    message: (rule.message && this.t(rule.message)) || this.t('should be an email'),
+    message: rule.message || this.t('should be an email'),
     allowEmpty: rule.allowEmpty,
   }, value);
 }
@@ -426,7 +426,7 @@ function checkPassword(rule, value, obj) {
 function checkUrl(rule, value) {
   return checkString.call(this, {
     format: URL_RE,
-    message: (rule.message && this.t(rule.message)) || this.t('should be a url'),
+    message: rule.message || this.t('should be a url'),
     allowEmpty: rule.allowEmpty
   }, value);
 }
@@ -517,7 +517,7 @@ function checkArray(rule, value) {
     if (Array.isArray(errs)) {
       errors = errors.concat(errs.map(function (e) {
         e.field = index + '.' + e.field;
-        e.message = self.t(e.message);
+        e.message = e.message;
         return e;
       }));
     }
