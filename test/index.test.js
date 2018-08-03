@@ -1,16 +1,4 @@
-/**
- * Copyright(c) node-modules and other contributors.
- * MIT Licensed
- *
- * Authors:
- *  dead_horse <dead_horse@qq.com>
- */
-
 'use strict';
-
-/**
- * Module dependencies.
- */
 
 var should = require('should');
 var util = require('util');
@@ -350,6 +338,14 @@ describe('parameter', function () {
             message: 'should be an email'
           }
         ]);
+
+        parameter.validate({ name: { type: 'email', message: '错误 email' } }, { name: email }).should.eql([
+          {
+            code: 'invalid',
+            field: 'name',
+            message: '错误 email'
+          }
+        ]);
       });
     });
   });
@@ -405,6 +401,23 @@ describe('parameter', function () {
           code: 'invalid',
           field: 'password',
           message: 'length should bigger than 6'
+        }
+      ]);
+
+      parameter.validate({
+        password: {
+          type: 'password',
+          min: 4,
+          compare: 're-password'
+        }
+      }, {
+        password: '1',
+        're-password': '1',
+      }).should.eql([
+        {
+          code: 'invalid',
+          field: 'password',
+          message: 'length should bigger than 4'
         }
       ]);
     });
@@ -473,6 +486,14 @@ describe('parameter', function () {
             code: 'invalid',
             field: 'name',
             message: 'should be a url'
+          }
+        ]);
+
+        parameter.validate({ name: { type: 'url', message: '不合法 url' } }, { name: url }).should.eql([
+          {
+            code: 'invalid',
+            field: 'name',
+            message: '不合法 url'
           }
         ]);
       });
@@ -632,6 +653,18 @@ describe('parameter', function () {
       (function () {
         parameter.addRule();
       }).should.throw('`type` required');
+      (function () {
+        Parameter.addRule();
+      }).should.throw('`type` required');
+    });
+
+    it('should throw error when override exists rule', function () {
+      (function () {
+        parameter.addRule('string', function() {}, false);
+      }).should.throw('rule `string` exists');
+      (function () {
+        Parameter.addRule('string', function() {}, false);
+      }).should.throw('rule `string` exists');
     });
 
     it('should throw without check', function () {
@@ -655,6 +688,13 @@ describe('parameter', function () {
     it('should add with regexp', function () {
       parameter.addRule('prefix', /^prefix/);
       var rule = {key: 'prefix'};
+      var value = {key: 'not-prefixed'};
+      parameter.validate(rule, value)[0].message.should.equal('should match /^prefix/');
+    });
+
+    it('should add with regexp on global', function () {
+      Parameter.addRule('prefix2', /^prefix/);
+      var rule = {key: 'prefix2'};
       var value = {key: 'not-prefixed'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^prefix/');
     });

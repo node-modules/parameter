@@ -58,7 +58,7 @@ class Parameter {
 
     if (this.validateRoot && (typeof obj !== 'object' || !obj)) {
       return [{
-        message: 'the validated value should be a object',
+        message: this.t('the validated value should be a object'),
         code: this.t('invalid'),
         field: undefined,
       }];
@@ -111,34 +111,6 @@ class Parameter {
       return errors;
     }
   }
-
-  /**
-   * add custom rule
-   *
-   * @param {String} type
-   * @param {Function | RegExp} check
-   * @api public
-   */
-
-  addRule(type, check) {
-    if (!type) {
-      throw new TypeError('`type` required');
-    }
-
-    if (typeof check === 'function') {
-      TYPE_MAP[type] = check;
-      return;
-    }
-
-    if (check instanceof RegExp) {
-      TYPE_MAP[type] = function (rule, value) {
-        return checkString.call(this, {format: check}, value);
-      };
-      return;
-    }
-
-    throw new TypeError('check must be function or regexp');
-  }
 };
 
 /**
@@ -147,6 +119,41 @@ class Parameter {
  */
 module.exports = Parameter;
 
+/**
+ * add custom rule to global rules list.
+ *
+ * @param {String} type
+ * @param {Function | RegExp} check
+ * @param {Boolean} [override] - override exists rule or not, default is true
+ * @api public
+ */
+Parameter.prototype.addRule = Parameter.addRule = function addRule(type, check, override) {
+  if (!type) {
+    throw new TypeError('`type` required');
+  }
+
+  if (typeof override !== 'boolean') {
+    override = true;
+  }
+
+  if (!override && TYPE_MAP[type]) {
+    throw new TypeError('rule `' + type + '` exists');
+  }
+
+  if (typeof check === 'function') {
+    TYPE_MAP[type] = check;
+    return;
+  }
+
+  if (check instanceof RegExp) {
+    TYPE_MAP[type] = function (rule, value) {
+      return checkString.call(this, {format: check}, value);
+    };
+    return;
+  }
+
+  throw new TypeError('check must be function or regexp');
+};
 
 /**
  * Simple type map
@@ -299,7 +306,7 @@ function checkString(rule, value) {
  */
 
 function checkId(rule, value) {
-  return checkString.call(this, {format: ID_RE, allowEmpty: rule.allowEmpty}, value);
+  return checkString.call(this, { format: ID_RE, allowEmpty: rule.allowEmpty }, value);
 }
 
 /**
@@ -313,7 +320,7 @@ function checkId(rule, value) {
  */
 
 function checkDate(rule, value) {
-  return checkString.call(this, {format: DATE_TYPE_RE, allowEmpty: rule.allowEmpty}, value);
+  return checkString.call(this, { format: DATE_TYPE_RE, allowEmpty: rule.allowEmpty }, value);
 }
 
 /**
@@ -327,7 +334,7 @@ function checkDate(rule, value) {
  */
 
 function checkDateTime(rule, value) {
-  return checkString.call(this, {format: DATETIME_TYPE_RE, allowEmpty: rule.allowEmpty}, value);
+  return checkString.call(this, { format: DATETIME_TYPE_RE, allowEmpty: rule.allowEmpty }, value);
 }
 
 /**
