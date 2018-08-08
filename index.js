@@ -74,7 +74,7 @@ class Parameter {
       var has = obj.hasOwnProperty(key);
 
       if (!has) {
-        var required = rule.required !== undefined ? rule.required : this.defaultRequired;
+        var required = rule.hasOwnProperty('required') ? rule.required : this.defaultRequired;
         if (required) {
           errors.push({
             message: this.t('required'),

@@ -33,6 +33,7 @@ $ npm install parameter --save
 - `constructor([options])` - new Class `Parameter` instance
   - `options.translate` - translate function
   - `options.validateRoot` - config whether to validate the passed in value must be a object.
+  - `options.defaultRequired` - config whether to require the property, default to `true`
 - `validate(rule, value)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
 - `addRule(type, check)` - add custom rules.
    - `type` - rule type, required and must be string type.
@@ -50,6 +51,7 @@ var parameter = new Parameter({
     return I18n.t.apply(I18n, args);
   },
   validateRoot: true, // restrict the being validate value must be a object
+  defaultRequired: false, // default to true
 });
 
 var data = {
