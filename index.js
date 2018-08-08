@@ -33,7 +33,9 @@ class Parameter {
     if (opts.validateRoot) {
       this.validateRoot = true;
     }
-    this.defaultRequired = opts.defaultRequired !== undefined ? opts.defaultRequired : true;
+    this.defaultRequired = opts.defaultRequired !== undefined ?
+                        opts.defaultRequired :
+                        true;
   }
 
   t() {
@@ -73,7 +75,9 @@ class Parameter {
       var rule = formatRule(rules[key]);
       var has = obj.hasOwnProperty(key);
       if (!has) {
-        var required = rule.required !== undefined ? rule.required : this.defaultRequired;
+        var required = rule.required !== undefined ?
+                    rule.required :
+                    this.defaultRequired;
         if (required) {
           errors.push({
             message: this.t('required'),
