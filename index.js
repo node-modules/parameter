@@ -33,6 +33,7 @@ class Parameter {
     if (opts.validateRoot) {
       this.validateRoot = true;
     }
+    this.defaultRequired = opts.defaultRequired !== false;
   }
 
   t() {
@@ -73,7 +74,8 @@ class Parameter {
       var has = obj.hasOwnProperty(key);
 
       if (!has) {
-        if (rule.required !== false) {
+        var required = rule.hasOwnProperty('required') ? rule.required : this.defaultRequired;
+        if (required) {
           errors.push({
             message: this.t('required'),
             field: key,

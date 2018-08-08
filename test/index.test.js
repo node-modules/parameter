@@ -8,13 +8,19 @@ var parameter = new Parameter();
 var parameterWithRootValidate = new Parameter({
   validateRoot: true,
 });
+var parameterWithDefaultNotRequiredValidate = new Parameter({
+  defaultRequired: false,
+});
+var parameterWithDefaultRequiredValidate = new Parameter({
+  defaultRequired: true,
+});
 
 describe('parameter', function () {
   describe('required', function () {
     it('should required work fine', function () {
-      var value = {int: 1};
+      var value = {};
       var rule = {int: {type: 'int', required: true}};
-      parameter.validate(rule, {})[0].should.eql({
+      parameter.validate(rule, value)[0].should.eql({
         code: 'missing_field',
         field: 'int',
         message: 'required'
@@ -22,9 +28,9 @@ describe('parameter', function () {
     });
 
     it('should not required work fine', function () {
-      var value = {int: 1};
+      var value = {};
       var rule = {int: {type: 'int', required: false}};
-      should.not.exist(parameter.validate(rule, {}));
+      should.not.exist(parameter.validate(rule, value));
     });
 
     it('should not required check ok', function () {
@@ -726,4 +732,40 @@ describe('validate with option.validateRoot', function () {
     var rule = { int: { type: 'int1', required: false } };
     parameterWithRootValidate.validate(rule, value)[0].message.should.equal('the validated value should be a object');;
   });
+});
+
+
+describe('validate with option.defaultNotRequired', function () {
+  it('should not required work fine', function () {
+    var value = {};
+    var rule = {int: {type: 'int'}};
+    should.not.exist(parameterWithDefaultNotRequiredValidate.validate(rule, value));
+  });
+
+  it('should required check ok', function () {
+    var value = {int: 1.1};
+    var rule = {int: {type: 'int'}};
+    parameterWithDefaultRequiredValidate.validate(rule, value)[0].should.eql({
+      code: 'invalid',
+      field: 'int',
+      message: 'should be an integer'
+    });
+  });
+
+  it('should required check ok', function () {
+    var value = {int: 1.1};
+    var rule = {int: {type: 'int', required: true}};
+    parameterWithDefaultNotRequiredValidate.validate(rule, value)[0].should.eql({
+      code: 'invalid',
+      field: 'int',
+      message: 'should be an integer'
+    });
+  });
+
+  it('should not required work fine', function () {
+    var value = {};
+    var rule = {int: {type: 'int', required: false}};
+    should.not.exist(parameterWithDefaultRequiredValidate.validate(rule, value));
+  });
+
 });
