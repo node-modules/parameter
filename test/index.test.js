@@ -27,6 +27,19 @@ describe('parameter', function () {
       should.not.exist(parameter.validate(rule, {}));
     });
 
+    it('should not required work fine with null', function () {
+      var value = { int: 1 };
+      var rule = { int: { type: 'int', required: false } };
+      should.not.exist(parameter.validate(rule, { int: null }));
+    });
+
+    it('should not required work fine with ?', function () {
+      var rule = { int: 'int?' };
+      should.not.exist(parameter.validate(rule, {}));
+      rule = { int: { type: 'int?' }};
+      should.not.exist(parameter.validate(rule, {}));
+    });
+
     it('should not required check ok', function () {
       var value = {int: 1.1};
       var rule = {int: {type: 'int', required: false}};
@@ -48,7 +61,7 @@ describe('parameter', function () {
         } catch (e) {
           err = e;
         }
-      should(err.message).equal("Cannot read property 'hasOwnProperty' of undefined");
+      should(err.message).equal('Cannot read property \'int\' of undefined');
     });
 
     it('should invalid type throw', function () {
@@ -182,6 +195,12 @@ describe('parameter', function () {
     it('should check allowEmpty with min and max ok', function () {
       var value = {string: ''};
       var rule = {string: { type: 'string', min: 10, max: 100, allowEmpty: true}};
+      should.not.exist(parameter.validate(rule, value));
+    });
+
+    it('should allowEmpty default to true if required is false', function () {
+      var value = { string: '' };
+      var rule = { string: { type: 'string', format: /\d+/, required: false } };
       should.not.exist(parameter.validate(rule, value));
     });
   });
@@ -697,6 +716,17 @@ describe('parameter', function () {
       var rule = {key: 'prefix2'};
       var value = {key: 'not-prefixed'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^prefix/');
+    });
+
+    it('should add work with required false by ?', function () {
+      parameter.addRule('prefix', function (rule, value) {
+        if (value.indexOf(rule.prefix) !== 0) {
+          return 'should start with ' + rule.prefix;
+        }
+      });
+      should.not.exist(parameter.validate({ foo: 'prefix?' }, {}));
+      parameter.validate({ foo: { type: 'prefix', prefix: 'hello' } }, {})[0].message.should.equal('required');
+      parameter.validate({ foo: { type: 'prefix', prefix: 'hello' } }, { foo: 'world' })[0].message.should.equal('should start with hello');
     });
   });
 

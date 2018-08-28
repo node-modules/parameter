@@ -70,7 +70,7 @@ class Parameter {
 
     for (var key in rules) {
       var rule = formatRule(rules[key]);
-      var has = obj.hasOwnProperty(key);
+      var has = obj[key] !== null && obj[key] !== undefined;
 
       if (!has) {
         if (rule.required !== false) {
@@ -187,15 +187,20 @@ var TYPE_MAP = Parameter.TYPE_MAP = {
  */
 
 function formatRule(rule) {
+  rule = rule || {};
   if (typeof rule === 'string') {
-    return { type: rule };
+    rule = { type: rule };
+  } else if (Array.isArray(rule)) {
+    rule = { type: 'enum', values: rule };
+  } else if (rule instanceof RegExp) {
+    rule = { type: 'string', format: rule };
   }
-  if (Array.isArray(rule)) {
-    return { type: 'enum', values: rule };
+
+  if (rule.type && rule.type[rule.type.length - 1] === '?') {
+    rule.type = rule.type.slice(0, -1);
+    rule.required = false;
   }
-  if (rule instanceof RegExp) {
-    return { type: 'string', format: rule };
-  }
+
   return rule || {};
 }
 
@@ -270,17 +275,19 @@ function checkString(rule, value) {
   if (typeof value !== 'string') {
     return this.t('should be a string');
   }
+
+  // if required === false, set allowEmpty to true by default
+  if (!rule.hasOwnProperty('allowEmpty') && rule.required === false) {
+    rule.allowEmpty = true;
+  }
+
   var allowEmpty = rule.hasOwnProperty('allowEmpty')
     ? rule.allowEmpty
     : rule.empty;
 
-  if (!allowEmpty && value === '') {
+  if (!value) {
+    if (allowEmpty) return;
     return this.t('should not be empty');
-  }
-
-  // if allowEmpty was set, don't need to match format
-  if (allowEmpty && value === '') {
-    return;
   }
 
   if (rule.hasOwnProperty('max') && value.length > rule.max) {
@@ -501,7 +508,7 @@ function checkArray(rule, value) {
   var errors = [];
   var subRule = rule.itemType === 'object'
   ? rule
-  : rule.rule || formatRule.call(self, rule.itemType);
+  : rule.rule || formatRule(rule.itemType);
 
   value.forEach(function (v, i) {
     var index = '[' + i + ']';

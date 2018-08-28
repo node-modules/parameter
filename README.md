@@ -73,8 +73,10 @@ var errors = parameter.validate(rule, data);
 
 #### common rule
 
-- `required` - if `required` is set to false, this property can be empty. default to `true`.
+- `required` - if `required` is set to false, this property can be null or undefined. default to `true`.
 - `type` - The type of property, every type has it's own rule for the validate.
+
+__ Note: you can combile require and type end with a notation `?` like: `int?` or `string?` to specific both type and non-required.__
 
 #### int
 
@@ -122,7 +124,7 @@ Alias to `boolean`
 
 If type is `string`, there has four addition rules:
 
-- `allowEmpty`(alias to `empty`) - allow empty string, default to false.
+- `allowEmpty`(alias to `empty`) - allow empty string, default to false. If `rule.required` set to false, `allowEmpty` will be set to `true` by default.
 - `format` - A `RegExp` to check string's format.
 - `max` - The maximum length of the string.
 - `min` - The minimum length of the string.
@@ -169,6 +171,7 @@ If type is `array`, there has four addition rule:
 #### abbr
 
 - `'int'` => `{type: 'int', required: true}`
+- `'int?'` => `{type: 'int', required: false }`
 - `'integer'` => `{type: 'integer', required: true}`
 - `'number'` => `{type: 'number', required: true}`
 - `'date'` => `{type: 'date', required: true}`
