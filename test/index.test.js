@@ -9,6 +9,10 @@ var parameterWithRootValidate = new Parameter({
   validateRoot: true,
 });
 
+var parameterWithConvert = new Parameter({
+  convert: true,
+});
+
 describe('parameter', function () {
   describe('required', function () {
     it('should required work fine', function () {
@@ -755,5 +759,62 @@ describe('validate with option.validateRoot', function () {
     var value = null;
     var rule = { int: { type: 'int1', required: false } };
     parameterWithRootValidate.validate(rule, value)[0].message.should.equal('the validated value should be a object');;
+  });
+});
+
+describe('validate with options.convert', function() {
+  it('should convert to specific type by default', () => {
+    var value = {
+      int: '1.1',
+      number: '1.23',
+      string: 123,
+      boolean: 'foo',
+      regexp: 567,
+      id: 888,
+    };
+    parameterWithConvert.validate({
+      int: 'int',
+      number: 'number',
+      string: 'string',
+      boolean: 'boolean',
+      regexp: /\d+/,
+      id: 'id',
+    }, value);
+    value.should.eql({
+      int: 1,
+      number: 1.23,
+      string: '123',
+      boolean: true,
+      regexp: '567',
+      id: '888'
+    });
+  });
+
+  it('should convertType support customize', () => {
+    var value = { int: 123 };
+    var res = parameterWithConvert.validate({
+      int: {
+        type: 'int',
+        convertType: 'string',
+      },
+    }, value);
+    res[0].message.should.equal('should be an integer');
+    value.int.should.equal('123');
+  });
+
+  it('should convertType support function', () => {
+    var value = { int: 'x' };
+    var res = parameterWithConvert.validate({
+      int: {
+        type: 'int',
+        convertType(v, obj) {
+          obj.should.equal(value);
+          if (v === 'x') return 1;
+          return 0;
+        },
+      },
+    }, value);
+    should.not.exist(res);
+    value.int.should.equal(1);
   });
 });

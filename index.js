@@ -30,9 +30,8 @@ class Parameter {
       this.translate = opts.translate;
     }
 
-    if (opts.validateRoot) {
-      this.validateRoot = true;
-    }
+    if (opts.validateRoot) this.validateRoot = true;
+    if (opts.convert) this.convert = true;
   }
 
   t() {
@@ -89,6 +88,7 @@ class Parameter {
           ', but the following type was passed: ' + rule.type);
       }
 
+      convert(rule, obj, key, this.convert);
       var msg = checker.call(self, rule, obj[key], obj);
       if (typeof msg === 'string') {
         errors.push({
@@ -178,8 +178,27 @@ var TYPE_MAP = Parameter.TYPE_MAP = {
   url: checkUrl,
 };
 
+var CONVERT_MAP = Parameter.CONVERT_MAP = {
+  number: 'number',
+  int: 'int',
+  integer: 'int',
+  string: 'string',
+  id: 'string',
+  date: 'string',
+  dateTime: 'string',
+  datetime: 'string',
+  boolean: 'bool',
+  bool: 'bool',
+  email: 'string',
+  password: 'string',
+  url: 'string',
+};
+
 /**
  * format a rule
+ * - resolve abbr
+ * - resolve `?`
+ * - resolve default convertType
  *
  * @param {Mixed} rule
  * @return {Object}
@@ -201,7 +220,45 @@ function formatRule(rule) {
     rule.required = false;
   }
 
-  return rule || {};
+  return rule;
+}
+
+/**
+ * convert param to specific type
+ * @param {Object} rule
+ * @param {Object} obj
+ * @param {String} key
+ * @param {Boolean} defaultConvert
+ */
+function convert(rule, obj, key, defaultConvert) {
+  var convertType;
+  if (defaultConvert) convertType = CONVERT_MAP[rule.type];
+  if (rule.convertType) convertType = rule.convertType;
+  if (!convertType) return;
+
+  const value = obj[key];
+
+  // convertType support function
+  if (typeof convertType === 'function') {
+    obj[key] = convertType(value, obj);
+    return;
+  }
+
+  switch (convertType) {
+    case 'int':
+      obj[key] = parseInt(value, 10);
+      break;
+    case 'string':
+      obj[key] = String(value);
+      break;
+    case 'number':
+      obj[key] = Number(obj[key]);
+      break;
+    case 'bool':
+    case 'boolean':
+      obj[key] = !!value;
+      break;
+  }
 }
 
 /**
@@ -257,9 +314,9 @@ function checkNumber(rule, value) {
 }
 
 /**
- * check string
- * {
- *   allowEmpty: true, // (default to false, alias to empty)
+ * - check string
+ *-  {
+ *-    allowEmpty: true, // resolve default convertType to false, alias to empty)
  *   format: /^\d+$/,
  *   max: 100,
  *   min: 0
