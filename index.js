@@ -126,11 +126,18 @@ module.exports = Parameter;
  * @param {String} type
  * @param {Function | RegExp} check
  * @param {Boolean} [override] - override exists rule or not, default is true
+ * @param {String|Function} [convertType]
  * @api public
  */
-Parameter.prototype.addRule = Parameter.addRule = function addRule(type, check, override) {
+Parameter.prototype.addRule = Parameter.addRule = function addRule(type, check, override, convertType) {
   if (!type) {
     throw new TypeError('`type` required');
+  }
+
+  // addRule(type, check, convertType)
+  if (typeof override === 'string' || typeof override === 'function') {
+    convertType = override;
+    override = true;
   }
 
   if (typeof override !== 'boolean') {
@@ -140,6 +147,14 @@ Parameter.prototype.addRule = Parameter.addRule = function addRule(type, check, 
   if (!override && TYPE_MAP[type]) {
     throw new TypeError('rule `' + type + '` exists');
   }
+
+  if (convertType) {
+    if (typeof convertType !== 'string' && typeof convertType !== 'function') {
+      throw new TypeError('convertType should be string or function');
+    }
+    Parameter.CONVERT_MAP[type] = convertType;
+  }
+
 
   if (typeof check === 'function') {
     TYPE_MAP[type] = check;
