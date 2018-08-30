@@ -1,4 +1,10 @@
 
+3.0.0 / 2018-08-30
+==================
+
+**others**
+  * [[`f1dda26`](http://github.com/node-modules/parameter/commit/f1dda26ac3697c63a7e344228b7aed7bb55b3931)] - refactor: make rules more practical (#50) (Yiyu He <<dead_horse@qq.com>>)
+
 2.4.0 / 2018-08-03
 ==================
 
