@@ -31,7 +31,7 @@ class Parameter {
     }
 
     if (opts.validateRoot) this.validateRoot = true;
-    if (opts.convert) this.convert = true;
+    if (opts.convert) this.convertType = true;
   }
 
   t() {
@@ -69,7 +69,8 @@ class Parameter {
 
     for (var key in rules) {
       var rule = formatRule(rules[key]);
-      var has = obj[key] !== null && obj[key] !== undefined;
+      var value = obj[key];
+      var has = value !== null && value !== undefined;
 
       if (!has) {
         if (rule.required !== false) {
@@ -88,7 +89,7 @@ class Parameter {
           ', but the following type was passed: ' + rule.type);
       }
 
-      convert(rule, obj, key, this.convert);
+      convert(rule, obj, key, this.convertType);
       var msg = checker.call(self, rule, obj[key], obj);
       if (typeof msg === 'string') {
         errors.push({
@@ -237,6 +238,8 @@ function convert(rule, obj, key, defaultConvert) {
   if (!convertType) return;
 
   const value = obj[key];
+  // convert type only work for primitive data
+  if (typeof value === 'object') return;
 
   // convertType support function
   if (typeof convertType === 'function') {

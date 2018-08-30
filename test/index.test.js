@@ -802,6 +802,15 @@ describe('validate with options.convert', function() {
     value.int.should.equal('123');
   });
 
+  it('should convertType not work with object', () => {
+    var value = { int: {} };
+    var res = parameterWithConvert.validate({
+      int: 'int',
+    }, value);
+    res[0].message.should.equal('should be an integer');
+    value.int.should.eql({});
+  });
+
   it('should convertType support function', () => {
     var value = { int: 'x' };
     var res = parameterWithConvert.validate({

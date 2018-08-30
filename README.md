@@ -33,7 +33,7 @@ $ npm install parameter --save
 - `constructor([options])` - new Class `Parameter` instance
   - `options.translate` - translate function
   - `options.validateRoot` - config whether to validate the passed in value must be a object, default to `false`.
-  - `options.convertType` - convert params to specific type, default to `false`.
+  - `options.convertType` - convert primitive params to specific type, default to `false`.
 - `validate(rule, value)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
 - `addRule(type, check)` - add custom rules.
    - `type` - rule type, required and must be string type.
@@ -78,7 +78,7 @@ var errors = parameter.validate(rule, data);
 - `type` - The type of property, every type has it's own rule for the validate.
 - `convertType` - Let parameter to convert the input param to the specific type, support `int`, `number`, `string` and `boolean`, also support a function to customize your own convert method.
 
-if `options.convertType` was set to parameter's constructor, the default rules below will convert the params to matched type.
+if `options.convertType` was set to parameter's constructor, the default rules below will convert the primitive params to matched type.
 
 __ Note: you can combile require and type end with a notation `?` like: `int?` or `string?` to specific both type and non-required.__
 
