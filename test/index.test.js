@@ -732,6 +732,103 @@ describe('parameter', function () {
       parameter.validate({ foo: { type: 'prefix', prefix: 'hello' } }, {})[0].message.should.equal('required');
       parameter.validate({ foo: { type: 'prefix', prefix: 'hello' } }, { foo: 'world' })[0].message.should.equal('should start with hello');
     });
+
+    it('should add rule support function convertType', () => {
+      parameter.addRule('httpBoolean', Parameter.TYPE_MAP['boolean'], false, (value, obj) => {
+        if (value === 'false' || value === '0') return false;
+        return !!value;
+      });
+
+      const obj = {
+        a: 'false',
+        b: '0',
+        c: true,
+        d: false,
+        e: 1,
+        f: 0,
+        g: null,
+        h: undefined,
+        i: '',
+        j: NaN,
+        k: '00',
+        l: '\t',
+      };
+      should.not.exist(parameterWithConvert.validate({
+        a: 'httpBoolean',
+        b: 'httpBoolean',
+        c: 'httpBoolean',
+        d: 'httpBoolean',
+        e: 'httpBoolean',
+        f: 'httpBoolean',
+        g: 'httpBoolean?',
+        h: 'httpBoolean?',
+        i: 'httpBoolean',
+        j: 'httpBoolean',
+        k: 'httpBoolean',
+        l: 'httpBoolean',
+      }, obj));
+      obj.should.eql({
+        a: false,
+        b: false,
+        c: true,
+        d: false,
+        e: true,
+        f: false,
+        g: null,
+        h: undefined,
+        i: false,
+        j: false,
+        k: true,
+        l: true,
+      });
+    });
+
+    it('should add rule support string convertType', () => {
+      parameter.addRule('httpBoolean2', Parameter.TYPE_MAP['boolean'], false, 'boolean');
+
+      const obj = {
+        a: 'false',
+        b: '0',
+        c: true,
+        d: false,
+        e: 1,
+        f: 0,
+        g: null,
+        h: undefined,
+        i: '',
+        j: NaN,
+        k: '00',
+        l: '\t',
+      };
+      should.not.exist(parameterWithConvert.validate({
+        a: 'httpBoolean2',
+        b: 'httpBoolean2',
+        c: 'httpBoolean2',
+        d: 'httpBoolean2',
+        e: 'httpBoolean2',
+        f: 'httpBoolean2',
+        g: 'httpBoolean2?',
+        h: 'httpBoolean2?',
+        i: 'httpBoolean2',
+        j: 'httpBoolean2',
+        k: 'httpBoolean2',
+        l: 'httpBoolean2',
+      }, obj));
+      obj.should.eql({
+        a: true,
+        b: true,
+        c: true,
+        d: false,
+        e: true,
+        f: false,
+        g: null,
+        h: undefined,
+        i: false,
+        j: false,
+        k: true,
+        l: true,
+      });
+    });
   });
 
   describe('custom translate function', function(){
@@ -800,6 +897,10 @@ describe('validate with options.convert', function() {
       f: 'true',
       g: true,
       h: false,
+      n: null,
+      u: undefined,
+      i: NaN,
+      j: Infinity,
     };
     parameterWithConvert.validate({
       a: 'boolean',
@@ -810,6 +911,10 @@ describe('validate with options.convert', function() {
       f: 'boolean',
       g: 'boolean',
       h: 'boolean',
+      n: 'boolean',
+      u: 'boolean',
+      i: 'boolean',
+      j: 'boolean',
     }, value);
     value.should.eql({
       a: true,
@@ -820,6 +925,10 @@ describe('validate with options.convert', function() {
       f: true,
       g: true,
       h: false,
+      n: null,
+      u: undefined,
+      i: false,
+      j: true,
     });
   });
 
