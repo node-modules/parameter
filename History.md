@@ -1,4 +1,10 @@
 
+3.1.0 / 2018-08-30
+==================
+
+**features**
+  * [[`487ae22`](http://github.com/node-modules/parameter/commit/487ae229df85b235761bfbb402826baaf61f29bb)] - feat: addRule support set default convertType (#51) (fengmk2 <<fengmk2@gmail.com>>)
+
 3.0.0 / 2018-08-30
 ==================
 
