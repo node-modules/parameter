@@ -9,6 +9,10 @@ var parameterWithRootValidate = new Parameter({
   validateRoot: true,
 });
 
+var parameterWithConvert = new Parameter({
+  convert: true,
+});
+
 describe('parameter', function () {
   describe('required', function () {
     it('should required work fine', function () {
@@ -24,6 +28,19 @@ describe('parameter', function () {
     it('should not required work fine', function () {
       var value = {int: 1};
       var rule = {int: {type: 'int', required: false}};
+      should.not.exist(parameter.validate(rule, {}));
+    });
+
+    it('should not required work fine with null', function () {
+      var value = { int: 1 };
+      var rule = { int: { type: 'int', required: false } };
+      should.not.exist(parameter.validate(rule, { int: null }));
+    });
+
+    it('should not required work fine with ?', function () {
+      var rule = { int: 'int?' };
+      should.not.exist(parameter.validate(rule, {}));
+      rule = { int: { type: 'int?' }};
       should.not.exist(parameter.validate(rule, {}));
     });
 
@@ -48,7 +65,7 @@ describe('parameter', function () {
         } catch (e) {
           err = e;
         }
-      should(err.message).equal("Cannot read property 'hasOwnProperty' of undefined");
+      should(err.message).equal('Cannot read property \'int\' of undefined');
     });
 
     it('should invalid type throw', function () {
@@ -182,6 +199,12 @@ describe('parameter', function () {
     it('should check allowEmpty with min and max ok', function () {
       var value = {string: ''};
       var rule = {string: { type: 'string', min: 10, max: 100, allowEmpty: true}};
+      should.not.exist(parameter.validate(rule, value));
+    });
+
+    it('should allowEmpty default to true if required is false', function () {
+      var value = { string: '' };
+      var rule = { string: { type: 'string', format: /\d+/, required: false } };
       should.not.exist(parameter.validate(rule, value));
     });
   });
@@ -698,6 +721,17 @@ describe('parameter', function () {
       var value = {key: 'not-prefixed'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^prefix/');
     });
+
+    it('should add work with required false by ?', function () {
+      parameter.addRule('prefix', function (rule, value) {
+        if (value.indexOf(rule.prefix) !== 0) {
+          return 'should start with ' + rule.prefix;
+        }
+      });
+      should.not.exist(parameter.validate({ foo: 'prefix?' }, {}));
+      parameter.validate({ foo: { type: 'prefix', prefix: 'hello' } }, {})[0].message.should.equal('required');
+      parameter.validate({ foo: { type: 'prefix', prefix: 'hello' } }, { foo: 'world' })[0].message.should.equal('should start with hello');
+    });
   });
 
   describe('custom translate function', function(){
@@ -725,5 +759,104 @@ describe('validate with option.validateRoot', function () {
     var value = null;
     var rule = { int: { type: 'int1', required: false } };
     parameterWithRootValidate.validate(rule, value)[0].message.should.equal('the validated value should be a object');;
+  });
+});
+
+describe('validate with options.convert', function() {
+  it('should convert to specific type by default', () => {
+    var value = {
+      int: '1.1',
+      number: '1.23',
+      string: 123,
+      boolean: 'foo',
+      regexp: 567,
+      id: 888,
+    };
+    parameterWithConvert.validate({
+      int: 'int',
+      number: 'number',
+      string: 'string',
+      boolean: 'boolean',
+      regexp: /\d+/,
+      id: 'id',
+    }, value);
+    value.should.eql({
+      int: 1,
+      number: 1.23,
+      string: '123',
+      boolean: true,
+      regexp: '567',
+      id: '888'
+    });
+  });
+
+  it('should convert to boolean', () => {
+    var value = {
+      a: '0',
+      b: '',
+      c: 0,
+      d: 1,
+      e: 'false',
+      f: 'true',
+      g: true,
+      h: false,
+    };
+    parameterWithConvert.validate({
+      a: 'boolean',
+      b: 'boolean',
+      c: 'boolean',
+      d: 'boolean',
+      e: 'boolean',
+      f: 'boolean',
+      g: 'boolean',
+      h: 'boolean',
+    }, value);
+    value.should.eql({
+      a: true,
+      b: false,
+      c: false,
+      d: true,
+      e: true,
+      f: true,
+      g: true,
+      h: false,
+    });
+  });
+
+  it('should convertType support customize', () => {
+    var value = { int: 123 };
+    var res = parameterWithConvert.validate({
+      int: {
+        type: 'int',
+        convertType: 'string',
+      },
+    }, value);
+    res[0].message.should.equal('should be an integer');
+    value.int.should.equal('123');
+  });
+
+  it('should convertType not work with object', () => {
+    var value = { int: {} };
+    var res = parameterWithConvert.validate({
+      int: 'int',
+    }, value);
+    res[0].message.should.equal('should be an integer');
+    value.int.should.eql({});
+  });
+
+  it('should convertType support function', () => {
+    var value = { int: 'x' };
+    var res = parameterWithConvert.validate({
+      int: {
+        type: 'int',
+        convertType(v, obj) {
+          obj.should.equal(value);
+          if (v === 'x') return 1;
+          return 0;
+        },
+      },
+    }, value);
+    should.not.exist(res);
+    value.int.should.equal(1);
   });
 });

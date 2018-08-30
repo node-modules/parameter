@@ -30,9 +30,8 @@ class Parameter {
       this.translate = opts.translate;
     }
 
-    if (opts.validateRoot) {
-      this.validateRoot = true;
-    }
+    if (opts.validateRoot) this.validateRoot = true;
+    if (opts.convert) this.convert = true;
   }
 
   t() {
@@ -70,7 +69,8 @@ class Parameter {
 
     for (var key in rules) {
       var rule = formatRule(rules[key]);
-      var has = obj.hasOwnProperty(key);
+      var value = obj[key];
+      var has = value !== null && value !== undefined;
 
       if (!has) {
         if (rule.required !== false) {
@@ -89,6 +89,7 @@ class Parameter {
           ', but the following type was passed: ' + rule.type);
       }
 
+      convert(rule, obj, key, this.convert);
       var msg = checker.call(self, rule, obj[key], obj);
       if (typeof msg === 'string') {
         errors.push({
@@ -178,8 +179,27 @@ var TYPE_MAP = Parameter.TYPE_MAP = {
   url: checkUrl,
 };
 
+var CONVERT_MAP = Parameter.CONVERT_MAP = {
+  number: 'number',
+  int: 'int',
+  integer: 'int',
+  string: 'string',
+  id: 'string',
+  date: 'string',
+  dateTime: 'string',
+  datetime: 'string',
+  boolean: 'bool',
+  bool: 'bool',
+  email: 'string',
+  password: 'string',
+  url: 'string',
+};
+
 /**
  * format a rule
+ * - resolve abbr
+ * - resolve `?`
+ * - resolve default convertType
  *
  * @param {Mixed} rule
  * @return {Object}
@@ -187,16 +207,61 @@ var TYPE_MAP = Parameter.TYPE_MAP = {
  */
 
 function formatRule(rule) {
+  rule = rule || {};
   if (typeof rule === 'string') {
-    return { type: rule };
+    rule = { type: rule };
+  } else if (Array.isArray(rule)) {
+    rule = { type: 'enum', values: rule };
+  } else if (rule instanceof RegExp) {
+    rule = { type: 'string', format: rule };
   }
-  if (Array.isArray(rule)) {
-    return { type: 'enum', values: rule };
+
+  if (rule.type && rule.type[rule.type.length - 1] === '?') {
+    rule.type = rule.type.slice(0, -1);
+    rule.required = false;
   }
-  if (rule instanceof RegExp) {
-    return { type: 'string', format: rule };
+
+  return rule;
+}
+
+/**
+ * convert param to specific type
+ * @param {Object} rule
+ * @param {Object} obj
+ * @param {String} key
+ * @param {Boolean} defaultConvert
+ */
+function convert(rule, obj, key, defaultConvert) {
+  var convertType;
+  if (defaultConvert) convertType = CONVERT_MAP[rule.type];
+  if (rule.convertType) convertType = rule.convertType;
+  if (!convertType) return;
+
+  const value = obj[key];
+  // convert type only work for primitive data
+  if (typeof value === 'object') return;
+
+  // convertType support function
+  if (typeof convertType === 'function') {
+    obj[key] = convertType(value, obj);
+    return;
   }
-  return rule || {};
+
+  switch (convertType) {
+    case 'int':
+      obj[key] = parseInt(value, 10);
+      break;
+    case 'string':
+      obj[key] = String(value);
+      break;
+    case 'number':
+      obj[key] = Number(obj[key]);
+      break;
+    case 'bool':
+    case 'boolean':
+      obj[key] = !!value;
+      break;
+  }
 }
 
 /**
@@ -252,9 +317,9 @@ function checkNumber(rule, value) {
 }
 
 /**
- * check string
- * {
- *   allowEmpty: true, // (default to false, alias to empty)
+ * - check string
+ *-  {
+ *-    allowEmpty: true, // resolve default convertType to false, alias to empty)
  *   format: /^\d+$/,
  *   max: 100,
  *   min: 0
@@ -270,17 +335,19 @@ function checkString(rule, value) {
   if (typeof value !== 'string') {
     return this.t('should be a string');
   }
+
+  // if required === false, set allowEmpty to true by default
+  if (!rule.hasOwnProperty('allowEmpty') && rule.required === false) {
+    rule.allowEmpty = true;
+  }
+
   var allowEmpty = rule.hasOwnProperty('allowEmpty')
     ? rule.allowEmpty
     : rule.empty;
 
-  if (!allowEmpty && value === '') {
+  if (!value) {
+    if (allowEmpty) return;
     return this.t('should not be empty');
-  }
-
-  // if allowEmpty was set, don't need to match format
-  if (allowEmpty && value === '') {
-    return;
   }
 
   if (rule.hasOwnProperty('max') && value.length > rule.max) {
@@ -501,7 +568,7 @@ function checkArray(rule, value) {
   var errors = [];
   var subRule = rule.itemType === 'object'
   ? rule
-  : rule.rule || formatRule.call(self, rule.itemType);
+  : rule.rule || formatRule(rule.itemType);
 
   value.forEach(function (v, i) {
     var index = '[' + i + ']';
