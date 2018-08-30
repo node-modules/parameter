@@ -33,11 +33,13 @@ $ npm install parameter --save
 - `constructor([options])` - new Class `Parameter` instance
   - `options.translate` - translate function
   - `options.validateRoot` - config whether to validate the passed in value must be a object, default to `false`.
-  - `options.convertType` - convert primitive params to specific type, default to `false`.
+  - `options.convert` - convert primitive params to specific type, default to `false`.
 - `validate(rule, value)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
 - `addRule(type, check)` - add custom rules.
    - `type` - rule type, required and must be string type.
    - `check` - check handler. can be a `function` or a `RegExp`.
+
+__Note: when `options.convert` enabled, all built-in rules check for primitive input param and convert it to rule's default `convertType`(which defined below), you can also enable this feature for specific rule by `convertType` options in each rule definition.__
 
 ### Example
 
@@ -76,11 +78,9 @@ var errors = parameter.validate(rule, data);
 
 - `required` - if `required` is set to false, this property can be null or undefined. default to `true`.
 - `type` - The type of property, every type has it's own rule for the validate.
-- `convertType` - Let parameter to convert the input param to the specific type, support `int`, `number`, `string` and `boolean`, also support a function to customize your own convert method.
+- `convertType` - Make parameter convert the input param to the specific type, support `int`, `number`, `string` and `boolean`, also support a function to customize your own convert method.
 
-if `options.convertType` was set to parameter's constructor, the default rules below will convert the primitive params to matched type.
-
-__ Note: you can combile require and type end with a notation `?` like: `int?` or `string?` to specific both type and non-required.__
+__Note: you can combile require and type end with a notation `?` like: `int?` or `string?` to specific both type and non-required.__
 
 #### int
 
@@ -90,6 +90,8 @@ If type is `int`, there has tow addition rules:
 - `min` - The minimum of the value, `value` must >= `min`.
 
 Default `convertType` is `int`.
+
+__Note: default `convertType` will only work when `options.convert` set to true in parameter's constructor.__
 
 #### integer
 

@@ -31,7 +31,7 @@ class Parameter {
     }
 
     if (opts.validateRoot) this.validateRoot = true;
-    if (opts.convert) this.convertType = true;
+    if (opts.convert) this.convert = true;
   }
 
   t() {
@@ -89,7 +89,7 @@ class Parameter {
           ', but the following type was passed: ' + rule.type);
       }
 
-      convert(rule, obj, key, this.convertType);
+      convert(rule, obj, key, this.convert);
       var msg = checker.call(self, rule, obj[key], obj);
       if (typeof msg === 'string') {
         errors.push({

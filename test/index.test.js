@@ -790,6 +790,39 @@ describe('validate with options.convert', function() {
     });
   });
 
+  it('should convert to boolean', () => {
+    var value = {
+      a: '0',
+      b: '',
+      c: 0,
+      d: 1,
+      e: 'false',
+      f: 'true',
+      g: true,
+      h: false,
+    };
+    parameterWithConvert.validate({
+      a: 'boolean',
+      b: 'boolean',
+      c: 'boolean',
+      d: 'boolean',
+      e: 'boolean',
+      f: 'boolean',
+      g: 'boolean',
+      h: 'boolean',
+    }, value);
+    value.should.eql({
+      a: true,
+      b: false,
+      c: false,
+      d: true,
+      e: true,
+      f: true,
+      g: true,
+      h: false,
+    });
+  });
+
   it('should convertType support customize', () => {
     var value = { int: 123 };
     var res = parameterWithConvert.validate({
