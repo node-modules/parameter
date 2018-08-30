@@ -829,6 +829,53 @@ describe('parameter', function () {
         l: true,
       });
     });
+
+    it('should add rule support string convertType ignore override', () => {
+      parameter.addRule('httpBoolean3', Parameter.TYPE_MAP['boolean'], 'boolean');
+
+      const obj = {
+        a: 'false',
+        b: '0',
+        c: true,
+        d: false,
+        e: 1,
+        f: 0,
+        g: null,
+        h: undefined,
+        i: '',
+        j: NaN,
+        k: '00',
+        l: '\t',
+      };
+      should.not.exist(parameterWithConvert.validate({
+        a: 'httpBoolean3',
+        b: 'httpBoolean3',
+        c: 'httpBoolean3',
+        d: 'httpBoolean3',
+        e: 'httpBoolean3',
+        f: 'httpBoolean3',
+        g: 'httpBoolean3?',
+        h: 'httpBoolean3?',
+        i: 'httpBoolean3',
+        j: 'httpBoolean3',
+        k: 'httpBoolean3',
+        l: 'httpBoolean3',
+      }, obj));
+      obj.should.eql({
+        a: true,
+        b: true,
+        c: true,
+        d: false,
+        e: true,
+        f: false,
+        g: null,
+        h: undefined,
+        i: false,
+        j: false,
+        k: true,
+        l: true,
+      });
+    });
   });
 
   describe('custom translate function', function(){

@@ -134,6 +134,12 @@ Parameter.prototype.addRule = Parameter.addRule = function addRule(type, check, 
     throw new TypeError('`type` required');
   }
 
+  // addRule(type, check, convertType)
+  if (typeof override === 'string' || typeof override === 'function') {
+    convertType = override;
+    override = true;
+  }
+
   if (typeof override !== 'boolean') {
     override = true;
   }
