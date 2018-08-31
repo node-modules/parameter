@@ -1,16 +1,4 @@
-/**
- * Copyright(c) node-modules and other contributors.
- * MIT Licensed
- *
- * Authors:
- *  dead_horse <dead_horse@qq.com>
- */
-
 'use strict';
-
-/**
- * Module dependencies.
- */
 
 var should = require('should');
 var util = require('util');
@@ -19,6 +7,10 @@ var parameter = new Parameter();
 
 var parameterWithRootValidate = new Parameter({
   validateRoot: true,
+});
+
+var parameterWithConvert = new Parameter({
+  convert: true,
 });
 
 describe('parameter', function () {
@@ -36,6 +28,19 @@ describe('parameter', function () {
     it('should not required work fine', function () {
       var value = {int: 1};
       var rule = {int: {type: 'int', required: false}};
+      should.not.exist(parameter.validate(rule, {}));
+    });
+
+    it('should not required work fine with null', function () {
+      var value = { int: 1 };
+      var rule = { int: { type: 'int', required: false } };
+      should.not.exist(parameter.validate(rule, { int: null }));
+    });
+
+    it('should not required work fine with ?', function () {
+      var rule = { int: 'int?' };
+      should.not.exist(parameter.validate(rule, {}));
+      rule = { int: { type: 'int?' }};
       should.not.exist(parameter.validate(rule, {}));
     });
 
@@ -60,7 +65,7 @@ describe('parameter', function () {
         } catch (e) {
           err = e;
         }
-      should(err.message).equal("Cannot read property 'hasOwnProperty' of undefined");
+      should(err.message).equal('Cannot read property \'int\' of undefined');
     });
 
     it('should invalid type throw', function () {
@@ -194,6 +199,12 @@ describe('parameter', function () {
     it('should check allowEmpty with min and max ok', function () {
       var value = {string: ''};
       var rule = {string: { type: 'string', min: 10, max: 100, allowEmpty: true}};
+      should.not.exist(parameter.validate(rule, value));
+    });
+
+    it('should allowEmpty default to true if required is false', function () {
+      var value = { string: '' };
+      var rule = { string: { type: 'string', format: /\d+/, required: false } };
       should.not.exist(parameter.validate(rule, value));
     });
   });
@@ -350,6 +361,14 @@ describe('parameter', function () {
             message: 'should be an email'
           }
         ]);
+
+        parameter.validate({ name: { type: 'email', message: '错误 email' } }, { name: email }).should.eql([
+          {
+            code: 'invalid',
+            field: 'name',
+            message: '错误 email'
+          }
+        ]);
       });
     });
   });
@@ -405,6 +424,23 @@ describe('parameter', function () {
           code: 'invalid',
           field: 'password',
           message: 'length should bigger than 6'
+        }
+      ]);
+
+      parameter.validate({
+        password: {
+          type: 'password',
+          min: 4,
+          compare: 're-password'
+        }
+      }, {
+        password: '1',
+        're-password': '1',
+      }).should.eql([
+        {
+          code: 'invalid',
+          field: 'password',
+          message: 'length should bigger than 4'
         }
       ]);
     });
@@ -473,6 +509,14 @@ describe('parameter', function () {
             code: 'invalid',
             field: 'name',
             message: 'should be a url'
+          }
+        ]);
+
+        parameter.validate({ name: { type: 'url', message: '不合法 url' } }, { name: url }).should.eql([
+          {
+            code: 'invalid',
+            field: 'name',
+            message: '不合法 url'
           }
         ]);
       });
@@ -632,6 +676,18 @@ describe('parameter', function () {
       (function () {
         parameter.addRule();
       }).should.throw('`type` required');
+      (function () {
+        Parameter.addRule();
+      }).should.throw('`type` required');
+    });
+
+    it('should throw error when override exists rule', function () {
+      (function () {
+        parameter.addRule('string', function() {}, false);
+      }).should.throw('rule `string` exists');
+      (function () {
+        Parameter.addRule('string', function() {}, false);
+      }).should.throw('rule `string` exists');
     });
 
     it('should throw without check', function () {
@@ -657,6 +713,168 @@ describe('parameter', function () {
       var rule = {key: 'prefix'};
       var value = {key: 'not-prefixed'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^prefix/');
+    });
+
+    it('should add with regexp on global', function () {
+      Parameter.addRule('prefix2', /^prefix/);
+      var rule = {key: 'prefix2'};
+      var value = {key: 'not-prefixed'};
+      parameter.validate(rule, value)[0].message.should.equal('should match /^prefix/');
+    });
+
+    it('should add work with required false by ?', function () {
+      parameter.addRule('prefix', function (rule, value) {
+        if (value.indexOf(rule.prefix) !== 0) {
+          return 'should start with ' + rule.prefix;
+        }
+      });
+      should.not.exist(parameter.validate({ foo: 'prefix?' }, {}));
+      parameter.validate({ foo: { type: 'prefix', prefix: 'hello' } }, {})[0].message.should.equal('required');
+      parameter.validate({ foo: { type: 'prefix', prefix: 'hello' } }, { foo: 'world' })[0].message.should.equal('should start with hello');
+    });
+
+    it('should add rule support function convertType', () => {
+      parameter.addRule('httpBoolean', Parameter.TYPE_MAP['boolean'], false, (value, obj) => {
+        if (value === 'false' || value === '0') return false;
+        return !!value;
+      });
+
+      const obj = {
+        a: 'false',
+        b: '0',
+        c: true,
+        d: false,
+        e: 1,
+        f: 0,
+        g: null,
+        h: undefined,
+        i: '',
+        j: NaN,
+        k: '00',
+        l: '\t',
+      };
+      should.not.exist(parameterWithConvert.validate({
+        a: 'httpBoolean',
+        b: 'httpBoolean',
+        c: 'httpBoolean',
+        d: 'httpBoolean',
+        e: 'httpBoolean',
+        f: 'httpBoolean',
+        g: 'httpBoolean?',
+        h: 'httpBoolean?',
+        i: 'httpBoolean',
+        j: 'httpBoolean',
+        k: 'httpBoolean',
+        l: 'httpBoolean',
+      }, obj));
+      obj.should.eql({
+        a: false,
+        b: false,
+        c: true,
+        d: false,
+        e: true,
+        f: false,
+        g: null,
+        h: undefined,
+        i: false,
+        j: false,
+        k: true,
+        l: true,
+      });
+    });
+
+    it('should add rule support string convertType', () => {
+      parameter.addRule('httpBoolean2', Parameter.TYPE_MAP['boolean'], false, 'boolean');
+
+      const obj = {
+        a: 'false',
+        b: '0',
+        c: true,
+        d: false,
+        e: 1,
+        f: 0,
+        g: null,
+        h: undefined,
+        i: '',
+        j: NaN,
+        k: '00',
+        l: '\t',
+      };
+      should.not.exist(parameterWithConvert.validate({
+        a: 'httpBoolean2',
+        b: 'httpBoolean2',
+        c: 'httpBoolean2',
+        d: 'httpBoolean2',
+        e: 'httpBoolean2',
+        f: 'httpBoolean2',
+        g: 'httpBoolean2?',
+        h: 'httpBoolean2?',
+        i: 'httpBoolean2',
+        j: 'httpBoolean2',
+        k: 'httpBoolean2',
+        l: 'httpBoolean2',
+      }, obj));
+      obj.should.eql({
+        a: true,
+        b: true,
+        c: true,
+        d: false,
+        e: true,
+        f: false,
+        g: null,
+        h: undefined,
+        i: false,
+        j: false,
+        k: true,
+        l: true,
+      });
+    });
+
+    it('should add rule support string convertType ignore override', () => {
+      parameter.addRule('httpBoolean3', Parameter.TYPE_MAP['boolean'], 'boolean');
+
+      const obj = {
+        a: 'false',
+        b: '0',
+        c: true,
+        d: false,
+        e: 1,
+        f: 0,
+        g: null,
+        h: undefined,
+        i: '',
+        j: NaN,
+        k: '00',
+        l: '\t',
+      };
+      should.not.exist(parameterWithConvert.validate({
+        a: 'httpBoolean3',
+        b: 'httpBoolean3',
+        c: 'httpBoolean3',
+        d: 'httpBoolean3',
+        e: 'httpBoolean3',
+        f: 'httpBoolean3',
+        g: 'httpBoolean3?',
+        h: 'httpBoolean3?',
+        i: 'httpBoolean3',
+        j: 'httpBoolean3',
+        k: 'httpBoolean3',
+        l: 'httpBoolean3',
+      }, obj));
+      obj.should.eql({
+        a: true,
+        b: true,
+        c: true,
+        d: false,
+        e: true,
+        f: false,
+        g: null,
+        h: undefined,
+        i: false,
+        j: false,
+        k: true,
+        l: true,
+      });
     });
   });
 
@@ -685,5 +903,116 @@ describe('validate with option.validateRoot', function () {
     var value = null;
     var rule = { int: { type: 'int1', required: false } };
     parameterWithRootValidate.validate(rule, value)[0].message.should.equal('the validated value should be a object');;
+  });
+});
+
+describe('validate with options.convert', function() {
+  it('should convert to specific type by default', () => {
+    var value = {
+      int: '1.1',
+      number: '1.23',
+      string: 123,
+      boolean: 'foo',
+      regexp: 567,
+      id: 888,
+    };
+    parameterWithConvert.validate({
+      int: 'int',
+      number: 'number',
+      string: 'string',
+      boolean: 'boolean',
+      regexp: /\d+/,
+      id: 'id',
+    }, value);
+    value.should.eql({
+      int: 1,
+      number: 1.23,
+      string: '123',
+      boolean: true,
+      regexp: '567',
+      id: '888'
+    });
+  });
+
+  it('should convert to boolean', () => {
+    var value = {
+      a: '0',
+      b: '',
+      c: 0,
+      d: 1,
+      e: 'false',
+      f: 'true',
+      g: true,
+      h: false,
+      n: null,
+      u: undefined,
+      i: NaN,
+      j: Infinity,
+    };
+    parameterWithConvert.validate({
+      a: 'boolean',
+      b: 'boolean',
+      c: 'boolean',
+      d: 'boolean',
+      e: 'boolean',
+      f: 'boolean',
+      g: 'boolean',
+      h: 'boolean',
+      n: 'boolean',
+      u: 'boolean',
+      i: 'boolean',
+      j: 'boolean',
+    }, value);
+    value.should.eql({
+      a: true,
+      b: false,
+      c: false,
+      d: true,
+      e: true,
+      f: true,
+      g: true,
+      h: false,
+      n: null,
+      u: undefined,
+      i: false,
+      j: true,
+    });
+  });
+
+  it('should convertType support customize', () => {
+    var value = { int: 123 };
+    var res = parameterWithConvert.validate({
+      int: {
+        type: 'int',
+        convertType: 'string',
+      },
+    }, value);
+    res[0].message.should.equal('should be an integer');
+    value.int.should.equal('123');
+  });
+
+  it('should convertType not work with object', () => {
+    var value = { int: {} };
+    var res = parameterWithConvert.validate({
+      int: 'int',
+    }, value);
+    res[0].message.should.equal('should be an integer');
+    value.int.should.eql({});
+  });
+
+  it('should convertType support function', () => {
+    var value = { int: 'x' };
+    var res = parameterWithConvert.validate({
+      int: {
+        type: 'int',
+        convertType(v, obj) {
+          obj.should.equal(value);
+          if (v === 'x') return 1;
+          return 0;
+        },
+      },
+    }, value);
+    should.not.exist(res);
+    value.int.should.equal(1);
   });
 });

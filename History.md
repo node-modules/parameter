@@ -1,4 +1,22 @@
 
+3.1.0 / 2018-08-30
+==================
+
+**features**
+  * [[`487ae22`](http://github.com/node-modules/parameter/commit/487ae229df85b235761bfbb402826baaf61f29bb)] - feat: addRule support set default convertType (#51) (fengmk2 <<fengmk2@gmail.com>>)
+
+3.0.0 / 2018-08-30
+==================
+
+**others**
+  * [[`f1dda26`](http://github.com/node-modules/parameter/commit/f1dda26ac3697c63a7e344228b7aed7bb55b3931)] - refactor: make rules more practical (#50) (Yiyu He <<dead_horse@qq.com>>)
+
+2.4.0 / 2018-08-03
+==================
+
+**features**
+  * [[`e12fac4`](http://github.com/node-modules/parameter/commit/e12fac4d1681e51b02193defd5acb9e4864138dd)] - feat: add global addRule method (#46) (fengmk2 <<fengmk2@gmail.com>>)
+
 2.3.0 / 2018-06-19
 ==================
 
