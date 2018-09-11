@@ -32,6 +32,7 @@ class Parameter {
 
     if (opts.validateRoot) this.validateRoot = true;
     if (opts.convert) this.convert = true;
+    if (opts.widelyUndefined) this.widelyUndefined = true;
   }
 
   t() {
@@ -70,6 +71,13 @@ class Parameter {
     for (var key in rules) {
       var rule = formatRule(rules[key]);
       var value = obj[key];
+
+      // treat null / '' / NaN as undefined
+      if (this.widelyUndefined &&
+        (value === '' || value === null || Number.isNaN(value))) {
+        value = obj[key] = undefined;
+      }
+
       var has = value !== null && value !== undefined;
 
       if (!has) {
@@ -79,6 +87,10 @@ class Parameter {
             field: key,
             code: this.t('missing_field')
           });
+        }
+        // support default value
+        if (rule.default) {
+          obj[key] = rule.default;
         }
         continue;
       }
