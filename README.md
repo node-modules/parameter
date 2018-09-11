@@ -34,6 +34,7 @@ $ npm install parameter --save
   - `options.translate` - translate function
   - `options.validateRoot` - config whether to validate the passed in value must be a object, default to `false`.
   - `options.convert` - convert primitive params to specific type, default to `false`.
+  - `optinos.widelyUndefined` - convert empty string(`''`), NaN, Null to undefined, this option can make `rule.required` more powerful, default to `false`.
 - `validate(rule, value)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
 - `addRule(type, check)` - add custom rules.
    - `type` - rule type, required and must be string type.
@@ -79,6 +80,7 @@ var errors = parameter.validate(rule, data);
 - `required` - if `required` is set to false, this property can be null or undefined. default to `true`.
 - `type` - The type of property, every type has it's own rule for the validate.
 - `convertType` - Make parameter convert the input param to the specific type, support `int`, `number`, `string` and `boolean`, also support a function to customize your own convert method.
+- `default` - The default value of property, once the property is allowed non-required and missed, parameter will use this as the default value. __This may change the original input params__.
 
 __Note: you can combile require and type end with a notation `?` like: `int?` or `string?` to specific both type and non-required.__
 

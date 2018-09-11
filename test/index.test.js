@@ -13,6 +13,10 @@ var parameterWithConvert = new Parameter({
   convert: true,
 });
 
+var parameterWithWidelyUndefined = new Parameter({
+  widelyUndefined: true,
+});
+
 describe('parameter', function () {
   describe('required', function () {
     it('should required work fine', function () {
@@ -1014,5 +1018,82 @@ describe('validate with options.convert', function() {
     }, value);
     should.not.exist(res);
     value.int.should.equal(1);
+  });
+
+  describe('validate with options.widelyUndefined', function () {
+    it('should convert null / NaN / "" to undefiend', function() {
+      var value = {
+        number: NaN,
+        string: '',
+        date: null,
+        foo: 'test string',
+        bar: 123,
+      };
+      var res = parameterWithWidelyUndefined.validate({
+        number: 'number?',
+        string: 'string?',
+        date: 'date?',
+        foo: 'string',
+        bar: 'int',
+      }, value);
+      should.not.exist(res);
+      value.should.eql({
+        number: undefined,
+        string: undefined,
+        date: undefined,
+        foo: 'test string',
+        bar: 123,
+      });
+    });
+  });
+
+  describe('default', function() {
+    it('should default work', function () {
+      var value = {
+        string: '',
+        foo: null,
+        bar: 123,
+      };
+      var res = parameter.validate({
+        string: { type: 'string?', default: 'string' },
+        foo: { type: 'string?', default: 'foo' },
+        bar: { type: 'int?', default: 1200 },
+        hello: { type: 'string?', default: 'world' },
+      }, value);
+      should.not.exist(res);
+      value.should.eql({
+        string: '', // notice: string '' is not undefined here
+        foo: 'foo',
+        bar: 123,
+        hello: 'world',
+      });
+    });
+
+    it('should default work with widelyUndefined', function() {
+      var value = {
+        number: NaN,
+        string: '',
+        date: null,
+        foo: 'test string',
+        bar: 123,
+      };
+      var res = parameterWithWidelyUndefined.validate({
+        number: { type: 'number?', default: 100 },
+        string: { type: 'string?', default: 'string' },
+        date: { type: 'date?', default: 100 },
+        foo: { type: 'string?', default: 'foo' },
+        bar: { type: 'int?', default: 1200 },
+        hello: { type: 'string?', default: 'world' },
+      }, value);
+      should.not.exist(res);
+      value.should.eql({
+        number: 100,
+        string: 'string',
+        date: 100,
+        foo: 'test string',
+        bar: 123,
+        hello: 'world',
+      });
+    });
   });
 });
