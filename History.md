@@ -1,4 +1,10 @@
 
+3.2.0 / 2018-09-11
+==================
+
+**features**
+  * [[`9d35b7f`](http://github.com/node-modules/parameter/commit/9d35b7fda2b21bf59d4ba036f7b75874d82ca9ad)] - feat: support options.widelyUndefined and rule.default (#53) (Yiyu He <<dead_horse@qq.com>>)
+
 3.1.0 / 2018-08-30
 ==================
 
