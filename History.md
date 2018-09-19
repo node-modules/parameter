@@ -1,4 +1,10 @@
 
+3.3.0 / 2018-09-19
+==================
+
+**features**
+  * [[`4d95c6a`](http://github.com/node-modules/parameter/commit/4d95c6a52416c8b8cd4f71b647ec4c05e0bab8ac)] - feat: support `trim: true` on string value (#54) (fengmk2 <<fengmk2@gmail.com>>)
+
 3.2.0 / 2018-09-11
 ==================
 
