@@ -72,6 +72,10 @@ class Parameter {
       var rule = formatRule(rules[key]);
       var value = obj[key];
 
+      if (typeof value === 'string' && rule.trim === true) {
+        value = obj[key] = value.trim();
+      }
+
       // treat null / '' / NaN as undefined
       if (this.widelyUndefined &&
         (value === '' || value === null || Number.isNaN(value))) {
@@ -344,12 +348,13 @@ function checkNumber(rule, value) {
 }
 
 /**
- * - check string
- *-  {
- *-    allowEmpty: true, // resolve default convertType to false, alias to empty)
+ * check string
+ * {
+ *   allowEmpty: true, // resolve default convertType to false, alias to empty)
  *   format: /^\d+$/,
  *   max: 100,
- *   min: 0
+ *   min: 0,
+ *   trim: false,
  * }
  *
  * @param {Object} rule

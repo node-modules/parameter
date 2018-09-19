@@ -148,6 +148,7 @@ If type is `string`, there has four addition rules:
 - `format` - A `RegExp` to check string's format.
 - `max` - The maximum length of the string.
 - `min` - The minimum length of the string.
+- `trim` - Trim the string before check, default is `false`.
 
 Default `convertType` is `string`.
 
@@ -208,6 +209,7 @@ If type is `array`, there has four addition rule:
 - `'boolean'` => `{type: 'boolean', required: true}`
 - `'bool'` => `{type: 'bool', required: true}`
 - `'string'` => `{type: 'string', required: true, allowEmpty: false}`
+- `'string?'` => `{type: 'string', required: false, allowEmpty: true}`
 - `'email'` => `{type: 'email', required: true, allowEmpty: false, format: EMAIL_RE}`
 - `'password'` => `{type: 'password', required: true, allowEmpty: false, format: PASSWORD_RE, min: 6}`
 - `'object'` => `{type: 'object', required: true}`

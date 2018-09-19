@@ -17,9 +17,9 @@ var parameterWithWidelyUndefined = new Parameter({
   widelyUndefined: true,
 });
 
-describe('parameter', function () {
-  describe('required', function () {
-    it('should required work fine', function () {
+describe('parameter', () => {
+  describe('required', () => {
+    it('should required work fine', () => {
       var value = {int: 1};
       var rule = {int: {type: 'int', required: true}};
       parameter.validate(rule, {})[0].should.eql({
@@ -29,26 +29,26 @@ describe('parameter', function () {
       });
     });
 
-    it('should not required work fine', function () {
+    it('should not required work fine', () => {
       var value = {int: 1};
       var rule = {int: {type: 'int', required: false}};
       should.not.exist(parameter.validate(rule, {}));
     });
 
-    it('should not required work fine with null', function () {
+    it('should not required work fine with null', () => {
       var value = { int: 1 };
       var rule = { int: { type: 'int', required: false } };
       should.not.exist(parameter.validate(rule, { int: null }));
     });
 
-    it('should not required work fine with ?', function () {
+    it('should not required work fine with ?', () => {
       var rule = { int: 'int?' };
       should.not.exist(parameter.validate(rule, {}));
       rule = { int: { type: 'int?' }};
       should.not.exist(parameter.validate(rule, {}));
     });
 
-    it('should not required check ok', function () {
+    it('should not required check ok', () => {
       var value = {int: 1.1};
       var rule = {int: {type: 'int', required: false}};
       parameter.validate(rule, value)[0].should.eql({
@@ -59,8 +59,8 @@ describe('parameter', function () {
     });
   });
 
-  describe('validate', function () {
-    it('should throw error when received a non object', function () {
+  describe('validate', () => {
+    it('should throw error when received a non object', () => {
         var value = null;
         var rule = {int: {type: 'int1', required: false}};
         let err;
@@ -72,95 +72,95 @@ describe('parameter', function () {
       should(err.message).equal('Cannot read property \'int\' of undefined');
     });
 
-    it('should invalid type throw', function () {
-      (function () {
+    it('should invalid type throw', () => {
+      (() => {
         var value = {int: 1.1};
         var rule = {int: {type: 'int1', required: false}};
         parameter.validate(rule, value);
       }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, password, url, but the following type was passed: int1');
     });
 
-    it('should throw without rule', function () {
-      (function () {
+    it('should throw without rule', () => {
+      (() => {
         parameter.validate();
       }).should.throw('need object type rule');
     });
 
-    it('should throw when rule is null', function () {
-      (function () {
+    it('should throw when rule is null', () => {
+      (() => {
         parameter.validate({d: null}, {d: 1});
       }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, password, url, but the following type was passed: undefined');
     });
   });
 
-  describe('int', function () {
-    it('should check ok', function () {
+  describe('int', () => {
+    it('should check ok', () => {
       var value = { int: 1 };
       var rule = { int: {type: 'int', max: 100, min: 1 }};
       should.not.exist(parameter.validate(rule, value));
       should.not.exist(parameter.validate({int: 'int'}, value));
     });
 
-    it('should check number error', function () {
+    it('should check number error', () => {
       var value = { int: '1' };
       var rule = { int: {type: 'int', max: 100, min: 1 }};
       parameter.validate(rule, value)[0].message.should.equal('should be an integer');
     });
 
-    it('should check int error', function () {
+    it('should check int error', () => {
       var value = { int: 1.1 };
       var rule = { int: {type: 'int', max: 100, min: 1 }};
       parameter.validate(rule, value)[0].message.should.equal('should be an integer');
     });
 
-    it('should check max error', function () {
+    it('should check max error', () => {
       var value = { int: 101 };
       var rule = { int: {type: 'int', max: 100, min: 1 }};
       parameter.validate(rule, value)[0].message.should.equal('should smaller than 100');
     });
 
-    it('should check min error', function () {
+    it('should check min error', () => {
       var value = { int: -1 };
       var rule = { int: {type: 'int', max: 100, min: 0 }};
       parameter.validate(rule, value)[0].message.should.equal('should bigger than 0');
     });
   });
 
-  describe('number', function () {
-    it('should check ok', function () {
+  describe('number', () => {
+    it('should check ok', () => {
       var value = { number: 1.1 };
       var rule = { number: {type: 'number', max: 100, min: 1 }};
       should.not.exist(parameter.validate(rule, value));
       should.not.exist(parameter.validate({number: 'number'}, value));
     });
 
-    it('should check number error', function () {
+    it('should check number error', () => {
       var value = { number: '1' };
       var rule = { number: {type: 'number', max: 100, min: 1 }};
       parameter.validate(rule, value)[0].message.should.equal('should be a number');
     });
 
-    it('should check NaN error', function () {
+    it('should check NaN error', () => {
       var value = { number: NaN };
       var rule = { number: 'number' };
       parameter.validate(rule, value)[0].message.should.equal('should be a number');
     });
 
-    it('should check max error', function () {
+    it('should check max error', () => {
       var value = { number: 101 };
       var rule = { number: {type: 'number', max: 100, min: 1 }};
       parameter.validate(rule, value)[0].message.should.equal('should smaller than 100');
     });
 
-    it('should check min error', function () {
+    it('should check min error', () => {
       var value = { number: -1 };
       var rule = { number: {type: 'number', max: 100, min: 0 }};
       parameter.validate(rule, value)[0].message.should.equal('should bigger than 0');
     });
   });
 
-  describe('string', function () {
-    it('should check ok', function () {
+  describe('string', () => {
+    it('should check ok', () => {
       var value = { string: 'hello' };
       var rule = { string: {type: 'string', max: 100, min: 1, format: /^\D+$/ }};
       should.not.exist(parameter.validate(rule, value));
@@ -168,7 +168,7 @@ describe('parameter', function () {
       should.not.exist(parameter.validate({string: {type: 'string', allowEmpty: true}}, {string: ''}));
     });
 
-    it('should check empty error', function () {
+    it('should check empty error', () => {
       var value = { string: '' };
       var rule = { string: 'string'};
       parameter.validate(rule, value)[0].message.should.equal('should not be empty');
@@ -176,51 +176,56 @@ describe('parameter', function () {
       parameter.validate(rule, value)[0].message.should.equal('should not be empty');
     });
 
-    it('should check max error', function () {
+    it('should check with rule.trim', () => {
+      should.not.exist(parameter.validate({string: {type: 'string', trim: true, allowEmpty: true}}, {string: '    '}));
+      parameter.validate({string: {type: 'string', trim: true}}, {string: '    '})[0].message.should.equal('should not be empty');
+    });
+
+    it('should check max error', () => {
       var value = { string: 'hello' };
       var rule = { string: {type: 'string', max: 4, min: 1 }};
       parameter.validate(rule, value)[0].message.should.equal('length should smaller than 4');
     });
 
-    it('should check min error', function () {
+    it('should check min error', () => {
       var value = { string: 'hello' };
       var rule = { string: {type: 'string', max: 100, min: 10 }};
       parameter.validate(rule, value)[0].message.should.equal('length should bigger than 10');
     });
 
-    it('should check format error', function () {
+    it('should check format error', () => {
       var value = {string: 'hello'};
       var rule = {string: /\d+/};
       parameter.validate(rule, value)[0].message.should.equal('should match /\\d+/');
     });
 
-    it('should check allowEmpty with format ok', function () {
+    it('should check allowEmpty with format ok', () => {
       var value = {string: ''};
       var rule = {string: { type: 'string', format: /\d+/, allowEmpty: true}};
       should.not.exist(parameter.validate(rule, value));
     });
 
-    it('should check allowEmpty with min and max ok', function () {
+    it('should check allowEmpty with min and max ok', () => {
       var value = {string: ''};
       var rule = {string: { type: 'string', min: 10, max: 100, allowEmpty: true}};
       should.not.exist(parameter.validate(rule, value));
     });
 
-    it('should allowEmpty default to true if required is false', function () {
+    it('should allowEmpty default to true if required is false', () => {
       var value = { string: '' };
       var rule = { string: { type: 'string', format: /\d+/, required: false } };
       should.not.exist(parameter.validate(rule, value));
     });
   });
 
-  describe('id', function () {
-    it('should check ok', function () {
+  describe('id', () => {
+    it('should check ok', () => {
       var value = {id : '0524' };
       var rule = {id: 'id'};
       should.not.exist(parameter.validate(rule, value));
     });
 
-    it('should check allowEmpty ok', function () {
+    it('should check allowEmpty ok', () => {
       [
         '231',
         '',
@@ -229,7 +234,7 @@ describe('parameter', function () {
       });
     });
 
-    it('should check id not ok', function () {
+    it('should check id not ok', () => {
       var value = {id : '0524x' };
       var rule = {id: 'id'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^\\d+$/');
@@ -237,20 +242,20 @@ describe('parameter', function () {
   });
 
 
-  describe('date', function () {
-    it('should check ok', function () {
+  describe('date', () => {
+    it('should check ok', () => {
       var value = {date : '2014-11-11' };
       var rule = {date: 'date'};
       should.not.exist(parameter.validate(rule, value));
     });
 
-    it('should check date not ok', function () {
+    it('should check date not ok', () => {
       var value = {date : '2014-xx-xx' };
       var rule = {date: 'date'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^\\d{4}\\-\\d{2}\\-\\d{2}$/');
     });
 
-    it('should check allowEmpty ok', function () {
+    it('should check allowEmpty ok', () => {
       [
         '2014-11-11',
         '',
@@ -260,26 +265,26 @@ describe('parameter', function () {
     });
   });
 
-  describe('dateTime', function () {
-    it('should check ok', function () {
+  describe('dateTime', () => {
+    it('should check ok', () => {
       var value = {dateTime : '2014-11-11 00:00:00' };
       var rule = {dateTime: 'dateTime'};
       should.not.exist(parameter.validate(rule, value));
     });
 
-    it('should check dateTime not ok', function () {
+    it('should check dateTime not ok', () => {
       var value = {dateTime : '2014-11-11 00:xx:00' };
       var rule = {dateTime: 'dateTime'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^\\d{4}\\-\\d{2}\\-\\d{2} \\d{2}:\\d{2}:\\d{2}$/');
     });
 
-    it('should datetime alias to dateTime', function () {
+    it('should datetime alias to dateTime', () => {
       var value = {datetime : '2014-11-11 00:00:00' };
       var rule = {datetime: 'dateTime'};
       should.not.exist(parameter.validate(rule, value));
     });
 
-    it('should check allowEmpty ok', function () {
+    it('should check allowEmpty ok', () => {
       [
         '2014-11-11 00:00:00',
         '',
@@ -289,8 +294,8 @@ describe('parameter', function () {
     });
   });
 
-  describe('boolean', function () {
-    it('should check ok', function () {
+  describe('boolean', () => {
+    it('should check ok', () => {
       var value = {boolean : true };
       var rule = {boolean: 'boolean'};
       should.not.exist(parameter.validate(rule, value));
@@ -298,15 +303,15 @@ describe('parameter', function () {
       should.not.exist(parameter.validate(rule, value));
     });
 
-    it('should check boolean not ok', function () {
+    it('should check boolean not ok', () => {
       var value = {boolean : '2014-11-11 00:xx:00' };
       var rule = {boolean: 'boolean'};
       parameter.validate(rule, value)[0].message.should.equal('should be a boolean');
     });
   });
 
-  describe('enum', function () {
-    it('should check ok', function () {
+  describe('enum', () => {
+    it('should check ok', () => {
       var value = {enum : 1 };
       var rule = {enum: [1, 2, 3]};
       should.not.exist(parameter.validate(rule, value));
@@ -314,21 +319,21 @@ describe('parameter', function () {
       should.not.exist(parameter.validate(rule, value));
     });
 
-    it('should throw when no values', function () {
-      (function () {
+    it('should throw when no values', () => {
+      (() => {
         parameter.validate({enum: {type: 'enum'}}, {enum: 1});
       }).should.throw('check enum need array type values');
     });
 
-    it('should check enum not ok', function () {
+    it('should check enum not ok', () => {
       var value = {enum : 4 };
       var rule = {enum: [1, 2, 3]};
       parameter.validate(rule, value)[0].message.should.equal('should be one of 1, 2, 3');
     });
   });
 
-  describe('email', function () {
-    it('should check ok', function () {
+  describe('email', () => {
+    it('should check ok', () => {
       [
         'fengmk2@gmail.com',
         'dead-horse@qq.com',
@@ -341,7 +346,7 @@ describe('parameter', function () {
       });
     });
 
-    it('should check allowEmpty ok', function () {
+    it('should check allowEmpty ok', () => {
       [
         'fengmk2@gmail.com',
         '',
@@ -350,7 +355,7 @@ describe('parameter', function () {
       });
     });
 
-    it('should check fail', function () {
+    it('should check fail', () => {
       [
         'fengmk2@中文.域名',
         '.fengmk2@gmail.com',
@@ -377,8 +382,8 @@ describe('parameter', function () {
     });
   });
 
-  describe('password', function () {
-    it('should check ok', function () {
+  describe('password', () => {
+    it('should check ok', () => {
       should.not.exist(parameter.validate({
         password: {
           type: 'password',
@@ -398,7 +403,7 @@ describe('parameter', function () {
       }));
     });
 
-    it('should check fail', function () {
+    it('should check fail', () => {
       parameter.validate({
         password: {
           type: 'password',
@@ -450,8 +455,8 @@ describe('parameter', function () {
     });
   });
 
-  describe('url', function () {
-    it('should check ok', function () {
+  describe('url', () => {
+    it('should check ok', () => {
       [
         'http://✪df.ws/123',
         'http://userid:password@example.com:8080',
@@ -484,7 +489,7 @@ describe('parameter', function () {
       });
     });
 
-    it('should check fail', function () {
+    it('should check fail', () => {
       [
       'http://',
       'http://.',
@@ -527,8 +532,8 @@ describe('parameter', function () {
     });
   });
 
-  describe('object', function () {
-    it('should check ok', function () {
+  describe('object', () => {
+    it('should check ok', () => {
       var value = {
         object: {
           name: 'string',
@@ -548,13 +553,13 @@ describe('parameter', function () {
       should.not.exist(parameter.validate({object: 'object'}, value));
     });
 
-    it('should check object', function () {
+    it('should check object', () => {
       var value = {object: 1};
       var rule = {object: 'object'};
       parameter.validate(rule, value)[0].message.should.equal('should be an object');
     });
 
-    it('should check error', function () {
+    it('should check error', () => {
       var value = {
         object: {
           name: 'string',
@@ -576,8 +581,8 @@ describe('parameter', function () {
     });
   });
 
-  describe('array', function () {
-    it('should check ok', function () {
+  describe('array', () => {
+    it('should check ok', () => {
       var value = {
         array: [{
           name: 'string',
@@ -601,32 +606,32 @@ describe('parameter', function () {
       should.not.exist(parameter.validate({array: 'array'}, value));
     });
 
-    it('should check array', function () {
+    it('should check array', () => {
       var value = {array: 1};
       var rule = {array: 'array'};
       parameter.validate(rule, value)[0].message.should.equal('should be an array');
     });
 
-    it('should invalid itemType throw error', function () {
+    it('should invalid itemType throw error', () => {
       var rule = {array: {type: 'array', itemType: 'invalid'}};
-      (function () {
+      (() => {
          parameter.validate(rule, {array: []});
        }).should.throw('rule type must be one of number, int, integer, string, id, date, dateTime, datetime, boolean, bool, array, object, enum, email, password, url, but the following type was passed: invalid');
     });
 
-    it('should check max error', function () {
+    it('should check max error', () => {
       var value = {array: [0, 1, 2, 3, 4]};
       var rule = {array: {type: 'array', itemType: 'int', max: 4, min: 1}};
       parameter.validate(rule, value)[0].message.should.equal('length should smaller than 4');
     });
 
-    it('should check min error', function () {
+    it('should check min error', () => {
       var value = {array: [0, 1, 2, 3, 4]};
       var rule = {array: {type: 'array', itemType: 'int', max: 100, min: 10}};
       parameter.validate(rule, value)[0].message.should.equal('length should bigger than 10');
     });
 
-    it('should check itemType=object error', function () {
+    it('should check itemType=object error', () => {
       var value = {
         array: [{
           name: 22,
@@ -650,7 +655,7 @@ describe('parameter', function () {
       parameter.validate(rule, value)[1].message.should.equal('should be an integer');
     });
 
-    it('should check itemType=string error', function () {
+    it('should check itemType=string error', () => {
       var value = {
         array: ['test', 'foo', 1, '']
       };
@@ -675,32 +680,32 @@ describe('parameter', function () {
     });
   });
 
-  describe('addRule', function () {
-    it('should throw without type', function () {
-      (function () {
+  describe('addRule', () => {
+    it('should throw without type', () => {
+      (() => {
         parameter.addRule();
       }).should.throw('`type` required');
-      (function () {
+      (() => {
         Parameter.addRule();
       }).should.throw('`type` required');
     });
 
-    it('should throw error when override exists rule', function () {
-      (function () {
+    it('should throw error when override exists rule', () => {
+      (() => {
         parameter.addRule('string', function() {}, false);
       }).should.throw('rule `string` exists');
-      (function () {
+      (() => {
         Parameter.addRule('string', function() {}, false);
       }).should.throw('rule `string` exists');
     });
 
-    it('should throw without check', function () {
-      (function () {
+    it('should throw without check', () => {
+      (() => {
         parameter.addRule('type');
       }).should.throw('check must be function or regexp');
     });
 
-    it('should add with function', function () {
+    it('should add with function', () => {
       parameter.addRule('prefix', function (rule, value) {
         if (value.indexOf(rule.prefix) !== 0) {
           return 'should start with ' + rule.prefix;
@@ -712,21 +717,21 @@ describe('parameter', function () {
       parameter.validate(rule, value)[0].message.should.equal('should start with prefix');
     });
 
-    it('should add with regexp', function () {
+    it('should add with regexp', () => {
       parameter.addRule('prefix', /^prefix/);
       var rule = {key: 'prefix'};
       var value = {key: 'not-prefixed'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^prefix/');
     });
 
-    it('should add with regexp on global', function () {
+    it('should add with regexp on global', () => {
       Parameter.addRule('prefix2', /^prefix/);
       var rule = {key: 'prefix2'};
       var value = {key: 'not-prefixed'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^prefix/');
     });
 
-    it('should add work with required false by ?', function () {
+    it('should add work with required false by ?', () => {
       parameter.addRule('prefix', function (rule, value) {
         if (value.indexOf(rule.prefix) !== 0) {
           return 'should start with ' + rule.prefix;
@@ -902,8 +907,8 @@ describe('parameter', function () {
 });
 
 
-describe('validate with option.validateRoot', function () {
-  it('should not pass when received a invalid value', function () {
+describe('validate with option.validateRoot', () => {
+  it('should not pass when received a invalid value', () => {
     var value = null;
     var rule = { int: { type: 'int1', required: false } };
     parameterWithRootValidate.validate(rule, value)[0].message.should.equal('the validated value should be a object');;
@@ -1020,11 +1025,12 @@ describe('validate with options.convert', function() {
     value.int.should.equal(1);
   });
 
-  describe('validate with options.widelyUndefined', function () {
-    it('should convert null / NaN / "" to undefiend', function() {
+  describe('validate with options.widelyUndefined', () => {
+    it('should convert null / NaN / "" to undefiend', () => {
       var value = {
         number: NaN,
         string: '',
+        trimString: '   ',
         date: null,
         foo: 'test string',
         bar: 123,
@@ -1032,6 +1038,7 @@ describe('validate with options.convert', function() {
       var res = parameterWithWidelyUndefined.validate({
         number: 'number?',
         string: 'string?',
+        trimString: { type: 'string?', trim: true },
         date: 'date?',
         foo: 'string',
         bar: 'int',
@@ -1040,6 +1047,7 @@ describe('validate with options.convert', function() {
       value.should.eql({
         number: undefined,
         string: undefined,
+        trimString: undefined,
         date: undefined,
         foo: 'test string',
         bar: 123,
@@ -1047,15 +1055,17 @@ describe('validate with options.convert', function() {
     });
   });
 
-  describe('default', function() {
-    it('should default work', function () {
+  describe('default', () => {
+    it('should default work', () => {
       var value = {
         string: '',
+        trimString: '\t\t\t\n   ',
         foo: null,
         bar: 123,
       };
       var res = parameter.validate({
         string: { type: 'string?', default: 'string' },
+        trimString: { type: 'string?', trim: true, default: 'trimString' },
         foo: { type: 'string?', default: 'foo' },
         bar: { type: 'int?', default: 1200 },
         hello: { type: 'string?', default: 'world' },
@@ -1063,6 +1073,7 @@ describe('validate with options.convert', function() {
       should.not.exist(res);
       value.should.eql({
         string: '', // notice: string '' is not undefined here
+        trimString: '',
         foo: 'foo',
         bar: 123,
         hello: 'world',
@@ -1073,6 +1084,7 @@ describe('validate with options.convert', function() {
       var value = {
         number: NaN,
         string: '',
+        trimString: '    ',
         date: null,
         foo: 'test string',
         bar: 123,
@@ -1080,6 +1092,7 @@ describe('validate with options.convert', function() {
       var res = parameterWithWidelyUndefined.validate({
         number: { type: 'number?', default: 100 },
         string: { type: 'string?', default: 'string' },
+        trimString: { type: 'string?', trim: true, default: 'trimString' },
         date: { type: 'date?', default: 100 },
         foo: { type: 'string?', default: 'foo' },
         bar: { type: 'int?', default: 1200 },
@@ -1089,6 +1102,7 @@ describe('validate with options.convert', function() {
       value.should.eql({
         number: 100,
         string: 'string',
+        trimString: 'trimString',
         date: 100,
         foo: 'test string',
         bar: 123,
