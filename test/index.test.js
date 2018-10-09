@@ -1069,6 +1069,7 @@ describe('validate with options.convert', function() {
         foo: { type: 'string?', default: 'foo' },
         bar: { type: 'int?', default: 1200 },
         hello: { type: 'string?', default: 'world' },
+        bool: { type: 'boolean?', default: false },
       }, value);
       should.not.exist(res);
       value.should.eql({
@@ -1077,6 +1078,7 @@ describe('validate with options.convert', function() {
         foo: 'foo',
         bar: 123,
         hello: 'world',
+        bool: false,
       });
     });
 
