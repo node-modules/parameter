@@ -93,7 +93,7 @@ class Parameter {
           });
         }
         // support default value
-        if (rule.default) {
+        if ('default' in rule) {
           obj[key] = rule.default;
         }
         continue;
