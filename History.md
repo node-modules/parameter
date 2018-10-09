@@ -1,4 +1,10 @@
 
+3.3.1 / 2018-10-09
+==================
+
+**fixes**
+  * [[`f5e33e3`](http://github.com/node-modules/parameter/commit/f5e33e379d0c70616faed6d010cf75b577818bb5)] - fix: allow default to be `null` or `false` (#55) (Cong Liu <<ghostoy@users.noreply.github.com>>)
+
 3.3.0 / 2018-09-19
 ==================
 
