@@ -3,23 +3,28 @@
   "version": "3.3.1",
   "description": "A parameter verify tools.",
   "main": "index.js",
+  "module": "index.es5.js",
   "files": [
-    "index.js"
+    "index.js",
+    "index.es5.js"
   ],
   "scripts": {
     "test": "mocha -R spec -t 1000 test/*.test.js",
     "cov": "istanbul cover _mocha -- -t 1000 test/*.test.js",
     "ci": "npm run cov",
+    "build:es5": "babel index.js --presets babel-preset-es2015 -o index.es5.js",
+    "prepublish": "npm run build:es5",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
-  "dependencies": {},
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
     "beautify-benchmark": "0",
     "benchmark": "*",
     "istanbul": "*",
     "mocha": "*",
-    "should": "*",
-    "semantic-release": "^6.3.6"
+    "semantic-release": "^6.3.6",
+    "should": "*"
   },
   "repository": {
     "type": "git",
