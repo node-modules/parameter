@@ -1,4 +1,10 @@
 
+3.4.0 / 2018-10-30
+==================
+
+**features**
+  * [[`abcd739`](http://github.com/node-modules/parameter/commit/abcd739cd24133205e1f0c34e2d2a4adbf7be921)] - feat: support es5 with babel (#56) (Angela <<idu.angela@gmail.com>>)
+
 3.3.1 / 2018-10-09
 ==================
 
