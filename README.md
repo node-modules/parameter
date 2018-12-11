@@ -81,6 +81,7 @@ var errors = parameter.validate(rule, data);
 - `type` - The type of property, every type has it's own rule for the validate.
 - `convertType` - Make parameter convert the input param to the specific type, support `int`, `number`, `string` and `boolean`, also support a function to customize your own convert method.
 - `default` - The default value of property, once the property is allowed non-required and missed, parameter will use this as the default value. __This may change the original input params__.
+- `widelyUndefined` - override `options.widelyUndefined`
 
 __Note: you can combile require and type end with a notation `?` like: `int?` or `string?` to specific both type and non-required.__
 
