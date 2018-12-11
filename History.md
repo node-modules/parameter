@@ -1,4 +1,10 @@
 
+3.5.0 / 2018-12-11
+==================
+
+**features**
+  * [[`ee3521c`](http://github.com/node-modules/parameter/commit/ee3521c74e73630b5b72014d7aeba7ed87eb865e)] - feat: support override options.widelyUndefined (#59) (Yiyu He <<dead_horse@qq.com>>)
+
 3.4.0 / 2018-10-30
 ==================
 

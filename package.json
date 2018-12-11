@@ -1,6 +1,6 @@
 {
   "name": "parameter",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "description": "A parameter verify tools.",
   "main": "index.js",
   "module": "index.es5.js",
