@@ -1034,6 +1034,7 @@ describe('validate with options.convert', function() {
         date: null,
         foo: 'test string',
         bar: 123,
+        byRule: '',
       };
       var res = parameterWithWidelyUndefined.validate({
         number: 'number?',
@@ -1042,6 +1043,7 @@ describe('validate with options.convert', function() {
         date: 'date?',
         foo: 'string',
         bar: 'int',
+        byRule: { type: 'string?', widelyUndefined: false },
       }, value);
       should.not.exist(res);
       value.should.eql({
@@ -1051,6 +1053,7 @@ describe('validate with options.convert', function() {
         date: undefined,
         foo: 'test string',
         bar: 123,
+        byRule: '',
       });
     });
   });

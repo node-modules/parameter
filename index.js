@@ -77,7 +77,9 @@ class Parameter {
       }
 
       // treat null / '' / NaN as undefined
-      if (this.widelyUndefined &&
+      let widelyUndefined = this.widelyUndefined;
+      if ('widelyUndefined' in rule) widelyUndefined = rule.widelyUndefined;
+      if (widelyUndefined &&
         (value === '' || value === null || Number.isNaN(value))) {
         value = obj[key] = undefined;
       }
