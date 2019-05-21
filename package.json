@@ -22,7 +22,7 @@
     "beautify-benchmark": "0",
     "benchmark": "*",
     "istanbul": "*",
-    "mocha": "*",
+    "mocha": "^5.2.0",
     "semantic-release": "^6.3.6",
     "should": "*"
   },
