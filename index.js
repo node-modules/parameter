@@ -294,6 +294,11 @@ function convert(rule, obj, key, defaultConvert) {
     case 'boolean':
       obj[key] = !!value;
       break;
+    default:
+      // support convertType function added by addRule
+      if (typeof CONVERT_MAP[convertType] === 'function' ) {
+        obj[key] = CONVERT_MAP[rule.type](obj[key]);
+      }
   }
 }
 

@@ -792,6 +792,51 @@ describe('parameter', () => {
       });
     });
 
+    it('should add rule support function convertType used without convert', () => {
+      const obj = {
+        a: 'false',
+        b: '0',
+        c: true,
+        d: false,
+        e: 1,
+        f: 0,
+        g: null,
+        h: undefined,
+        i: '',
+        j: NaN,
+        k: '00',
+        l: '\t',
+      };
+      should.not.exist(parameter.validate({
+        a: { type: 'httpBoolean', convertType: 'httpBoolean' },
+        b: { type: 'httpBoolean', convertType: 'httpBoolean' },
+        c: { type: 'httpBoolean', convertType: 'httpBoolean' },
+        d: { type: 'httpBoolean', convertType: 'httpBoolean' },
+        e: { type: 'httpBoolean', convertType: 'httpBoolean' },
+        f: { type: 'httpBoolean', convertType: 'httpBoolean' },
+        g: { type: 'httpBoolean', convertType: 'httpBoolean', required: false },
+        h: { type: 'httpBoolean', convertType: 'httpBoolean', required: false },
+        i: { type: 'httpBoolean', convertType: 'httpBoolean' },
+        j: { type: 'httpBoolean', convertType: 'httpBoolean' },
+        k: { type: 'httpBoolean', convertType: 'httpBoolean' },
+        l: { type: 'httpBoolean', convertType: 'httpBoolean' },
+      }, obj));
+      obj.should.eql({
+        a: false,
+        b: false,
+        c: true,
+        d: false,
+        e: true,
+        f: false,
+        g: null,
+        h: undefined,
+        i: false,
+        j: false,
+        k: true,
+        l: true,
+      });
+    });
+
     it('should add rule support string convertType', () => {
       parameter.addRule('httpBoolean2', Parameter.TYPE_MAP['boolean'], false, 'boolean');
 
