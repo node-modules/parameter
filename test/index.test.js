@@ -793,48 +793,73 @@ describe('parameter', () => {
     });
 
     it('should add rule support function convertType used without convert', () => {
-      const obj = {
-        a: 'false',
-        b: '0',
-        c: true,
-        d: false,
-        e: 1,
-        f: 0,
-        g: null,
-        h: undefined,
-        i: '',
-        j: NaN,
-        k: '00',
-        l: '\t',
+      parameter.addRule(
+        'time',
+        (rule, value) => {
+          if (String(value) === 'Invalid Date') {
+            return 'must be timestamp or format date';
+          }
+          return;
+        },
+        (value, obj) => {
+          if (typeof value === 'string' && /^\d{13,}$/.test(value)) {
+            return new Date(parseInt(value));
+          }
+    
+          return new Date(value);
+        }
+      );
+
+      const obj1 = {
+        a: 1558507311641,
+        b: '1558507311641',
+        c: "2019-05-22T06:41:51.641Z",
+        d: "2019-05-22 14:41:51",
+        e: '2019-05-22',
       };
+
       should.not.exist(parameter.validate({
-        a: { type: 'httpBoolean', convertType: 'httpBoolean' },
-        b: { type: 'httpBoolean', convertType: 'httpBoolean' },
-        c: { type: 'httpBoolean', convertType: 'httpBoolean' },
-        d: { type: 'httpBoolean', convertType: 'httpBoolean' },
-        e: { type: 'httpBoolean', convertType: 'httpBoolean' },
-        f: { type: 'httpBoolean', convertType: 'httpBoolean' },
-        g: { type: 'httpBoolean', convertType: 'httpBoolean', required: false },
-        h: { type: 'httpBoolean', convertType: 'httpBoolean', required: false },
-        i: { type: 'httpBoolean', convertType: 'httpBoolean' },
-        j: { type: 'httpBoolean', convertType: 'httpBoolean' },
-        k: { type: 'httpBoolean', convertType: 'httpBoolean' },
-        l: { type: 'httpBoolean', convertType: 'httpBoolean' },
-      }, obj));
-      obj.should.eql({
-        a: false,
-        b: false,
-        c: true,
-        d: false,
-        e: true,
-        f: false,
-        g: null,
-        h: undefined,
-        i: false,
-        j: false,
-        k: true,
-        l: true,
+        a: { type: 'time', convertType: 'time' },
+        b: { type: 'time', convertType: 'time' },
+        c: { type: 'time', convertType: 'time' },
+        d: { type: 'time', convertType: 'time' },
+        e: { type: 'time', convertType: 'time' },
+      }, obj1));
+
+      obj1.should.eql({
+        a: new Date(1558507311641),
+        b: new Date(1558507311641),
+        c: new Date("2019-05-22T06:41:51.641Z"),
+        d: new Date("2019-05-22 14:41:51"),
+        e: new Date("2019-05-22"),
       });
+
+      const obj2 = {
+        f: 'abc',
+        g: '155850731164a',
+        h: '',
+      };
+      parameter.validate({
+        f: { type: 'time', convertType: 'time' },
+        g: { type: 'time', convertType: 'time' },
+        h: { type: 'time', convertType: 'time', required: false },
+      }, obj2).should.eql([
+        {
+          message: 'must be timestamp or format date',
+          code: 'invalid',
+          field: 'f'
+        },
+        {
+          message: 'must be timestamp or format date',
+          code: 'invalid',
+          field: 'g'
+        },
+        {
+          message: 'must be timestamp or format date',
+          code: 'invalid',
+          field: 'h'
+        },
+      ]);
     });
 
     it('should add rule support string convertType', () => {
