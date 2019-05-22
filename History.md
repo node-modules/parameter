@@ -1,4 +1,10 @@
 
+3.6.0 / 2019-05-22
+==================
+
+**features**
+  * [[`156fc36`](http://github.com/node-modules/parameter/commit/156fc3609710369b1a28f8618c4abf18111ac948)] - feat: support convertType function added by addRule (hdumok <<hdumok@163.com>>)
+
 3.5.0 / 2018-12-11
 ==================
 
