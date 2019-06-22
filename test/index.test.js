@@ -128,7 +128,21 @@ describe('parameter', () => {
     it('should check error with custom message', () => {
       var value = { int: '1' };
       var rule = { int: {type: 'int', message: 'custom message'}};
+      var rule2 = { int: {type: 'int', message: { int: 'custom message'}}};
       parameter.validate(rule, value)[0].message.should.equal('custom message');
+      parameter.validate(rule2, value)[0].message.should.equal('custom message');
+    });
+
+    it('should check error with custom min message', () => {
+      var value = { int: 1 };
+      var rule = { int: {type: 'int', min: 2, message: { min: '不能小于2' }}};
+      parameter.validate(rule, value)[0].message.should.equal('不能小于2');
+    });
+
+    it('should check error with custom max message', () => {
+      var value = { int: 10 };
+      var rule = { int: {type: 'int', max: 5, message: { max: '不能大于5' }}};
+      parameter.validate(rule, value)[0].message.should.equal('不能大于5');
     });
   });
 
@@ -163,6 +177,26 @@ describe('parameter', () => {
       var rule = { number: {type: 'number', max: 100, min: 0 }};
       parameter.validate(rule, value)[0].message.should.equal('should bigger than 0');
     });
+
+    it('should check error with custom message', () => {
+      var value = { number: '-1' };
+      var rule = { number: {type: 'number', message: 'custom message'}};
+      var rule2 = { number: {type: 'number', message: { number: 'custom message'}}};
+      parameter.validate(rule, value)[0].message.should.equal('custom message');
+      parameter.validate(rule2, value)[0].message.should.equal('custom message');
+    });
+
+    it('should check error with custom min message', () => {
+      var value = { number: 1 };
+      var rule = { number: {type: 'number', min: 2, message: { min: '不能小于2' }}};
+      parameter.validate(rule, value)[0].message.should.equal('不能小于2');
+    });
+
+    it('should check error with custom max message', () => {
+      var value = { number: 10 };
+      var rule = { number: {type: 'number', max: 5, message: { max: '不能大于5' }}};
+      parameter.validate(rule, value)[0].message.should.equal('不能大于5');
+    });
   });
 
   describe('string', () => {
@@ -180,6 +214,10 @@ describe('parameter', () => {
       parameter.validate(rule, value)[0].message.should.equal('should not be empty');
       rule = { string: {type: 'string', empty: false }};
       parameter.validate(rule, value)[0].message.should.equal('should not be empty');
+      rule = { string: {type: 'string', empty: false, message: { empty: '不能为空' } }};
+      parameter.validate(rule, value)[0].message.should.equal('不能为空');
+      rule = { string: {type: 'string', empty: false, message: { allowEmpty: '不能为空' } }};
+      parameter.validate(rule, value)[0].message.should.equal('不能为空');
     });
 
     it('should check with rule.trim', () => {
@@ -191,18 +229,24 @@ describe('parameter', () => {
       var value = { string: 'hello' };
       var rule = { string: {type: 'string', max: 4, min: 1 }};
       parameter.validate(rule, value)[0].message.should.equal('length should smaller than 4');
+      rule = { string: {type: 'string', max: 4, min: 1, message: { max: '不能多于4个字符'} }};
+      parameter.validate(rule, value)[0].message.should.equal('不能多于4个字符');
     });
 
     it('should check min error', () => {
       var value = { string: 'hello' };
       var rule = { string: {type: 'string', max: 100, min: 10 }};
       parameter.validate(rule, value)[0].message.should.equal('length should bigger than 10');
+      rule = { string: {type: 'string', max: 100, min: 10, message: { min: '不能少于10个字符'} }};
+      parameter.validate(rule, value)[0].message.should.equal('不能少于10个字符');
     });
 
     it('should check format error', () => {
       var value = {string: 'hello'};
-      var rule = {string: /\d+/};
+      var rule = {string: { type: 'string', format: /\d+/ }};
       parameter.validate(rule, value)[0].message.should.equal('should match /\\d+/');
+      rule = {string: { type: 'string', format: /\d+/, message: { format: '格式不正确' }}};
+      parameter.validate(rule, value)[0].message.should.equal('格式不正确');
     });
 
     it('should check allowEmpty with format ok', () => {
@@ -244,6 +288,8 @@ describe('parameter', () => {
       var value = {id : '0524x' };
       var rule = {id: 'id'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^\\d+$/');
+      rule = {id: { type: 'id', message: 'ID 格式不正确' }};
+      parameter.validate(rule, value)[0].message.should.equal('ID 格式不正确');
     });
   });
 
@@ -259,6 +305,8 @@ describe('parameter', () => {
       var value = {date : '2014-xx-xx' };
       var rule = {date: 'date'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^\\d{4}\\-\\d{2}\\-\\d{2}$/');
+      rule = {date: { type: 'date', message: '日期格式不正确'}};
+      parameter.validate(rule, value)[0].message.should.equal('日期格式不正确');
     });
 
     it('should check allowEmpty ok', () => {
@@ -282,6 +330,8 @@ describe('parameter', () => {
       var value = {dateTime : '2014-11-11 00:xx:00' };
       var rule = {dateTime: 'dateTime'};
       parameter.validate(rule, value)[0].message.should.equal('should match /^\\d{4}\\-\\d{2}\\-\\d{2} \\d{2}:\\d{2}:\\d{2}$/');
+      rule = {dateTime: { type: 'dateTime', message: "时间格式不正确" }};
+      parameter.validate(rule, value)[0].message.should.equal('时间格式不正确');
     });
 
     it('should datetime alias to dateTime', () => {
@@ -313,6 +363,10 @@ describe('parameter', () => {
       var value = {boolean : '2014-11-11 00:xx:00' };
       var rule = {boolean: 'boolean'};
       parameter.validate(rule, value)[0].message.should.equal('should be a boolean');
+      rule = {boolean: { type: 'boolean', message: '应该是一个布尔值' }};
+      parameter.validate(rule, value)[0].message.should.equal('应该是一个布尔值');
+      rule = {boolean: { type: 'bool', message: '应该是一个布尔值' }};
+      parameter.validate(rule, value)[0].message.should.equal('应该是一个布尔值');
     });
   });
 
@@ -335,6 +389,8 @@ describe('parameter', () => {
       var value = {enum : 4 };
       var rule = {enum: [1, 2, 3]};
       parameter.validate(rule, value)[0].message.should.equal('should be one of 1, 2, 3');
+      rule = {enum: { type: 'enum', values: [1, 2, 3], message: '不合法的枚举值' }};
+      parameter.validate(rule, value)[0].message.should.equal('不合法的枚举值');
     });
   });
 
@@ -423,6 +479,25 @@ describe('parameter', () => {
           code: 'invalid',
           field: 'password',
           message: 'should equal to re-password'
+        }
+      ]);
+
+      parameter.validate({
+        password: {
+          type: 'password',
+          compare: 're-password',
+          message: {
+            compare: '两次输入的密码不一致'
+          }
+        }
+      }, {
+        password: '123123',
+        're-password': '1231231',
+      }).should.eql([
+        {
+          code: 'invalid',
+          field: 'password',
+          message: '两次输入的密码不一致'
         }
       ]);
 
