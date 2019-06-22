@@ -124,6 +124,12 @@ describe('parameter', () => {
       var rule = { int: {type: 'int', max: 100, min: 0 }};
       parameter.validate(rule, value)[0].message.should.equal('should bigger than 0');
     });
+
+    it('should check error with custom message', () => {
+      var value = { int: '1' };
+      var rule = { int: {type: 'int', message: 'custom message'}};
+      parameter.validate(rule, value)[0].message.should.equal('custom message');
+    });
   });
 
   describe('number', () => {

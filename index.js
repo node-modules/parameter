@@ -44,6 +44,10 @@ class Parameter {
     }
   }
 
+  message(rule, defaultMessage) {
+    return this.t(rule.message || defaultMessage);
+  }
+
   /**
    * validate
    *
@@ -111,7 +115,7 @@ class Parameter {
       var msg = checker.call(self, rule, obj[key], obj);
       if (typeof msg === 'string') {
         errors.push({
-          message: msg,
+          message: this.message(rule, msg),
           code: this.t('invalid'),
           field: key
         });
@@ -397,7 +401,7 @@ function checkString(rule, value) {
   }
 
   if (rule.format && !rule.format.test(value)) {
-    return rule.message || this.t('should match %s', rule.format);
+    return this.t('should match %s', rule.format);
   }
 }
 
@@ -489,11 +493,13 @@ function checkEnum(rule, value) {
  */
 
 function checkEmail(rule, value) {
-  return checkString.call(this, {
+  const errorMessage = checkString.call(this, {
     format: EMAIL_RE,
-    message: rule.message || this.t('should be an email'),
     allowEmpty: rule.allowEmpty,
   }, value);
+  if (errorMessage) {
+    return this.t('should be an email');
+  }
 }
 
 /**
@@ -530,11 +536,13 @@ function checkPassword(rule, value, obj) {
  */
 
 function checkUrl(rule, value) {
-  return checkString.call(this, {
+  const error = checkString.call(this, {
     format: URL_RE,
-    message: rule.message || this.t('should be a url'),
     allowEmpty: rule.allowEmpty
   }, value);
+  if (error) {
+    return this.t('should be a url')
+  }
 }
 
 /**
@@ -616,7 +624,7 @@ function checkArray(rule, value) {
     if (typeof errs === 'string') {
       errors.push({
         field: index,
-        message: errs,
+        message: self.message(subRule, errs),
         code: self.t('invalid')
       });
     }
