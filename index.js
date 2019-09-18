@@ -64,6 +64,16 @@ class Parameter {
       }];
     }
 
+    if (rules._strict.required) {
+      const okeys = Object.keys(obj);
+      for (let i = 0 ; i < okeys.length; i++) {
+        if (!(okeys[i] in rules)) {
+          throw new TypeError('not declared as incoming parameters');
+        }
+      }
+    }
+    delete rules._strict;
+
     var self = this;
 
     var errors = [];
