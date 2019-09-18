@@ -64,19 +64,23 @@ class Parameter {
       }];
     }
 
-    if (rules._strict.required) {
+    var self = this;
+
+    var errors = [];
+
+    if (rules._strict && rules._strict.required) {
       const okeys = Object.keys(obj);
       for (let i = 0 ; i < okeys.length; i++) {
         if (!(okeys[i] in rules)) {
-          throw new TypeError('not declared as incoming parameters');
+          errors.push({
+            message: this.t('required'),
+            field: this.t(okeys[i]),
+            code: this.t('not declared as incoming parameters')
+          });
         }
       }
     }
     delete rules._strict;
-
-    var self = this;
-
-    var errors = [];
 
     for (var key in rules) {
       var rule = formatRule(rules[key]);
