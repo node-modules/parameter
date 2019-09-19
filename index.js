@@ -69,7 +69,7 @@ class Parameter {
     var errors = [];
 
     if (rules._strict && rules._strict.required) {
-      const okeys = Object.keys(obj);
+      var okeys = Object.keys(obj);
       for (let i = 0 ; i < okeys.length; i++) {
         if (!(okeys[i] in rules)) {
           errors.push({
