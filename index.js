@@ -67,21 +67,7 @@ class Parameter {
     var self = this;
 
     var errors = [];
-
-    if (rules._strict && rules._strict.required) {
-      var okeys = Object.keys(obj);
-      for (let i = 0 ; i < okeys.length; i++) {
-        if (!(okeys[i] in rules)) {
-          errors.push({
-            message: this.t('required'),
-            field: this.t(okeys[i]),
-            code: this.t('not declared as incoming parameters')
-          });
-        }
-      }
-    }
-    delete rules._strict;
-
+    
     for (var key in rules) {
       var rule = formatRule(rules[key]);
       var value = obj[key];
