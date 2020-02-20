@@ -4,9 +4,11 @@
   "description": "A parameter verify tools.",
   "main": "index.js",
   "module": "index.es5.js",
+  "types": "index.d.ts",
   "files": [
     "index.js",
-    "index.es5.js"
+    "index.es5.js",
+    "index.d.ts"
   ],
   "scripts": {
     "test": "mocha -R spec -t 1000 test/*.test.js",
