@@ -34,7 +34,7 @@ $ npm install parameter --save
   - `options.translate` - translate function
   - `options.validateRoot` - config whether to validate the passed in value must be a object, default to `false`.
   - `options.convert` - convert primitive params to specific type, default to `false`.
-  - `optinos.widelyUndefined` - convert empty string(`''`), NaN, Null to undefined, this option can make `rule.required` more powerful, default to `false`.__This may change the original input params__.
+  - `options.widelyUndefined` - convert empty string(`''`), NaN, Null to undefined, this option can make `rule.required` more powerful, default to `false`.__This may change the original input params__.
 - `validate(rule, value)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
 - `addRule(type, check)` - add custom rules.
    - `type` - rule type, required and must be string type.
