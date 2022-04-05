@@ -195,8 +195,8 @@ If type is `array`, there has four addition rule:
 
 - `itemType` - The type of every item in this array.
 - `rule` - An object that validate the items of the array. Only work with `itemType`.
-- `max` - The maximun length of the array.
-- `min` - The minimun lenght of the array.
+- `max` - The maximum length of the array.
+- `min` - The minimum lenght of the array.
 
 #### abbr
 
