@@ -9,6 +9,7 @@
     "index.es5.js"
   ],
   "scripts": {
+    "contributor": "git-contributor",
     "test": "egg-bin test",
     "cov": "egg-bin cov",
     "ci": "npm run cov",
@@ -22,6 +23,7 @@
     "benchmark": "*",
     "egg-bin": "^4.19.0",
     "egg-ci": "^1.19.0",
+    "git-contributor": "^1.0.11",
     "should": "*"
   },
   "repository": {

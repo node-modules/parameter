@@ -240,3 +240,15 @@ If type is `array`, there has four addition rule:
 ## License
 
 [MIT](LICENSE.txt)
+
+<!-- GITCONTRIBUTOR_START -->
+
+## Contributors
+
+|[<img src="https://avatars.githubusercontent.com/u/156269?v=4" width="100px;"/><br/><sub><b>fengmk2</b></sub>](https://github.com/fengmk2)<br/>|[<img src="https://avatars.githubusercontent.com/u/985607?v=4" width="100px;"/><br/><sub><b>dead-horse</b></sub>](https://github.com/dead-horse)<br/>|[<img src="https://avatars.githubusercontent.com/u/5518?v=4" width="100px;"/><br/><sub><b>huacnlee</b></sub>](https://github.com/huacnlee)<br/>|[<img src="https://avatars.githubusercontent.com/u/143572?v=4" width="100px;"/><br/><sub><b>hotoo</b></sub>](https://github.com/hotoo)<br/>|[<img src="https://avatars.githubusercontent.com/u/2039144?v=4" width="100px;"/><br/><sub><b>sang4lv</b></sub>](https://github.com/sang4lv)<br/>|[<img src="https://avatars.githubusercontent.com/u/471928?v=4" width="100px;"/><br/><sub><b>ghostoy</b></sub>](https://github.com/ghostoy)<br/>|
+| :---: | :---: | :---: | :---: | :---: | :---: |
+[<img src="https://avatars.githubusercontent.com/u/12657964?v=4" width="100px;"/><br/><sub><b>beliefgp</b></sub>](https://github.com/beliefgp)<br/>|[<img src="https://avatars.githubusercontent.com/u/5825244?v=4" width="100px;"/><br/><sub><b>taylorharwin</b></sub>](https://github.com/taylorharwin)<br/>|[<img src="https://avatars.githubusercontent.com/u/3199140?v=4" width="100px;"/><br/><sub><b>tomowang</b></sub>](https://github.com/tomowang)<br/>|[<img src="https://avatars.githubusercontent.com/u/11374721?v=4" width="100px;"/><br/><sub><b>hdumok</b></sub>](https://github.com/hdumok)<br/>|[<img src="https://avatars.githubusercontent.com/u/7971415?v=4" width="100px;"/><br/><sub><b>paranoidjk</b></sub>](https://github.com/paranoidjk)<br/>|[<img src="https://avatars.githubusercontent.com/u/30565051?v=4" width="100px;"/><br/><sub><b>zcxsythenew</b></sub>](https://github.com/zcxsythenew)<br/>
+
+This project follows the git-contributor [spec](https://github.com/xudafeng/git-contributor), auto updated at `Tue Apr 05 2022 10:44:22 GMT+0800`.
+
+<!-- GITCONTRIBUTOR_END -->
