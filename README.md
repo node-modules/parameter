@@ -2,15 +2,12 @@ parameter
 =======
 
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+[![Node.js CI](https://github.com/node-modules/parameter/actions/workflows/nodejs.yml/badge.svg)](https://github.com/node-modules/parameter/actions/workflows/nodejs.yml)
 [![Test coverage][codecov-image]][codecov-url]
 [![npm download][download-image]][download-url]
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)
 
 [npm-image]: https://img.shields.io/npm/v/parameter.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/parameter
-[travis-image]: https://img.shields.io/travis/node-modules/parameter.svg?style=flat-square
-[travis-url]: https://travis-ci.org/node-modules/parameter
 [codecov-image]: https://codecov.io/github/node-modules/parameter/coverage.svg?branch=master
 [codecov-url]: https://codecov.io/github/node-modules/parameter?branch=master
 [download-image]: https://img.shields.io/npm/dm/parameter.svg?style=flat-square
@@ -239,13 +236,6 @@ If type is `array`, there has four addition rule:
   message: 'should be an integer'
 }
 ```
-
-### Release process
-
-We're using [semantic-release](https://github.com/semantic-release/semantic-release) to run npm publish
-after every commit on master.
-
-See [Default Commit Message Format](https://github.com/semantic-release/semantic-release#default-commit-message-format) for details.
 
 ## License
 
