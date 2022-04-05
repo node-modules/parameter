@@ -2,6 +2,7 @@ parameter
 =======
 
 [![NPM version][npm-image]][npm-url]
+[![Node.js CI](https://github.com/node-modules/parameter/actions/workflows/nodejs.yml/badge.svg)](https://github.com/node-modules/parameter/actions/workflows/nodejs.yml)
 [![Test coverage][codecov-image]][codecov-url]
 [![npm download][download-image]][download-url]
 
