@@ -9,8 +9,8 @@
     "index.es5.js"
   ],
   "scripts": {
-    "test": "mocha -R spec -t 1000 test/*.test.js",
-    "cov": "istanbul cover _mocha -- -t 1000 test/*.test.js",
+    "test": "egg-bin test",
+    "cov": "egg-bin cov",
     "ci": "npm run cov",
     "build:es5": "babel index.js --presets babel-preset-es2015 -o index.es5.js",
     "prepublish": "npm run build:es5"
@@ -20,9 +20,8 @@
     "babel-preset-es2015": "^6.24.1",
     "beautify-benchmark": "0",
     "benchmark": "*",
+    "egg-bin": "^4.19.0",
     "egg-ci": "^1.19.0",
-    "istanbul": "*",
-    "mocha": "^*",
     "should": "*"
   },
   "repository": {

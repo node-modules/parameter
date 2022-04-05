@@ -1,5 +1,6 @@
 'use strict';
 
+var assert = require('assert');
 var should = require('should');
 var util = require('util');
 var Parameter = require('..');
@@ -61,15 +62,17 @@ describe('parameter', () => {
 
   describe('validate', () => {
     it('should throw error when received a non object', () => {
-        var value = null;
-        var rule = {int: {type: 'int1', required: false}};
-        let err;
-        try {
-          parameter.validate(rule, undefined)
-        } catch (e) {
-          err = e;
-        }
-      should(err.message).equal('Cannot read property \'int\' of undefined');
+      var value = null;
+      var rule = {int: {type: 'int1', required: false}};
+      let err;
+      try {
+        parameter.validate(rule, undefined)
+      } catch (e) {
+        err = e;
+      }
+      
+      assert(err.message === 'Cannot read property \'int\' of undefined' ||
+        err.message === 'Cannot read properties of undefined (reading \'int\')');
     });
 
     it('should invalid type throw', () => {
