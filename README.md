@@ -192,6 +192,24 @@ If type is `array`, there has four addition rule:
 
 - `itemType` - The type of every item in this array.
 - `rule` - An object that validate the items of the array. Only work with `itemType`.
+    ```js
+    /**
+     * check array
+     * {
+     *   type: 'array',
+     *   itemType: 'string'
+     *   rule: {type: 'string', allowEmpty: true}
+     * }
+     *
+     * {
+     *   type: 'array'.
+     *   itemType: 'object',
+     *   rule: {
+     *     name: 'string'
+     *   }
+     * }
+     */
+    ```
 - `max` - The maximum length of the array.
 - `min` - The minimum lenght of the array.
 
