@@ -9,7 +9,7 @@
     "index.es5.js"
   ],
   "scripts": {
-    "contributor": "git-contributor",
+    "lint": "echo 'ignore'",
     "test": "egg-bin test",
     "cov": "egg-bin cov",
     "ci": "npm run cov",
@@ -22,8 +22,6 @@
     "beautify-benchmark": "0",
     "benchmark": "*",
     "egg-bin": "^4.19.0",
-    "egg-ci": "^1.19.0",
-    "git-contributor": "^1.0.11",
     "should": "*"
   },
   "repository": {
@@ -37,13 +35,6 @@
   ],
   "engines": {
     "node": ">= 10.0.0"
-  },
-  "ci": {
-    "type": "github",
-    "os": {
-      "github": "linux"
-    },
-    "version": "10, 12, 14, 16"
   },
   "author": "fengmk2 <fengmk2@gmail.com>",
   "license": "MIT"
