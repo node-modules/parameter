@@ -321,11 +321,11 @@ function checkInt(rule, value) {
   }
 
   if (rule.hasOwnProperty('max') && value > rule.max) {
-    return this.t('should smaller than %s', rule.max);
+    return this.t('should not bigger than %s', rule.max);
   }
 
   if (rule.hasOwnProperty('min') && value < rule.min) {
-    return this.t('should bigger than %s', rule.min);
+    return this.t('should not smaller than %s', rule.min);
   }
 }
 
@@ -347,10 +347,10 @@ function checkNumber(rule, value) {
     return this.t('should be a number');
   }
   if (rule.hasOwnProperty('max') && value > rule.max) {
-    return this.t('should smaller than %s', rule.max);
+    return this.t('should not bigger than %s', rule.max);
   }
   if (rule.hasOwnProperty('min') && value < rule.min) {
-    return this.t('should bigger than %s', rule.min);
+    return this.t('should not smaller than %s', rule.min);
   }
 }
 
@@ -390,10 +390,10 @@ function checkString(rule, value) {
   }
 
   if (rule.hasOwnProperty('max') && value.length > rule.max) {
-    return this.t('length should smaller than %s', rule.max);
+    return this.t('length should not bigger than %s', rule.max);
   }
   if (rule.hasOwnProperty('min') && value.length < rule.min) {
-    return this.t('length should bigger than %s', rule.min);
+    return this.t('length should not smaller than %s', rule.min);
   }
 
   if (rule.format && !rule.format.test(value)) {
@@ -587,10 +587,10 @@ function checkArray(rule, value) {
   }
 
   if (rule.hasOwnProperty('max') && value.length > rule.max) {
-    return this.t('length should smaller than %s', rule.max);
+    return this.t('length should not bigger than %s', rule.max);
   }
   if (rule.hasOwnProperty('min') && value.length < rule.min) {
-    return this.t('length should bigger than %s', rule.min);
+    return this.t('length should not smaller than %s', rule.min);
   }
 
   if (!rule.itemType) {

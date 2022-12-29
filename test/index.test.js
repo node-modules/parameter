@@ -119,13 +119,13 @@ describe('parameter', () => {
     it('should check max error', () => {
       var value = { int: 101 };
       var rule = { int: {type: 'int', max: 100, min: 1 }};
-      parameter.validate(rule, value)[0].message.should.equal('should smaller than 100');
+      parameter.validate(rule, value)[0].message.should.equal('should not bigger than 100');
     });
 
     it('should check min error', () => {
       var value = { int: -1 };
       var rule = { int: {type: 'int', max: 100, min: 0 }};
-      parameter.validate(rule, value)[0].message.should.equal('should bigger than 0');
+      parameter.validate(rule, value)[0].message.should.equal('should not smaller than 0');
     });
   });
 
@@ -152,13 +152,13 @@ describe('parameter', () => {
     it('should check max error', () => {
       var value = { number: 101 };
       var rule = { number: {type: 'number', max: 100, min: 1 }};
-      parameter.validate(rule, value)[0].message.should.equal('should smaller than 100');
+      parameter.validate(rule, value)[0].message.should.equal('should not bigger than 100');
     });
 
     it('should check min error', () => {
       var value = { number: -1 };
       var rule = { number: {type: 'number', max: 100, min: 0 }};
-      parameter.validate(rule, value)[0].message.should.equal('should bigger than 0');
+      parameter.validate(rule, value)[0].message.should.equal('should not smaller than 0');
     });
   });
 
@@ -187,13 +187,13 @@ describe('parameter', () => {
     it('should check max error', () => {
       var value = { string: 'hello' };
       var rule = { string: {type: 'string', max: 4, min: 1 }};
-      parameter.validate(rule, value)[0].message.should.equal('length should smaller than 4');
+      parameter.validate(rule, value)[0].message.should.equal('length should not bigger than 4');
     });
 
     it('should check min error', () => {
       var value = { string: 'hello' };
       var rule = { string: {type: 'string', max: 100, min: 10 }};
-      parameter.validate(rule, value)[0].message.should.equal('length should bigger than 10');
+      parameter.validate(rule, value)[0].message.should.equal('length should not smaller than 10');
     });
 
     it('should check format error', () => {
@@ -435,7 +435,7 @@ describe('parameter', () => {
         {
           code: 'invalid',
           field: 'password',
-          message: 'length should bigger than 6'
+          message: 'length should not smaller than 6'
         }
       ]);
 
@@ -452,7 +452,7 @@ describe('parameter', () => {
         {
           code: 'invalid',
           field: 'password',
-          message: 'length should bigger than 4'
+          message: 'length should not smaller than 4'
         }
       ]);
     });
@@ -632,13 +632,13 @@ describe('parameter', () => {
     it('should check max error', () => {
       var value = {array: [0, 1, 2, 3, 4]};
       var rule = {array: {type: 'array', itemType: 'int', max: 4, min: 1}};
-      parameter.validate(rule, value)[0].message.should.equal('length should smaller than 4');
+      parameter.validate(rule, value)[0].message.should.equal('length should not bigger than 4');
     });
 
     it('should check min error', () => {
       var value = {array: [0, 1, 2, 3, 4]};
       var rule = {array: {type: 'array', itemType: 'int', max: 100, min: 10}};
-      parameter.validate(rule, value)[0].message.should.equal('length should bigger than 10');
+      parameter.validate(rule, value)[0].message.should.equal('length should not smaller than 10');
     });
 
     it('should check itemType=object error', () => {
