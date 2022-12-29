@@ -320,11 +320,11 @@ function checkInt(rule, value) {
     return this.t('should be an integer');
   }
 
-  if (rule.hasOwnProperty('max') && value > rule.max) {
+  if (Object.prototype.hasOwnProperty.call(rule, 'max') && value > rule.max) {
     return this.t('should smaller than %s', rule.max);
   }
 
-  if (rule.hasOwnProperty('min') && value < rule.min) {
+  if (Object.prototype.hasOwnProperty.call(rule, 'min') && value < rule.min) {
     return this.t('should bigger than %s', rule.min);
   }
 }
@@ -346,10 +346,10 @@ function checkNumber(rule, value) {
   if (typeof value !== 'number' || isNaN(value)) {
     return this.t('should be a number');
   }
-  if (rule.hasOwnProperty('max') && value > rule.max) {
+  if (Object.prototype.hasOwnProperty.call(rule, 'max') && value > rule.max) {
     return this.t('should smaller than %s', rule.max);
   }
-  if (rule.hasOwnProperty('min') && value < rule.min) {
+  if (Object.prototype.hasOwnProperty.call(rule, 'min') && value < rule.min) {
     return this.t('should bigger than %s', rule.min);
   }
 }
@@ -376,11 +376,11 @@ function checkString(rule, value) {
   }
 
   // if required === false, set allowEmpty to true by default
-  if (!rule.hasOwnProperty('allowEmpty') && rule.required === false) {
+  if (!Object.prototype.hasOwnProperty.call(rule, 'allowEmpty') && rule.required === false) {
     rule.allowEmpty = true;
   }
 
-  var allowEmpty = rule.hasOwnProperty('allowEmpty')
+  var allowEmpty = Object.prototype.hasOwnProperty.call(rule, 'allowEmpty')
     ? rule.allowEmpty
     : rule.empty;
 
@@ -389,10 +389,10 @@ function checkString(rule, value) {
     return this.t('should not be empty');
   }
 
-  if (rule.hasOwnProperty('max') && value.length > rule.max) {
+  if (Object.prototype.hasOwnProperty.call(rule, 'max') && value.length > rule.max) {
     return this.t('length should smaller than %s', rule.max);
   }
-  if (rule.hasOwnProperty('min') && value.length < rule.min) {
+  if (Object.prototype.hasOwnProperty.call(rule, 'min') && value.length < rule.min) {
     return this.t('length should bigger than %s', rule.min);
   }
 
@@ -586,10 +586,10 @@ function checkArray(rule, value) {
     return this.t('should be an array');
   }
 
-  if (rule.hasOwnProperty('max') && value.length > rule.max) {
+  if (Object.prototype.hasOwnProperty.call(rule, 'max') && value.length > rule.max) {
     return this.t('length should smaller than %s', rule.max);
   }
-  if (rule.hasOwnProperty('min') && value.length < rule.min) {
+  if (Object.prototype.hasOwnProperty.call(rule, 'min') && value.length < rule.min) {
     return this.t('length should bigger than %s', rule.min);
   }
 
