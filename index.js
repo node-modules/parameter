@@ -44,6 +44,10 @@ class Parameter {
     }
   }
 
+  message(rule, key, defaultMessage) {
+    return rule.message && rule.message[key] || defaultMessage;
+  }
+
   /**
    * validate
    *
@@ -89,7 +93,7 @@ class Parameter {
       if (!has) {
         if (rule.required !== false) {
           errors.push({
-            message: this.t('required'),
+            message: this.message(rule, 'required', this.t('required')),
             field: key,
             code: this.t('missing_field')
           });
@@ -254,6 +258,13 @@ function formatRule(rule) {
     rule.required = false;
   }
 
+  rule.message = rule.message || {}
+  if (typeof rule.message === 'string') {
+    rule.message = {
+      [rule.type]: rule.message,
+    }
+  }
+
   return rule;
 }
 
@@ -317,15 +328,15 @@ function convert(rule, obj, key, defaultConvert) {
 
 function checkInt(rule, value) {
   if (typeof value !== 'number' || value % 1 !== 0) {
-    return this.t('should be an integer');
+    return this.message(rule, 'int', this.t('should be an integer'));
   }
 
   if (rule.hasOwnProperty('max') && value > rule.max) {
-    return this.t('should smaller than %s', rule.max);
+    return this.message(rule, 'max', this.t('should smaller than %s', rule.max));
   }
 
   if (rule.hasOwnProperty('min') && value < rule.min) {
-    return this.t('should bigger than %s', rule.min);
+    return this.message(rule, 'min', this.t('should bigger than %s', rule.min));
   }
 }
 
@@ -344,13 +355,13 @@ function checkInt(rule, value) {
 
 function checkNumber(rule, value) {
   if (typeof value !== 'number' || isNaN(value)) {
-    return this.t('should be a number');
+    return this.message(rule, 'number', this.t('should be a number'));
   }
   if (rule.hasOwnProperty('max') && value > rule.max) {
-    return this.t('should smaller than %s', rule.max);
+    return this.message(rule, 'max', this.t('should smaller than %s', rule.max));
   }
   if (rule.hasOwnProperty('min') && value < rule.min) {
-    return this.t('should bigger than %s', rule.min);
+    return this.message(rule, 'min', this.t('should bigger than %s', rule.min));
   }
 }
 
@@ -372,7 +383,7 @@ function checkNumber(rule, value) {
 
 function checkString(rule, value) {
   if (typeof value !== 'string') {
-    return this.t('should be a string');
+    return this.message(rule, rule.type || 'string', this.t('should be a string'));
   }
 
   // if required === false, set allowEmpty to true by default
@@ -386,18 +397,18 @@ function checkString(rule, value) {
 
   if (!value) {
     if (allowEmpty) return;
-    return this.t('should not be empty');
+    return this.message(rule, 'allowEmpty', '') || this.message(rule, 'empty', '') || this.t('should not be empty');
   }
 
   if (rule.hasOwnProperty('max') && value.length > rule.max) {
-    return this.t('length should smaller than %s', rule.max);
+    return this.message(rule, 'max', this.t('length should smaller than %s', rule.max));
   }
   if (rule.hasOwnProperty('min') && value.length < rule.min) {
-    return this.t('length should bigger than %s', rule.min);
+    return this.message(rule, 'min', this.t('length should bigger than %s', rule.min));
   }
 
   if (rule.format && !rule.format.test(value)) {
-    return rule.message || this.t('should match %s', rule.format);
+    return this.message(rule, 'format', this.t('should match %s', rule.format));
   }
 }
 
@@ -412,7 +423,10 @@ function checkString(rule, value) {
  */
 
 function checkId(rule, value) {
-  return checkString.call(this, { format: ID_RE, allowEmpty: rule.allowEmpty }, value);
+  const errorMessage = checkString.call(this, { format: ID_RE, allowEmpty: rule.allowEmpty }, value);
+  if (errorMessage) {
+    return this.message(rule, 'id', errorMessage);
+  }
 }
 
 /**
@@ -426,7 +440,10 @@ function checkId(rule, value) {
  */
 
 function checkDate(rule, value) {
-  return checkString.call(this, { format: DATE_TYPE_RE, allowEmpty: rule.allowEmpty }, value);
+  const errorMessage = checkString.call(this, { format: DATE_TYPE_RE, allowEmpty: rule.allowEmpty }, value);
+  if (errorMessage) {
+    return this.message(rule, 'date', errorMessage);
+  }
 }
 
 /**
@@ -440,7 +457,10 @@ function checkDate(rule, value) {
  */
 
 function checkDateTime(rule, value) {
-  return checkString.call(this, { format: DATETIME_TYPE_RE, allowEmpty: rule.allowEmpty }, value);
+  const errorMessage = checkString.call(this, { format: DATETIME_TYPE_RE, allowEmpty: rule.allowEmpty }, value);
+  if (errorMessage) {
+    return this.message(rule, 'dateTime', errorMessage);
+  }
 }
 
 /**
@@ -454,7 +474,7 @@ function checkDateTime(rule, value) {
 
 function checkBoolean(rule, value) {
   if (typeof value !== 'boolean') {
-    return this.t('should be a boolean');
+    return this.message(rule, 'bool', '') || this.message(rule, 'boolean', '') || this.t('should be a boolean');
   }
 }
 
@@ -475,7 +495,7 @@ function checkEnum(rule, value) {
     throw new TypeError('check enum need array type values');
   }
   if (rule.values.indexOf(value) === -1) {
-    return this.t('should be one of %s', rule.values.join(', '));
+    return this.message(rule, 'enum', this.t('should be one of %s', rule.values.join(', ')));
   }
 }
 
@@ -489,11 +509,13 @@ function checkEnum(rule, value) {
  */
 
 function checkEmail(rule, value) {
-  return checkString.call(this, {
+  const errorMessage = checkString.call(this, {
     format: EMAIL_RE,
-    message: rule.message || this.t('should be an email'),
     allowEmpty: rule.allowEmpty,
   }, value);
+  if (errorMessage) {
+    return this.message(rule, 'email', this.t('should be an email'));
+  }
 }
 
 /**
@@ -513,10 +535,10 @@ function checkPassword(rule, value, obj) {
   rule.format = PASSWORD_RE;
   var error = checkString.call(this, rule, value);
   if (error) {
-    return error;
+    return this.message(rule, 'password', error);
   }
   if (rule.compare && obj[rule.compare] !== value) {
-    return this.t('should equal to %s', rule.compare);
+    return this.message(rule, 'compare', this.t('should equal to %s', rule.compare));
   }
 }
 
@@ -530,11 +552,13 @@ function checkPassword(rule, value, obj) {
  */
 
 function checkUrl(rule, value) {
-  return checkString.call(this, {
+  const error = checkString.call(this, {
     format: URL_RE,
-    message: rule.message || this.t('should be a url'),
     allowEmpty: rule.allowEmpty
   }, value);
+  if (error) {
+    return this.message(rule, 'url', this.t('should be a url'));
+  }
 }
 
 /**
@@ -551,7 +575,7 @@ function checkUrl(rule, value) {
 
 function checkObject(rule, value) {
   if (typeof value !== 'object') {
-    return this.t('should be an object');
+    return this.message(rule, 'object', this.t('should be an object'));
   }
 
   if (rule.rule) {
@@ -583,14 +607,14 @@ function checkObject(rule, value) {
 
 function checkArray(rule, value) {
   if (!Array.isArray(value)) {
-    return this.t('should be an array');
+    return this.message(rule, 'array', this.t('should be an array'));
   }
 
   if (rule.hasOwnProperty('max') && value.length > rule.max) {
-    return this.t('length should smaller than %s', rule.max);
+    return this.message(rule, 'max', this.t('length should smaller than %s', rule.max));
   }
   if (rule.hasOwnProperty('min') && value.length < rule.min) {
-    return this.t('length should bigger than %s', rule.min);
+    return this.message(rule, 'min', this.t('length should bigger than %s', rule.min));
   }
 
   if (!rule.itemType) {

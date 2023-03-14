@@ -2,7 +2,7 @@ var Parameter = require('./');
 
 var rule = {
   name: 'string',
-  age: {type: 'int', max: 200},
+  age: {type: 'int', max: 200, message: { max: '年龄不能大于 200 岁' }},
   gender: ['male', 'female'],
   working: 'boolean',
   salary: {type: 'number', min: 0},
@@ -15,7 +15,7 @@ var rule = {
     required: false,
     rule: {
       name: 'string',
-      age: 'int',
+      age: { type: 'int', message: { required: '子女年龄不能为空' }},
       gender: ['male', 'female'],
       birthday: {type: 'date', required: false}
     }
