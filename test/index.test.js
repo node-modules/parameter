@@ -1,5 +1,6 @@
 'use strict';
 
+var assert = require('assert');
 var should = require('should');
 var util = require('util');
 var Parameter = require('..');
@@ -61,15 +62,17 @@ describe('parameter', () => {
 
   describe('validate', () => {
     it('should throw error when received a non object', () => {
-        var value = null;
-        var rule = {int: {type: 'int1', required: false}};
-        let err;
-        try {
-          parameter.validate(rule, undefined)
-        } catch (e) {
-          err = e;
-        }
-      should(err.message).equal('Cannot read property \'int\' of undefined');
+      var value = null;
+      var rule = {int: {type: 'int1', required: false}};
+      let err;
+      try {
+        parameter.validate(rule, undefined)
+      } catch (e) {
+        err = e;
+      }
+      
+      assert(err.message === 'Cannot read property \'int\' of undefined' ||
+        err.message === 'Cannot read properties of undefined (reading \'int\')');
     });
 
     it('should invalid type throw', () => {
@@ -563,10 +566,10 @@ describe('parameter', () => {
         'ftp://foo.bar/baz',
         'http://foo.bar/?q=Test%20URL-encoded%20stuff',
         'http://مثال.إختبار',
-        'http://例子.测试'
+        'http://例子.测试',
       ].forEach(function (url) {
-        should.not.exist(parameter.validate({ name: 'url' }, { name: url }));
-        should.not.exist(parameter.validate({ name: { type: 'url' } }, { name: url }));
+        assert(parameter.validate({ name: 'url' }, { name: url }) === undefined);
+        assert(parameter.validate({ name: { type: 'url' } }, { name: url }) === undefined);
       });
     });
 
@@ -592,9 +595,16 @@ describe('parameter', () => {
       'http://www.foo.bar./',
       'http://.www.foo.bar./',
       'http://10.1.1.1',
-      'http://10.1.1.254'
+      'http://10.1.1.254',
+      // private & local networks will fail
+      // https://gist.github.com/dperini/729294#file-regex-weburl-js-L77
+      // https://github.com/node-modules/parameter/issues/92
+      'http://localhost',
+      'http://127.0.0.1',
+      'http://127.0.0.1:8080',
+      'http://127.0.0.1:80',
       ].forEach(function (url) {
-        parameter.validate({ name: 'url' }, { name: url }).should.eql([
+        assert.deepStrictEqual(parameter.validate({ name: 'url' }, { name: url }), [
           {
             code: 'invalid',
             field: 'name',
@@ -602,7 +612,7 @@ describe('parameter', () => {
           }
         ]);
 
-        parameter.validate({ name: { type: 'url', message: '不合法 url' } }, { name: url }).should.eql([
+        assert.deepStrictEqual(parameter.validate({ name: { type: 'url', message: '不合法 url' } }, { name: url }), [
           {
             code: 'invalid',
             field: 'name',

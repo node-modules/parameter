@@ -2,15 +2,12 @@ parameter
 =======
 
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+[![Node.js CI](https://github.com/node-modules/parameter/actions/workflows/nodejs.yml/badge.svg)](https://github.com/node-modules/parameter/actions/workflows/nodejs.yml)
 [![Test coverage][codecov-image]][codecov-url]
 [![npm download][download-image]][download-url]
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)
 
 [npm-image]: https://img.shields.io/npm/v/parameter.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/parameter
-[travis-image]: https://img.shields.io/travis/node-modules/parameter.svg?style=flat-square
-[travis-url]: https://travis-ci.org/node-modules/parameter
 [codecov-image]: https://codecov.io/github/node-modules/parameter/coverage.svg?branch=master
 [codecov-url]: https://codecov.io/github/node-modules/parameter?branch=master
 [download-image]: https://img.shields.io/npm/dm/parameter.svg?style=flat-square
@@ -34,7 +31,7 @@ $ npm install parameter --save
   - `options.translate` - translate function
   - `options.validateRoot` - config whether to validate the passed in value must be a object, default to `false`.
   - `options.convert` - convert primitive params to specific type, default to `false`.
-  - `optinos.widelyUndefined` - convert empty string(`''`), NaN, Null to undefined, this option can make `rule.required` more powerful, default to `false`.__This may change the original input params__.
+  - `options.widelyUndefined` - convert empty string(`''`), NaN, Null to undefined, this option can make `rule.required` more powerful, default to `false`.__This may change the original input params__.
 - `validate(rule, value)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
 - `addRule(type, check)` - add custom rules.
    - `type` - rule type, required and must be string type.
@@ -195,8 +192,8 @@ If type is `array`, there has four addition rule:
 
 - `itemType` - The type of every item in this array.
 - `rule` - An object that validate the items of the array. Only work with `itemType`.
-- `max` - The maximun length of the array.
-- `min` - The minimun lenght of the array.
+- `max` - The maximum length of the array.
+- `min` - The minimum lenght of the array.
 
 #### abbr
 
@@ -240,13 +237,18 @@ If type is `array`, there has four addition rule:
 }
 ```
 
-### Release process
-
-We're using [semantic-release](https://github.com/semantic-release/semantic-release) to run npm publish
-after every commit on master.
-
-See [Default Commit Message Format](https://github.com/semantic-release/semantic-release#default-commit-message-format) for details.
-
 ## License
 
 [MIT](LICENSE.txt)
+
+<!-- GITCONTRIBUTOR_START -->
+
+## Contributors
+
+|[<img src="https://avatars.githubusercontent.com/u/156269?v=4" width="100px;"/><br/><sub><b>fengmk2</b></sub>](https://github.com/fengmk2)<br/>|[<img src="https://avatars.githubusercontent.com/u/985607?v=4" width="100px;"/><br/><sub><b>dead-horse</b></sub>](https://github.com/dead-horse)<br/>|[<img src="https://avatars.githubusercontent.com/u/5518?v=4" width="100px;"/><br/><sub><b>huacnlee</b></sub>](https://github.com/huacnlee)<br/>|[<img src="https://avatars.githubusercontent.com/u/143572?v=4" width="100px;"/><br/><sub><b>hotoo</b></sub>](https://github.com/hotoo)<br/>|[<img src="https://avatars.githubusercontent.com/u/2039144?v=4" width="100px;"/><br/><sub><b>sang4lv</b></sub>](https://github.com/sang4lv)<br/>|[<img src="https://avatars.githubusercontent.com/u/471928?v=4" width="100px;"/><br/><sub><b>ghostoy</b></sub>](https://github.com/ghostoy)<br/>|
+| :---: | :---: | :---: | :---: | :---: | :---: |
+[<img src="https://avatars.githubusercontent.com/u/12657964?v=4" width="100px;"/><br/><sub><b>beliefgp</b></sub>](https://github.com/beliefgp)<br/>|[<img src="https://avatars.githubusercontent.com/u/5825244?v=4" width="100px;"/><br/><sub><b>taylorharwin</b></sub>](https://github.com/taylorharwin)<br/>|[<img src="https://avatars.githubusercontent.com/u/3199140?v=4" width="100px;"/><br/><sub><b>tomowang</b></sub>](https://github.com/tomowang)<br/>|[<img src="https://avatars.githubusercontent.com/u/11374721?v=4" width="100px;"/><br/><sub><b>hdumok</b></sub>](https://github.com/hdumok)<br/>|[<img src="https://avatars.githubusercontent.com/u/7971415?v=4" width="100px;"/><br/><sub><b>paranoidjk</b></sub>](https://github.com/paranoidjk)<br/>|[<img src="https://avatars.githubusercontent.com/u/30565051?v=4" width="100px;"/><br/><sub><b>zcxsythenew</b></sub>](https://github.com/zcxsythenew)<br/>
+
+This project follows the git-contributor [spec](https://github.com/xudafeng/git-contributor), auto updated at `Tue Apr 05 2022 10:44:22 GMT+0800`.
+
+<!-- GITCONTRIBUTOR_END -->

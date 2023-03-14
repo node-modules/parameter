@@ -9,21 +9,19 @@
     "index.es5.js"
   ],
   "scripts": {
-    "test": "mocha -R spec -t 1000 test/*.test.js",
-    "cov": "istanbul cover _mocha -- -t 1000 test/*.test.js",
+    "lint": "echo 'ignore'",
+    "test": "egg-bin test",
+    "cov": "egg-bin cov",
     "ci": "npm run cov",
     "build:es5": "babel index.js --presets babel-preset-es2015 -o index.es5.js",
-    "prepublish": "npm run build:es5",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "prepublish": "npm run build:es5"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "beautify-benchmark": "0",
     "benchmark": "*",
-    "istanbul": "*",
-    "mocha": "^5.2.0",
-    "semantic-release": "^6.3.6",
+    "egg-bin": "^4.19.0",
     "should": "*"
   },
   "repository": {
@@ -36,7 +34,7 @@
     "univ"
   ],
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 10.0.0"
   },
   "author": "fengmk2 <fengmk2@gmail.com>",
   "license": "MIT"
