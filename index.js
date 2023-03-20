@@ -282,13 +282,15 @@ function convert(rule, obj, key, defaultConvert) {
   if (!convertType) return;
 
   const value = obj[key];
-  // convert type only work for primitive data
-  if (typeof value === 'object') return;
-
+  
+  // if set convertType function it should be support convert object
   // convertType support function
   if (typeof convertType === 'function') {
     obj[key] = convertType(value, obj);
     return;
+  }else{
+    // default convert type only work for primitive data
+    if (typeof value === 'object') return;
   }
 
   switch (convertType) {
