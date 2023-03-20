@@ -33,6 +33,7 @@ $ npm install parameter --save
   - `options.convert` - convert primitive params to specific type, default to `false`.
   - `options.widelyUndefined` - convert empty string(`''`), NaN, Null to undefined, this option can make `rule.required` more powerful, default to `false`.__This may change the original input params__.
 - `validate(rule, value)` - validate the `value` conforms to `rule`. return an array of errors if break rule.
+- `validateWithTranslate(rule, value, translate)` - validate the `value` conforms to `rule`, with customize translate method.
 - `addRule(type, check)` - add custom rules.
    - `type` - rule type, required and must be string type.
    - `check` - check handler. can be a `function` or a `RegExp`.

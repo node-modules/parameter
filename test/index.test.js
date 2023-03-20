@@ -1065,6 +1065,42 @@ describe('parameter', () => {
       error.field.should.equal('name');
     });
   });
+
+  describe('validateWithTranslate()', function() {
+    it('should work', function() {
+      var translate = function() {
+        var args = Array.prototype.slice.call(arguments);
+        args[0] = args[0] + '-add.';
+        return util.format.apply(util, args);
+      };
+
+      var p1 = new Parameter();
+
+      var rule = { name: 'string' };
+      var error = p1.validateWithTranslate(rule, {}, translate)[0];
+      error.message.should.equal('required-add.');
+      error.code.should.equal('missing_field-add.');
+      error.field.should.equal('name');
+    });
+
+    it('should reset translate', function(done) {
+      var translate = function() {
+        var args = Array.prototype.slice.call(arguments);
+        args[0] = args[0] + '-add.';
+        return util.format.apply(util, args);
+      };
+
+      var p1 = new Parameter();
+
+      var rule = { name: 'invalid' };
+      try {
+        p1.validateWithTranslate(rule, {name: 1}, translate);
+      } catch (e) {
+        should.not.exist(p1.translate);
+        done();
+      }
+    });
+  });
 });
 
 
